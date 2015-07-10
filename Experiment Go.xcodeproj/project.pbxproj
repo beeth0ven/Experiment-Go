@@ -1,0 +1,563 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4511B2851B4FB7CF0046DF76 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B2841B4FB7CF0046DF76 /* AppDelegate.swift */; };
+		4511B2881B4FB7CF0046DF76 /* Experiment_Go.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4511B2861B4FB7CF0046DF76 /* Experiment_Go.xcdatamodeld */; };
+		4511B28A1B4FB7CF0046DF76 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B2891B4FB7CF0046DF76 /* MasterViewController.swift */; };
+		4511B28C1B4FB7CF0046DF76 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B28B1B4FB7CF0046DF76 /* DetailViewController.swift */; };
+		4511B28F1B4FB7CF0046DF76 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4511B28D1B4FB7CF0046DF76 /* Main.storyboard */; };
+		4511B2941B4FB7CF0046DF76 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4511B2921B4FB7CF0046DF76 /* LaunchScreen.xib */; };
+		4511B2A01B4FB7CF0046DF76 /* Experiment_GoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B29F1B4FB7CF0046DF76 /* Experiment_GoTests.swift */; };
+		4511B2AA1B4FB9790046DF76 /* RootSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B2A91B4FB9790046DF76 /* RootSplitViewController.swift */; };
+		4511B2AC1B4FBA320046DF76 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4511B2AB1B4FBA320046DF76 /* Images.xcassets */; };
+		AF79662E4748E3048A76116B /* Pods_Experiment_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2877209060858C580BC83B66 /* Pods_Experiment_Go.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4511B29A1B4FB7CF0046DF76 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4511B2771B4FB7CF0046DF76 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4511B27E1B4FB7CF0046DF76;
+			remoteInfo = "Experiment Go";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2877209060858C580BC83B66 /* Pods_Experiment_Go.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Experiment_Go.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		366775A447029F1684C5AC49 /* Pods-Experiment Go.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Experiment Go.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Experiment Go/Pods-Experiment Go.debug.xcconfig"; sourceTree = "<group>"; };
+		4511B27F1B4FB7CF0046DF76 /* Experiment Go.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Experiment Go.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4511B2831B4FB7CF0046DF76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4511B2841B4FB7CF0046DF76 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4511B2871B4FB7CF0046DF76 /* Experiment_Go.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Experiment_Go.xcdatamodel; sourceTree = "<group>"; };
+		4511B2891B4FB7CF0046DF76 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
+		4511B28B1B4FB7CF0046DF76 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		4511B28E1B4FB7CF0046DF76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		4511B2931B4FB7CF0046DF76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		4511B2991B4FB7CF0046DF76 /* Experiment GoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Experiment GoTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4511B29E1B4FB7CF0046DF76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4511B29F1B4FB7CF0046DF76 /* Experiment_GoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Experiment_GoTests.swift; sourceTree = "<group>"; };
+		4511B2A91B4FB9790046DF76 /* RootSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootSplitViewController.swift; sourceTree = "<group>"; };
+		4511B2AB1B4FBA320046DF76 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		4511B2B01B4FBACA0046DF76 /* Experiment Go-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Experiment Go-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		459C3DB7BFCEAA28C645268E /* Pods-Experiment Go.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Experiment Go.release.xcconfig"; path = "Pods/Target Support Files/Pods-Experiment Go/Pods-Experiment Go.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4511B27C1B4FB7CF0046DF76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AF79662E4748E3048A76116B /* Pods_Experiment_Go.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4511B2961B4FB7CF0046DF76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0ED5787D122823B9536DE104 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2877209060858C580BC83B66 /* Pods_Experiment_Go.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4511B2761B4FB7CF0046DF76 = {
+			isa = PBXGroup;
+			children = (
+				4511B2811B4FB7CF0046DF76 /* Experiment Go */,
+				4511B29C1B4FB7CF0046DF76 /* Experiment GoTests */,
+				4511B2801B4FB7CF0046DF76 /* Products */,
+				DF005932E6AAD7CF037CDFD1 /* Pods */,
+				0ED5787D122823B9536DE104 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		4511B2801B4FB7CF0046DF76 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4511B27F1B4FB7CF0046DF76 /* Experiment Go.app */,
+				4511B2991B4FB7CF0046DF76 /* Experiment GoTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4511B2811B4FB7CF0046DF76 /* Experiment Go */ = {
+			isa = PBXGroup;
+			children = (
+				4511B2AF1B4FBA950046DF76 /* Model */,
+				4511B2AD1B4FBA6F0046DF76 /* View */,
+				4511B2AE1B4FBA7F0046DF76 /* Controller */,
+				4511B2821B4FB7CF0046DF76 /* Supporting Files */,
+			);
+			path = "Experiment Go";
+			sourceTree = "<group>";
+		};
+		4511B2821B4FB7CF0046DF76 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4511B2841B4FB7CF0046DF76 /* AppDelegate.swift */,
+				4511B2831B4FB7CF0046DF76 /* Info.plist */,
+				4511B2B01B4FBACA0046DF76 /* Experiment Go-Bridging-Header.h */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4511B29C1B4FB7CF0046DF76 /* Experiment GoTests */ = {
+			isa = PBXGroup;
+			children = (
+				4511B29F1B4FB7CF0046DF76 /* Experiment_GoTests.swift */,
+				4511B29D1B4FB7CF0046DF76 /* Supporting Files */,
+			);
+			path = "Experiment GoTests";
+			sourceTree = "<group>";
+		};
+		4511B29D1B4FB7CF0046DF76 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4511B29E1B4FB7CF0046DF76 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4511B2AD1B4FBA6F0046DF76 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4511B28D1B4FB7CF0046DF76 /* Main.storyboard */,
+				4511B2921B4FB7CF0046DF76 /* LaunchScreen.xib */,
+				4511B2AB1B4FBA320046DF76 /* Images.xcassets */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		4511B2AE1B4FBA7F0046DF76 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				4511B2A91B4FB9790046DF76 /* RootSplitViewController.swift */,
+				4511B2891B4FB7CF0046DF76 /* MasterViewController.swift */,
+				4511B28B1B4FB7CF0046DF76 /* DetailViewController.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		4511B2AF1B4FBA950046DF76 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4511B2861B4FB7CF0046DF76 /* Experiment_Go.xcdatamodeld */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		DF005932E6AAD7CF037CDFD1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				366775A447029F1684C5AC49 /* Pods-Experiment Go.debug.xcconfig */,
+				459C3DB7BFCEAA28C645268E /* Pods-Experiment Go.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4511B27E1B4FB7CF0046DF76 /* Experiment Go */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4511B2A31B4FB7CF0046DF76 /* Build configuration list for PBXNativeTarget "Experiment Go" */;
+			buildPhases = (
+				E8C11EE3573247C1312FAB8A /* Check Pods Manifest.lock */,
+				4511B27B1B4FB7CF0046DF76 /* Sources */,
+				4511B27C1B4FB7CF0046DF76 /* Frameworks */,
+				4511B27D1B4FB7CF0046DF76 /* Resources */,
+				3FE1E9A4AD8738EC19F505E3 /* Embed Pods Frameworks */,
+				D4F74D2544A680AE19FC6E82 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Experiment Go";
+			productName = "Experiment Go";
+			productReference = 4511B27F1B4FB7CF0046DF76 /* Experiment Go.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4511B2981B4FB7CF0046DF76 /* Experiment GoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4511B2A61B4FB7CF0046DF76 /* Build configuration list for PBXNativeTarget "Experiment GoTests" */;
+			buildPhases = (
+				4511B2951B4FB7CF0046DF76 /* Sources */,
+				4511B2961B4FB7CF0046DF76 /* Frameworks */,
+				4511B2971B4FB7CF0046DF76 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4511B29B1B4FB7CF0046DF76 /* PBXTargetDependency */,
+			);
+			name = "Experiment GoTests";
+			productName = "Experiment GoTests";
+			productReference = 4511B2991B4FB7CF0046DF76 /* Experiment GoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4511B2771B4FB7CF0046DF76 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = LuoJie;
+				TargetAttributes = {
+					4511B27E1B4FB7CF0046DF76 = {
+						CreatedOnToolsVersion = 6.3;
+					};
+					4511B2981B4FB7CF0046DF76 = {
+						CreatedOnToolsVersion = 6.3;
+						TestTargetID = 4511B27E1B4FB7CF0046DF76;
+					};
+				};
+			};
+			buildConfigurationList = 4511B27A1B4FB7CF0046DF76 /* Build configuration list for PBXProject "Experiment Go" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4511B2761B4FB7CF0046DF76;
+			productRefGroup = 4511B2801B4FB7CF0046DF76 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4511B27E1B4FB7CF0046DF76 /* Experiment Go */,
+				4511B2981B4FB7CF0046DF76 /* Experiment GoTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4511B27D1B4FB7CF0046DF76 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4511B2AC1B4FBA320046DF76 /* Images.xcassets in Resources */,
+				4511B28F1B4FB7CF0046DF76 /* Main.storyboard in Resources */,
+				4511B2941B4FB7CF0046DF76 /* LaunchScreen.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4511B2971B4FB7CF0046DF76 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3FE1E9A4AD8738EC19F505E3 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Experiment Go/Pods-Experiment Go-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D4F74D2544A680AE19FC6E82 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Experiment Go/Pods-Experiment Go-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E8C11EE3573247C1312FAB8A /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4511B27B1B4FB7CF0046DF76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4511B2881B4FB7CF0046DF76 /* Experiment_Go.xcdatamodeld in Sources */,
+				4511B2851B4FB7CF0046DF76 /* AppDelegate.swift in Sources */,
+				4511B28A1B4FB7CF0046DF76 /* MasterViewController.swift in Sources */,
+				4511B2AA1B4FB9790046DF76 /* RootSplitViewController.swift in Sources */,
+				4511B28C1B4FB7CF0046DF76 /* DetailViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4511B2951B4FB7CF0046DF76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4511B2A01B4FB7CF0046DF76 /* Experiment_GoTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4511B29B1B4FB7CF0046DF76 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4511B27E1B4FB7CF0046DF76 /* Experiment Go */;
+			targetProxy = 4511B29A1B4FB7CF0046DF76 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4511B28D1B4FB7CF0046DF76 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4511B28E1B4FB7CF0046DF76 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		4511B2921B4FB7CF0046DF76 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4511B2931B4FB7CF0046DF76 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4511B2A11B4FB7CF0046DF76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4511B2A21B4FB7CF0046DF76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4511B2A41B4FB7CF0046DF76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 366775A447029F1684C5AC49 /* Pods-Experiment Go.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				INFOPLIST_FILE = "Experiment Go/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Experiment Go-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		4511B2A51B4FB7CF0046DF76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 459C3DB7BFCEAA28C645268E /* Pods-Experiment Go.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				INFOPLIST_FILE = "Experiment Go/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Experiment Go-Bridging-Header.h";
+			};
+			name = Release;
+		};
+		4511B2A71B4FB7CF0046DF76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Experiment GoTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Experiment Go.app/Experiment Go";
+			};
+			name = Debug;
+		};
+		4511B2A81B4FB7CF0046DF76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Experiment GoTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Experiment Go.app/Experiment Go";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4511B27A1B4FB7CF0046DF76 /* Build configuration list for PBXProject "Experiment Go" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4511B2A11B4FB7CF0046DF76 /* Debug */,
+				4511B2A21B4FB7CF0046DF76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4511B2A31B4FB7CF0046DF76 /* Build configuration list for PBXNativeTarget "Experiment Go" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4511B2A41B4FB7CF0046DF76 /* Debug */,
+				4511B2A51B4FB7CF0046DF76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4511B2A61B4FB7CF0046DF76 /* Build configuration list for PBXNativeTarget "Experiment GoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4511B2A71B4FB7CF0046DF76 /* Debug */,
+				4511B2A81B4FB7CF0046DF76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		4511B2861B4FB7CF0046DF76 /* Experiment_Go.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4511B2871B4FB7CF0046DF76 /* Experiment_Go.xcdatamodel */,
+			);
+			currentVersion = 4511B2871B4FB7CF0046DF76 /* Experiment_Go.xcdatamodel */;
+			path = Experiment_Go.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 4511B2771B4FB7CF0046DF76 /* Project object */;
+}

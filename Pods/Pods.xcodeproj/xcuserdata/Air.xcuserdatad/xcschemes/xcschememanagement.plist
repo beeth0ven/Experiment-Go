@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>Pods-Experiment Go-Bolts.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-Experiment Go-ChameleonFramework.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-Experiment Go-Parse.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-Experiment Go-ParseUI.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-Experiment Go.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>27113772C5A030E5457446D0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6917C484F9B284986772A546</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7420AD1831FF5E8725E3260E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A6F9B1DA6FB0CEBDE8E1D7DE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E5B88C7E6E34A50122B7A826</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>
