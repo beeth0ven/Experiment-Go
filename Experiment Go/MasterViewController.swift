@@ -19,7 +19,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     
 
-    var managedObjectContext: NSManagedObjectContext? = nil
+//    var managedObjectContext: NSManagedObjectContext? = nil
     var fetchedEntityName: String? {
         get {
             let entity = self.fetchedResultsController.fetchRequest.entity!

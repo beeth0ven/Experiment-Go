@@ -2,7 +2,7 @@
 //  Review+CoreDataProperties.swift
 //  Experiment Go
 //
-//  Created by luojie on 7/16/15.
+//  Created by luojie on 7/17/15.
 //  Copyright © 2015 LuoJie. All rights reserved.
 //
 //  Delete this file and regenerate it using "Create NSManagedObject Subclass…"

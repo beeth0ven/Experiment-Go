@@ -33,11 +33,11 @@ class Experiment_GoTests: XCTestCase {
         }
     }
     
-    func testUserName() {
-        let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
-        let managedObjectContext = appDelegate?.managedObjectContext
-        let user = User.defaultUserInManagedObjectContext(managedObjectContext!)
-        XCTAssertEqual(user!.name!, "Luo Jie")
-    }
+//    func testUserName() {
+//        let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
+//        let managedObjectContext = appDelegate?.managedObjectContext
+//        let user = User.defaultUserInManagedObjectContext(managedObjectContext!)
+//        XCTAssertEqual(user!.name!, "Luo Jie")
+//    }
     
 }

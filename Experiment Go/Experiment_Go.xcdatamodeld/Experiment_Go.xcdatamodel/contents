@@ -29,9 +29,9 @@
         <relationship name="postedReviews" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Review" inverseName="whoReview" inverseEntity="Review" syncable="YES"/>
     </entity>
     <elements>
-        <element name="User" positionX="-261" positionY="171" width="128" height="178"/>
         <element name="Experiment" positionX="88" positionY="215" width="128" height="118"/>
         <element name="Review" positionX="430" positionY="290" width="128" height="88"/>
         <element name="Root" positionX="90" positionY="-162" width="128" height="88"/>
+        <element name="User" positionX="-261" positionY="171" width="128" height="178"/>
     </elements>
 </model>

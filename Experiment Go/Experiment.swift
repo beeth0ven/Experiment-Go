@@ -2,13 +2,14 @@
 //  Experiment.swift
 //  Experiment Go
 //
-//  Created by luojie on 7/15/15.
+//  Created by luojie on 7/17/15.
 //  Copyright © 2015 LuoJie. All rights reserved.
 //
 
 import Foundation
 import CoreData
 
+//@objc(Experiment)
 class Experiment: Root {
     
     struct Constants {
@@ -16,10 +17,10 @@ class Experiment: Root {
         static let  TitleKey = "title"
         static let  BodyKey = "body"
         static let  PropertyKey = "Property"
-
+        
     }
-
-// Insert code here to add functionality to your managed object subclass
+    
+    // Insert code here to add functionality to your managed object subclass
     class func insertNewExperimentInManagedObjectContext(managedObjectContext: NSManagedObjectContext) -> Experiment? {
         
         let experiment = NSEntityDescription.insertNewObjectForEntityForName(Constants.EntityNameKey, inManagedObjectContext: managedObjectContext) as! Experiment
@@ -40,9 +41,7 @@ class Experiment: Root {
         }
         
         return experiment
-
+        
     }
     
-    
-
 }

@@ -11,7 +11,7 @@ import CoreData
 
 class MenuTableViewController: UITableViewController {
     
-    var managedObjectContext: NSManagedObjectContext? = nil
+//    var managedObjectContext: NSManagedObjectContext? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +34,7 @@ class MenuTableViewController: UITableViewController {
             if let controller = (segue.destinationViewController as! UINavigationController).topViewController as? MasterViewController {
                 if let cell = sender as? UITableViewCell {
                     if  let text = cell.textLabel?.text {
-                        controller.managedObjectContext = managedObjectContext
+//                        controller.managedObjectContext = managedObjectContext
                         controller.title = text
                         
                         controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()

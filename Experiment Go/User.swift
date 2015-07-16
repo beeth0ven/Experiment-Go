@@ -2,23 +2,23 @@
 //  User.swift
 //  Experiment Go
 //
-//  Created by luojie on 7/15/15.
+//  Created by luojie on 7/17/15.
 //  Copyright © 2015 LuoJie. All rights reserved.
 //
 
 import Foundation
 import CoreData
 
+@objc(User)
 class User: Root {
-    
     
     struct Constants {
         static let  EntityNameKey = "User"
     }
     
-
-
-// Insert code here to add functionality to your managed object subclass
+    
+    
+    // Insert code here to add functionality to your managed object subclass
     class func defaultUserInManagedObjectContext(managedObjectContext: NSManagedObjectContext) -> User? {
         var user: User?
         user = userWithUserName(availableUserNames().first!, inManagedObjectContext: managedObjectContext)()
@@ -49,7 +49,7 @@ class User: Root {
                 // Replace this implementation with code to handle the error appropriately.
                 abort()
             }
-
+            
             
         } else if matches.count == 1 {
             user = matches.first! as? User
@@ -70,19 +70,3 @@ class User: Root {
         ]
     }
 }
-
-extension NSManagedObjectContext {
-    var currentUser: User? {
-        get {
-            return User.defaultUserInManagedObjectContext(self)
-        }
-    }
-}
-
-
-//extension NSManagedObject {
-//    class func EntityName() -> String {
-//        print("entityName : \(NSStringFromClass(self))")
-//        return NSStringFromClass(self)
-//    }
-//}
