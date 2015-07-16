@@ -14,7 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     var window: UIWindow?
 
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         let splitViewController = self.window!.rootViewController as! UISplitViewController
@@ -22,9 +21,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
         splitViewController.delegate = self
 
-        let masterNavigationController = splitViewController.viewControllers[0] as! UINavigationController
-        let controller = masterNavigationController.topViewController as! MasterViewController
-        controller.managedObjectContext = self.managedObjectContext
+        let menuNavigationController = splitViewController.viewControllers[0] as! UINavigationController
+        let menuTableViewController = menuNavigationController.topViewController as! MenuTableViewController
+        menuTableViewController.managedObjectContext = self.managedObjectContext
+        
+        let masterNavigationController = splitViewController.viewControllers[1] as! UINavigationController
+        let masterViewController = masterNavigationController.topViewController as! MasterViewController
+        masterViewController.managedObjectContext = self.managedObjectContext
+        
         return true
     }
 
@@ -55,15 +59,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     // MARK: - Split view
 
     func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
-        if let secondaryAsNavController = secondaryViewController as? UINavigationController {
-            if let topAsDetailController = secondaryAsNavController.topViewController as? DetailViewController {
-                if topAsDetailController.detailItem == nil {
-                    // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
-                    return true
-                }
-            }
-        }
-        return false
+//        guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
+//        guard let topAsDetailController = secondaryAsNavController.topViewController as? MasterViewController else { return false }
+//        if topAsDetailController.fetchedResultsController.fetchedObjects?.count > 0 {
+//            //             Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
+//            guard let primaryAsNavController = primaryViewController as? UINavigationController else { return false }
+//            guard let topAsprimaryController = primaryAsNavController.topViewController as? MenuTableViewController else { return false }
+//            topAsprimaryController.showHomeVC()
+//            splitViewController.showDetailViewController(secondaryViewController, sender: nil)
+//            topAsDetailController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
+//        }
+        return true
+
+//        return false
+        
     }
     // MARK: - Core Data stack
 
@@ -136,6 +145,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                 }
             }
         }
+    }
+
+}
+
+extension NSManagedObjectContext {
+    func saveContext () {
+        guard let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate else { return }
+        appDelegate.saveContext()
+        
     }
 
 }

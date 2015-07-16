@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A6F9B1DA6FB0CEBDE8E1D7DE"
+               BlueprintIdentifier = "63DB8786F78A3A416A124A24"
                BuildableName = "Pods_Experiment_Go.framework"
                BlueprintName = "Pods-Experiment Go"
                ReferencedContainer = "container:Pods.xcodeproj">

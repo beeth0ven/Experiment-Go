@@ -1,9 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="Test1.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="Event">
-        <attribute name="timeStamp" optional="YES" attributeType="Date"/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8154.4" systemVersion="15A178w" minimumToolsVersion="Automatic">
+    <entity name="Experiment" representedClassName=".Experiment" parentEntity="Root" syncable="YES">
+        <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="reviews" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Review" inverseName="experiment" inverseEntity="Review" syncable="YES"/>
+        <relationship name="usersLikeMe" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="User" inverseName="likedExperiments" inverseEntity="User" syncable="YES"/>
+        <relationship name="whoPost" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="postedExperiments" inverseEntity="User" syncable="YES"/>
+    </entity>
+    <entity name="Review" representedClassName=".Review" parentEntity="Root" syncable="YES">
+        <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="experiment" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Experiment" inverseName="reviews" inverseEntity="Experiment" syncable="YES"/>
+        <relationship name="whoReview" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="postedReviews" inverseEntity="User" syncable="YES"/>
+    </entity>
+    <entity name="Root" representedClassName=".Root" syncable="YES">
+        <attribute name="createDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="modifyDate" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="User" representedClassName=".User" parentEntity="Root" syncable="YES">
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="profileImageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <relationship name="followers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="User" inverseName="followingUsers" inverseEntity="User" syncable="YES"/>
+        <relationship name="followingUsers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="User" inverseName="followers" inverseEntity="User" syncable="YES"/>
+        <relationship name="likedExperiments" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Experiment" inverseName="usersLikeMe" inverseEntity="Experiment" syncable="YES"/>
+        <relationship name="postedExperiments" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Experiment" inverseName="whoPost" inverseEntity="Experiment" syncable="YES"/>
+        <relationship name="postedReviews" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Review" inverseName="whoReview" inverseEntity="Review" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Event" positionX="261" positionY="189" width="128" height="60"/>
+        <element name="User" positionX="-261" positionY="171" width="128" height="178"/>
+        <element name="Experiment" positionX="88" positionY="215" width="128" height="118"/>
+        <element name="Review" positionX="430" positionY="290" width="128" height="88"/>
+        <element name="Root" positionX="90" positionY="-162" width="128" height="88"/>
     </elements>
 </model>
