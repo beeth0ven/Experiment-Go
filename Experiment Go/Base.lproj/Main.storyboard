@@ -40,11 +40,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="FGR-UP-yLX">
-                                <rect key="frame" x="0.0" y="44" width="600" height="556"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="FGR-UP-yLX">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <animations/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                                <color key="separatorColor" red="0.68888300657272339" green="0.71366006135940552" blue="0.73448425531387329" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="BasicCell" textLabel="dT8-zY-IAV" detailTextLabel="pYU-bg-j2I" style="IBUITableViewCellStyleValue1" id="6rH-71-pI0">
                                         <rect key="frame" x="0.0" y="94" width="600" height="44"/>
@@ -82,14 +81,17 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fOI-FF-k7k">
-                                                    <rect key="frame" x="15" y="12" width="42" height="20"/>
+                                                    <rect key="frame" x="15" y="8" width="42" height="27"/>
                                                     <animations/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="27" id="Vaf-fa-bEJ"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="200" horizontalCompressionResistancePriority="700" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Experiment" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EIp-qh-KvZ">
-                                                    <rect key="frame" x="65" y="12" width="527" height="20"/>
+                                                    <rect key="frame" x="65" y="15" width="527" height="20"/>
                                                     <animations/>
                                                     <color key="textColor" red="0.68888300657272339" green="0.71366006135940552" blue="0.73448425531387329" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -101,9 +103,16 @@
                                                 <constraint firstAttribute="trailingMargin" secondItem="EIp-qh-KvZ" secondAttribute="trailing" id="3aT-u1-7li"/>
                                                 <constraint firstItem="fOI-FF-k7k" firstAttribute="centerY" secondItem="IFM-Ru-sf2" secondAttribute="centerY" id="9JF-cv-TUt"/>
                                                 <constraint firstItem="EIp-qh-KvZ" firstAttribute="leading" secondItem="fOI-FF-k7k" secondAttribute="trailing" constant="8" symbolic="YES" id="D3w-rC-KEX"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="fOI-FF-k7k" secondAttribute="bottom" id="EsK-fF-bPD"/>
                                                 <constraint firstItem="EIp-qh-KvZ" firstAttribute="baseline" secondItem="fOI-FF-k7k" secondAttribute="baseline" id="YKJ-uk-8GH"/>
                                                 <constraint firstAttribute="leadingMargin" secondItem="fOI-FF-k7k" secondAttribute="leading" constant="-7" id="ecp-rZ-MWQ"/>
+                                                <constraint firstItem="fOI-FF-k7k" firstAttribute="top" secondItem="IFM-Ru-sf2" secondAttribute="topMargin" id="jXy-DR-RYU"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="9JF-cv-TUt"/>
+                                                </mask>
+                                            </variation>
                                         </tableViewCellContentView>
                                         <animations/>
                                         <connections>
@@ -122,10 +131,10 @@
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="FGR-UP-yLX" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leading" id="DKS-PB-XV0"/>
-                            <constraint firstAttribute="trailing" secondItem="FGR-UP-yLX" secondAttribute="trailing" id="QJ9-hM-sno"/>
-                            <constraint firstItem="FGR-UP-yLX" firstAttribute="bottom" secondItem="GAO-Cl-Wes" secondAttribute="top" id="hrY-K3-Nv2"/>
-                            <constraint firstItem="FGR-UP-yLX" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" id="xY5-qz-Pgx"/>
+                            <constraint firstAttribute="trailing" secondItem="FGR-UP-yLX" secondAttribute="trailing" id="IyX-Yw-egF"/>
+                            <constraint firstItem="FGR-UP-yLX" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leading" id="Y9U-ZG-FcX"/>
+                            <constraint firstItem="FGR-UP-yLX" firstAttribute="top" secondItem="svH-Pt-448" secondAttribute="top" id="egG-WY-P7S"/>
+                            <constraint firstItem="FGR-UP-yLX" firstAttribute="bottom" secondItem="GAO-Cl-Wes" secondAttribute="top" id="wkc-fZ-ee3"/>
                         </constraints>
                     </view>
                     <toolbarItems/>

@@ -7,10 +7,16 @@
 //
 
 import UIKit
+import CoreData
 
 class DetailViewController: UIViewController {
     
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableView: UITableView! {
+        didSet {
+            tableView.estimatedRowHeight = Storyboard.TableViewEstimatedRowHeight
+            tableView.rowHeight = UITableViewAutomaticDimension
+        }
+    }
     
     var isNewExperimentAdded = false
     
@@ -44,7 +50,6 @@ class DetailViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         self.configureBarButtons()
         self.configureView()
-//        experiment?.setValue("Hallo", forKey: "title")
     }
     
     override func setEditing(editing: Bool, animated: Bool) {
@@ -75,10 +80,8 @@ class DetailViewController: UIViewController {
     
     private func dismissSelfAndSveContext(completion: (() -> Void)?) {
         presentingViewController?.dismissViewControllerAnimated(true) {
-            if let context = self.experiment!.managedObjectContext {
-                completion?()
-                context.saveContext()
-            }
+            completion?()
+            NSManagedObjectContext.saveDefaultContext()
         }
     }
     
@@ -91,6 +94,8 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     private struct Storyboard {
         static let BasicCellReuseIdentifier = "BasicCell"
         static let TextFieldCellReuseIdentifier = "TextFieldCell"
+        static let TableViewEstimatedRowHeight: CGFloat = 44
+        
     }
     
     

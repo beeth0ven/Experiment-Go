@@ -64,11 +64,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                     }
                 }
             } else if sender is UIBarButtonItem {
-                 let experiment = Experiment.insertNewExperimentInManagedObjectContext(self.managedObjectContext!)
-                    controller.experiment = experiment
-                    controller.isNewExperimentAdded = true
-                experiment?.title = "Hallo"
-//                experiment?.setValue("Hallo", forKey: "title")
+                let experiment = Experiment.insertNewExperiment()
+                controller.experiment = experiment
+                controller.isNewExperimentAdded = true
 
             }
             
@@ -83,7 +81,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section]
-        print(sectionInfo.numberOfObjects)
         return sectionInfo.numberOfObjects
         
     }
@@ -136,7 +133,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         let fetchRequest = NSFetchRequest()
         // Edit the entity name as appropriate.
-        let entity = NSEntityDescription.entityForName(Experiment.Constants.EntityNameKey, inManagedObjectContext: self.managedObjectContext!)
+        let context = NSManagedObjectContext.defaultContext()
+        let entity = NSEntityDescription.entityForName(Experiment.Constants.EntityNameKey, inManagedObjectContext: context)
         fetchRequest.entity = entity
         
         // Set the batch size to a suitable number.
@@ -149,7 +147,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         // Edit the section name key path and cache name if appropriate.
         // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "Master")
+        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: "Master")
         aFetchedResultsController.delegate = self
         _fetchedResultsController = aFetchedResultsController
         
@@ -182,16 +180,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
     
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: NSManagedObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        if type.rawValue == 0 { return }
         switch type {
         case .Insert:
-//            print("newIndexPath section: \(newIndexPath?.section), row: \(newIndexPath?.row)")
-//            print("anObject info: \(anObject)")
-        tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
         case .Delete:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
         case .Update:
-//            print("indexPath section: \(indexPath?.section), row: \(indexPath?.row)")
-//            print("anObject info: \(anObject)")
             self.configureCell(tableView.cellForRowAtIndexPath(indexPath!)!, atIndexPath: indexPath!)
         case .Move:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)

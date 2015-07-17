@@ -21,14 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
         splitViewController.delegate = self
 
-//        let menuNavigationController = splitViewController.viewControllers[0] as! UINavigationController
-//        let menuTableViewController = menuNavigationController.topViewController as! MenuTableViewController
-//        menuTableViewController.managedObjectContext = self.managedObjectContext
-//        
-//        let masterNavigationController = splitViewController.viewControllers[1] as! UINavigationController
-//        let masterViewController = masterNavigationController.topViewController as! MasterViewController
-//        masterViewController.managedObjectContext = self.managedObjectContext
-        
         return true
     }
 
@@ -153,19 +145,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 }
 
 extension UIViewController {
-    var managedObjectContext: NSManagedObjectContext? {
-        return  (UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext
-    }
+//    var managedObjectContext: NSManagedObjectContext? {
+//        return  (UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext
+//    }
 }
 
 
 
 extension NSManagedObjectContext {
-    func saveContext () {
-        guard let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate else { return }
-        appDelegate.saveContext()
-        
+    class func defaultContext() -> NSManagedObjectContext! {
+        return  (UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext!
     }
+    
+    class func saveDefaultContext() {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate.saveContext()
+    }
+    
 
 }
 

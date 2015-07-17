@@ -43,13 +43,7 @@ class User: Root {
             user?.name = userName
             
             // Save the context Once.
-            do {
-                try managedObjectContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                abort()
-            }
-            
+            NSManagedObjectContext.saveDefaultContext()
             
         } else if matches.count == 1 {
             user = matches.first! as? User
