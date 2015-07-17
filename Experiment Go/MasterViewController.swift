@@ -114,7 +114,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
         let experiment = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Experiment
-        cell.textLabel!.text = experiment.valueForKey(Root.Constants.CreateDateKey)!.description
+        cell.textLabel!.text = experiment.whoPost?.name ?? "Niu Dun"
         cell.detailTextLabel?.text = experiment.valueForKey(Experiment.Constants.TitleKey)?.description
     }
     

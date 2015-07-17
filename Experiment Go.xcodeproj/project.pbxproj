@@ -187,17 +187,25 @@
 		45629EDA1B563B72000F41E6 /* Core Data */ = {
 			isa = PBXGroup;
 			children = (
+				45629F931B58E714000F41E6 /* NSManagedObject SubClass */,
+				4511B2861B4FB7CF0046DF76 /* Experiment_Go.xcdatamodeld */,
+				45629F501B5811E8000F41E6 /* Root.swift */,
+				45629F4C1B5811E8000F41E6 /* Review.swift */,
+				45629F4E1B5811E8000F41E6 /* Experiment.swift */,
+				45629F521B5811E8000F41E6 /* User.swift */,
+			);
+			name = "Core Data";
+			sourceTree = "<group>";
+		};
+		45629F931B58E714000F41E6 /* NSManagedObject SubClass */ = {
+			isa = PBXGroup;
+			children = (
 				45629F4B1B5811E7000F41E6 /* Review+CoreDataProperties.swift */,
 				45629F4D1B5811E8000F41E6 /* Experiment+CoreDataProperties.swift */,
 				45629F4F1B5811E8000F41E6 /* Root+CoreDataProperties.swift */,
 				45629F511B5811E8000F41E6 /* User+CoreDataProperties.swift */,
-				45629F4C1B5811E8000F41E6 /* Review.swift */,
-				45629F4E1B5811E8000F41E6 /* Experiment.swift */,
-				45629F501B5811E8000F41E6 /* Root.swift */,
-				45629F521B5811E8000F41E6 /* User.swift */,
-				4511B2861B4FB7CF0046DF76 /* Experiment_Go.xcdatamodeld */,
 			);
-			name = "Core Data";
+			name = "NSManagedObject SubClass";
 			sourceTree = "<group>";
 		};
 		DF005932E6AAD7CF037CDFD1 /* Pods */ = {

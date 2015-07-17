@@ -9,38 +9,39 @@
 import Foundation
 import CoreData
 
-@objc(User)
+//@objc(User)
 class User: Root {
     
     struct Constants {
+        static let  UserNumber: Int = 1
         static let  EntityNameKey = "User"
     }
     
     
     
     // Insert code here to add functionality to your managed object subclass
-    class func defaultUserInManagedObjectContext(managedObjectContext: NSManagedObjectContext) -> User? {
-        var user: User?
-        user = userWithUserName(availableUserNames().first!, inManagedObjectContext: managedObjectContext)()
-        return user
+    class func defaultUser() -> User! {
+        let index = Constants.UserNumber % availableUserNames().count
+        return userWithUserName(availableUserNames()[index])()!
     }
     
-    class func userWithUserName(userName: String, inManagedObjectContext managedObjectContext: NSManagedObjectContext)() -> User? {
-        var user: User?
+    class func userWithUserName(userName: String)() -> User! {
+        var user: User!
+        let context = NSManagedObjectContext.defaultContext()
         let request = NSFetchRequest(entityName: Constants.EntityNameKey)
         request.predicate = NSPredicate(format: "name == %@", userName)
         request.sortDescriptors = [NSSortDescriptor(key: Root.Constants.DefaultSortKey, ascending: false)]
         
         var matches: [AnyObject]
         do {
-            try matches = managedObjectContext.executeFetchRequest(request)
+            try matches = context.executeFetchRequest(request)
         } catch {
             abort()
         }
         
         if matches.count == 0 {
-            user = NSEntityDescription.insertNewObjectForEntityForName(Constants.EntityNameKey, inManagedObjectContext: managedObjectContext) as? User
-            user?.name = userName
+            user = NSEntityDescription.insertNewObjectForEntityForName(Constants.EntityNameKey, inManagedObjectContext: context) as! User
+            user.name = userName
             
             // Save the context Once.
             NSManagedObjectContext.saveDefaultContext()
@@ -49,6 +50,7 @@ class User: Root {
             user = matches.first! as? User
         } else {
             print("Error: Users has same name.")
+            user = matches.first! as? User
         }
         
         return user
