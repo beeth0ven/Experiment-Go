@@ -52,6 +52,37 @@ class DetailViewController: UIViewController {
         self.configureView()
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        oberveTextField()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        stopOberveTextField()
+    }
+    
+    private func oberveTextField() {
+        let center = NSNotificationCenter.defaultCenter()
+        center.addObserver(self,
+            selector: "handleTextFieldTextDidChange:",
+            name: UITextFieldTextDidChangeNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func handleTextFieldTextDidChange(notification: NSNotification) {
+        guard let textField = notification.object as? UITextField else { return }
+        if let textFieldTableViewCell = textFieldTableViewCellWhichContainsTextField(textField) {
+            experiment?.setValue(textField.text, forKey: textFieldTableViewCell.titleLabel.text!)
+        }
+    }
+    
+    private func stopOberveTextField() {
+        let center = NSNotificationCenter.defaultCenter()
+        center.removeObserver(self)
+    }
+    
     override func setEditing(editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: true)
         updateUI()
@@ -69,7 +100,6 @@ class DetailViewController: UIViewController {
                 if self.isNewExperimentAdded {
                     context.deleteObject(self.experiment!)
                 }
-                
             }
         }
         
@@ -203,10 +233,7 @@ extension DetailViewController: UITextFieldDelegate {
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         if let textFieldTableViewCell = textFieldTableViewCellWhichContainsTextField(textField) {
             experiment?.setValue(textField.text, forKey: textFieldTableViewCell.titleLabel.text!)
-//            if let ex = self.experiment {
-////                ex.title = textField.text
-//                ex.setValue(textField.text, forKey: textFieldTableViewCell.titleLabel.text!)
-//            }
+
         }
         
         return true
