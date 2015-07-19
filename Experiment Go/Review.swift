@@ -21,7 +21,8 @@ class Review: Root {
 //        static let  ReviewsKey = "reviews"
 //        static let  UsersLikeMeKey = "usersLikeMe"
     }
-
+    
+    
     class func insertNewReviewInExperiment(experiment: Experiment) -> Review! {
         let context = NSManagedObjectContext.defaultContext()
         let review = NSEntityDescription.insertNewObjectForEntityForName(Constants.EntityNameKey, inManagedObjectContext: context) as! Review
@@ -30,4 +31,6 @@ class Review: Root {
         review.whoReview = User.defaultUser()
         return review
     }
+    
+    
 }

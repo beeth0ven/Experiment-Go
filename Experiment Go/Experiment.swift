@@ -21,6 +21,11 @@ class Experiment: Root {
         static let  UsersLikeMeKey = "usersLikeMe"
     }
     
+    var reviewsAsArray: [Review]? {
+        let array = reviews?.allObjects as? [Review]
+        return array?.sort { $0.createDate! > $1.createDate! }
+    }
+    
     // Insert code here to add functionality to your managed object subclass
     class func insertNewExperiment() -> Experiment! {
         let context = NSManagedObjectContext.defaultContext()

@@ -64,8 +64,31 @@ class DetailViewController: UIViewController {
     
     
     override func setEditing(editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: true)
-        updateUI()
+        if self.editing != editing {
+            super.setEditing(editing, animated: true)
+            tableView.setEditing(editing, animated: true)
+            toggleTableViewEditingMode(editing)
+        }
+    }
+    
+    private func toggleTableViewEditingMode(editing: Bool) {
+        guard let sections = self.sections else { return }
+        for (sectionIndex, section) in sections.enumerate() {
+            if section.entityToAddWhileEditingWithNameKey != nil {
+                tableView.beginUpdates()
+                var indexPath: NSIndexPath!
+                if editing {
+                    indexPath = NSIndexPath(forRow: section.rowsWhenEditing.count - 1, inSection: sectionIndex)
+                    tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                } else {
+                    indexPath = NSIndexPath(forRow: section.rows.count, inSection: sectionIndex)
+                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                }
+                tableView.endUpdates()
+            }
+            
+        }
+        
     }
     
     
@@ -111,32 +134,25 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
         var result: [DetailViewController.Section] = []
         
         // Section 0: Property
-        let titleRow = DetailViewController.Row.TextField(Experiment.Constants.TitleKey, title)
+        let titleRow = DetailViewController.Row.TextField(Experiment.Constants.TitleKey, experiment.title)
+        
         let bodyRow = DetailViewController.Row.TextField(Experiment.Constants.BodyKey, experiment.body)
-        let propertySection = DetailViewController.Section(title: Experiment.Constants.PropertyKey, rows: [titleRow, bodyRow])
+        let propertySection = DetailViewController.Section(title: Experiment.Constants.PropertyKey, rows: [titleRow, bodyRow], entityToAddWhileEditingWithNameKey: nil)
         result.append(propertySection)
         
         // Section 1: Reviews
         var reviewRows: [DetailViewController.Row] = []
-        if var reviews = experiment.reviews?.allObjects as? [Review] {
-
-            reviews.sortInPlace { $0.createDate! > $1.createDate! }
-
-            
+        if let reviews = experiment.reviewsAsArray {
             for review in reviews {
-                let row = DetailViewController.Row.RightDetail(review.whoReview!.name!, review.body!)
+                let row = DetailViewController.Row.RightDetail(review.whoReview!.name!, review.createDate!.description)
                 reviewRows.append(row)
             }
         }
+        
 
-        
-        if editing {
-            let row = DetailViewController.Row.Basic(Review.Constants.EntityNameKey)
-            reviewRows.append(row)
-        }
-        
-        let reviewsSection = DetailViewController.Section(title: Experiment.Constants.ReviewsKey, rows: reviewRows)
+        let reviewsSection = DetailViewController.Section(title: Experiment.Constants.ReviewsKey, rows: reviewRows, entityToAddWhileEditingWithNameKey: Review.Constants.EntityNameKey)
         result.append(reviewsSection)
+        
         
         // Section 2: UsersLikeMe
         var usersLikeMeRows: [DetailViewController.Row] = []
@@ -148,7 +164,8 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
                 }
             }
         }
-        let usersLikeMeSection = DetailViewController.Section(title: Experiment.Constants.UsersLikeMeKey, rows: usersLikeMeRows)
+        
+        let usersLikeMeSection = DetailViewController.Section(title: Experiment.Constants.UsersLikeMeKey, rows: usersLikeMeRows, entityToAddWhileEditingWithNameKey: nil)
         result.append(usersLikeMeSection)
         
         return result
@@ -156,7 +173,18 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
 
     struct Section {
         var title: String?
-        var rows: [Row]?
+        var rows: [Row]!
+        var entityToAddWhileEditingWithNameKey: String?
+        
+        var rowsWhenEditing: [Row]! {
+            var result = rows
+            if let entityName = entityToAddWhileEditingWithNameKey {
+                let row = DetailViewController.Row.Basic(entityName)
+                result.append(row)
+            }
+            return result
+        }
+        
     }
     
     enum Row {
@@ -179,8 +207,9 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     
     func rowAtIndexPath(indexPath: NSIndexPath) -> DetailViewController.Row?{
-        let section = sections?[indexPath.section]
-        return section?.rows?[indexPath.row]
+        let section =  sections?[indexPath.section]
+        let rows = tableView.editing == false ? section?.rows  : section?.rowsWhenEditing
+        return rows?[indexPath.row]
     }
     
     
@@ -192,7 +221,7 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let experimentSection = sections![section]
-        return experimentSection.rows?.count ?? 0
+        return tableView.editing == false ? experimentSection.rows.count  : experimentSection.rowsWhenEditing.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -210,11 +239,7 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
         let experimentSection = sections![section]
         return experimentSection.title
     }
-    
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
+
     
 
     func configureCell(cell: UITableViewCell, useRow row: Row) {
@@ -241,23 +266,33 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     // MARK: - Table View Delegate
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        let cell = tableView.cellForRowAtIndexPath(indexPath)!
+        if cell.editingStyle == .Insert {
+           self.tableView(tableView, commitEditingStyle: cell.editingStyle , forRowAtIndexPath: indexPath)
+        }
+        
+        tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow!, animated: true)
     }
+    
     
     // MARK: - Table View Edited Method
     
-    func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        
-        if let sectionTitle = sections?[indexPath.section].title {
-            switch sectionTitle {
-            case Experiment.Constants.ReviewsKey:
-                return true
-            default: break
+    
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        // Return false if you do not want the specified item to be editable.
+        if tableView.editing {
+            if let sectionTitle = sections?[indexPath.section].title {
+                switch sectionTitle {
+                case Experiment.Constants.ReviewsKey:
+                    return true
+                default: break
+                }
+                
             }
-            
         }
-        return false
 
+        return false
     }
     
     
@@ -267,7 +302,11 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
             switch sectionTitle {
             case Experiment.Constants.ReviewsKey:
                 let numberOfRows = tableView.numberOfRowsInSection(indexPath.section)
-                return indexPath.row == numberOfRows-1 ? .Insert : .Delete
+                if (indexPath.row == numberOfRows - 1) && tableView.editing {
+                    return .Insert
+                } else {
+                    return .Delete
+                }
             default: break
             }
             
@@ -281,28 +320,31 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.beginUpdates()
         if let sectionTitle = sections?[indexPath.section].title {
             
-            switch editingStyle {
-            case .Insert:
-                switch sectionTitle {
-                case Experiment.Constants.ReviewsKey:
-                    let numberOfRows = tableView.numberOfRowsInSection(indexPath.section)
+            
+            switch sectionTitle {
+            case Experiment.Constants.ReviewsKey:
+                switch editingStyle {
+                case .Insert:
+                    Review.insertNewReviewInExperiment(experiment)
+                    let indexPathToInsert = NSIndexPath(forRow: 0, inSection: indexPath.section)
+                    tableView.insertRowsAtIndexPaths([indexPathToInsert], withRowAnimation: .Fade)
+
+                    NSManagedObjectContext.saveDefaultContext()
+                    
+                case .Delete:
+                    let context = NSManagedObjectContext.defaultContext()
+                    context.deleteObject(experiment.reviewsAsArray![indexPath.row])
+                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                    
+                    NSManagedObjectContext.saveDefaultContext()
+                    
                 default: break
                 }
-                
-                NSManagedObjectContext.saveDefaultContext()
-                
-            case .Delete:
-                switch sectionTitle {
-                case Experiment.Constants.ReviewsKey:
-                    let numberOfRows = tableView.numberOfRowsInSection(indexPath.section)
-                default: break
-                }
-                
-                NSManagedObjectContext.saveDefaultContext()
-                
+
                 
             default: break
             }
+            
             
             
         }
@@ -349,8 +391,8 @@ extension DetailViewController: UITextFieldDelegate {
     
 }
 
-public func ==(date1: NSDate, date2: NSDate) -> Bool { return date1.compare(date2) == NSComparisonResult.OrderedSame }
-public func <(date1: NSDate, date2: NSDate) -> Bool { return date1.compare(date2) == NSComparisonResult.OrderedAscending }
+public func ==(date0: NSDate, date1: NSDate) -> Bool { return date0.compare(date1) == NSComparisonResult.OrderedSame }
+public func <(date0: NSDate, date1: NSDate) -> Bool { return date0.compare(date1) == NSComparisonResult.OrderedAscending }
 
 extension NSDate: Comparable {}
 
