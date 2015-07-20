@@ -28,7 +28,7 @@ class Review: Root {
         let review = NSEntityDescription.insertNewObjectForEntityForName(Constants.EntityNameKey, inManagedObjectContext: context) as! Review
         review.body = "How do you do!"
         review.experiment = experiment
-        review.whoReview = User.defaultUser()
+        review.whoReview = User.currentUser()
         return review
     }
     

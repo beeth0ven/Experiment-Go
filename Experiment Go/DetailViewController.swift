@@ -73,9 +73,14 @@ class DetailViewController: UIViewController {
     
     private func toggleTableViewEditingMode(editing: Bool) {
         guard let sections = self.sections else { return }
+        tableView.beginUpdates()
         for (sectionIndex, section) in sections.enumerate() {
+
+            if section.title == Experiment.Constants.PropertyKey {
+                tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+            }
+            
             if section.entityToAddWhileEditingWithNameKey != nil {
-                tableView.beginUpdates()
                 var indexPath: NSIndexPath!
                 if editing {
                     indexPath = NSIndexPath(forRow: section.rowsWhenEditing.count - 1, inSection: sectionIndex)
@@ -84,10 +89,10 @@ class DetailViewController: UIViewController {
                     indexPath = NSIndexPath(forRow: section.rows.count, inSection: sectionIndex)
                     tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                 }
-                tableView.endUpdates()
             }
-            
+
         }
+        tableView.endUpdates()
         
     }
     
@@ -125,6 +130,7 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
         static let BasicCellReuseIdentifier = "BasicCell"
         static let RightDetailReuseIdentifier = "RightDetailCell"
         static let TextFieldCellReuseIdentifier = "TextFieldCell"
+        static let ButtonCellReuseIdentifier = "ButtonCell"
         static let TableViewEstimatedRowHeight: CGFloat = 44
         
     }
@@ -156,17 +162,32 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
         
         // Section 2: UsersLikeMe
         var usersLikeMeRows: [DetailViewController.Row] = []
-        if experiment.usersLikeMe?.count > 0 {
-            for object in experiment.usersLikeMe! {
-                if let userLikeMe = object as? User {
-                    let row = DetailViewController.Row.Basic(userLikeMe.name!)
-                    usersLikeMeRows.append(row)
-                }
+        if let usersLikeMe = experiment.usersLikeMeAsArray {
+            for user in usersLikeMe {
+                let row = DetailViewController.Row.Basic(user.name!)
+                usersLikeMeRows.append(row)
             }
         }
         
         let usersLikeMeSection = DetailViewController.Section(title: Experiment.Constants.UsersLikeMeKey, rows: usersLikeMeRows, entityToAddWhileEditingWithNameKey: nil)
         result.append(usersLikeMeSection)
+        
+        // Section 3: User Actions - Delete, Like Or UnLike
+        var buttonRow: Row!
+        if experiment.whoPost! == User.currentUser() {
+            buttonRow = Row.Button(.Delete)
+        } else {
+            var type: ButtonCellType =  .UnLike
+            if experiment.usersLikeMeAsArray?.count > 0 {
+                if experiment.usersLikeMeAsArray!.contains(User.currentUser()) {
+                    type = .Like
+                }
+            }
+            buttonRow = Row.Button(type)
+        }
+        
+        let userActionSection = DetailViewController.Section(title: Experiment.Constants.UserActionsKey, rows: [buttonRow], entityToAddWhileEditingWithNameKey: nil)
+        result.append(userActionSection)
         
         return result
     }
@@ -192,6 +213,7 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
         case Basic(String)
         case RightDetail(String, String)
         case TextField(String, String?)
+        case Button(ButtonCellType)
         
         var cellReuseIdentifier: String {
             switch self {
@@ -201,9 +223,41 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
                 return Storyboard.RightDetailReuseIdentifier
             case .TextField(_, _):
                 return Storyboard.TextFieldCellReuseIdentifier
+            case .Button(_):
+                return Storyboard.ButtonCellReuseIdentifier
             }
         }
     }
+    
+    enum ButtonCellType: CustomStringConvertible{
+        
+        case Delete
+        case Like
+        case UnLike
+        
+        var backgroundColor: UIColor {
+            switch self {
+            case Delete:
+                return UIColor.flatRedColor()
+            case Like:
+                return UIColor.flatSandColorDark()
+            case UnLike:
+                return UIColor.flatSandColor()
+            }
+        }
+        
+        var description: String {
+            switch self {
+            case Delete:
+                return "Delete"
+            case Like:
+                return "Like"
+            case UnLike:
+                return "UnLike"
+            }
+        }
+    }
+
     
     
     func rowAtIndexPath(indexPath: NSIndexPath) -> DetailViewController.Row?{
@@ -258,6 +312,9 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
                 textFieldTableViewCell.textField.delegate = self
                 
             }
+        case .Button(let type):
+            cell.textLabel?.text = type.description
+            cell.backgroundColor = type.backgroundColor
         }
     }
     
@@ -268,7 +325,7 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)!
         if cell.editingStyle == .Insert {
-           self.tableView(tableView, commitEditingStyle: cell.editingStyle , forRowAtIndexPath: indexPath)
+            self.tableView(tableView, commitEditingStyle: cell.editingStyle, forRowAtIndexPath: indexPath)
         }
         
         tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow!, animated: true)

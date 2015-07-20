@@ -20,7 +20,7 @@ class User: Root {
     
     
     // Insert code here to add functionality to your managed object subclass
-    class func defaultUser() -> User! {
+    class func currentUser() -> User! {
         let index = Constants.UserNumber % availableUserNames().count
         return userWithUserName(availableUserNames()[index])()!
     }

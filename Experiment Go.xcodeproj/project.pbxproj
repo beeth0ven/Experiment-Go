@@ -25,6 +25,7 @@
 		45629F5D1B5811E8000F41E6 /* Root.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45629F501B5811E8000F41E6 /* Root.swift */; };
 		45629F5F1B5811E8000F41E6 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45629F511B5811E8000F41E6 /* User+CoreDataProperties.swift */; };
 		45629F611B5811E8000F41E6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45629F521B5811E8000F41E6 /* User.swift */; };
+		45629F951B5BC386000F41E6 /* ChameleonFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45629F941B5BC386000F41E6 /* ChameleonFramework.framework */; };
 		4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */; };
 		AF79662E4748E3048A76116B /* Pods_Experiment_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2877209060858C580BC83B66 /* Pods_Experiment_Go.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -65,6 +66,7 @@
 		45629F501B5811E8000F41E6 /* Root.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Root.swift; sourceTree = "<group>"; };
 		45629F511B5811E8000F41E6 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		45629F521B5811E8000F41E6 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		45629F941B5BC386000F41E6 /* ChameleonFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChameleonFramework.framework; path = "Pods/../build/Debug-iphoneos/Pods-Experiment Go/ChameleonFramework.framework"; sourceTree = "<group>"; };
 		4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		459C3DB7BFCEAA28C645268E /* Pods-Experiment Go.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Experiment Go.release.xcconfig"; path = "Pods/Target Support Files/Pods-Experiment Go/Pods-Experiment Go.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -74,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45629F951B5BC386000F41E6 /* ChameleonFramework.framework in Frameworks */,
 				AF79662E4748E3048A76116B /* Pods_Experiment_Go.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -91,6 +94,7 @@
 		0ED5787D122823B9536DE104 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				45629F941B5BC386000F41E6 /* ChameleonFramework.framework */,
 				2877209060858C580BC83B66 /* Pods_Experiment_Go.framework */,
 			);
 			name = Frameworks;

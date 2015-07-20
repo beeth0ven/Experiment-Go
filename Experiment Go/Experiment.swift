@@ -19,10 +19,17 @@ class Experiment: Root {
         static let  PropertyKey = "Property"
         static let  ReviewsKey = "reviews"
         static let  UsersLikeMeKey = "usersLikeMe"
+        static let  UserActionsKey = "userActions"
+        
     }
     
     var reviewsAsArray: [Review]? {
         let array = reviews?.allObjects as? [Review]
+        return array?.sort { $0.createDate! > $1.createDate! }
+    }
+    
+    var usersLikeMeAsArray: [User]? {
+        let array = reviews?.allObjects as? [User]
         return array?.sort { $0.createDate! > $1.createDate! }
     }
     
@@ -31,7 +38,7 @@ class Experiment: Root {
         let context = NSManagedObjectContext.defaultContext()
         let experiment = NSEntityDescription.insertNewObjectForEntityForName(Constants.EntityNameKey, inManagedObjectContext: context) as! Experiment
         experiment.title = "Hallo"
-        experiment.whoPost = User.defaultUser()
+        experiment.whoPost = User.currentUser()
         return experiment
     }
     
