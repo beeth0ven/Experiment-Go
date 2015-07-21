@@ -180,7 +180,7 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Detail" id="mOI-FS-AaM">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="LQd-tM-Fng">
+                        <barButtonItem key="leftBarButtonItem" title="Close" id="LQd-tM-Fng">
                             <connections>
                                 <action selector="cancel:" destination="JEX-9P-axG" id="Wb0-Rs-7MR"/>
                             </connections>

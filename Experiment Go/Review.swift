@@ -23,11 +23,10 @@ class Review: Root {
     }
     
     
-    class func insertNewReviewInExperiment(experiment: Experiment) -> Review! {
+    class func insertNewReview() -> Review! {
         let context = NSManagedObjectContext.defaultContext()
         let review = NSEntityDescription.insertNewObjectForEntityForName(Constants.EntityNameKey, inManagedObjectContext: context) as! Review
         review.body = "How do you do!"
-        review.experiment = experiment
         review.whoReview = User.currentUser()
         return review
     }

@@ -9,16 +9,9 @@
 import UIKit
 import CoreData
 
-class DetailViewController: UIViewController {
+class DetailViewController: UIViewController ,FetchedDataControllerDelegate {
     
-    @IBOutlet weak var tableView: UITableView! {
-        didSet {
-            tableView.estimatedRowHeight = Storyboard.TableViewEstimatedRowHeight
-            tableView.rowHeight = UITableViewAutomaticDimension
-        }
-    }
-    
-    var isNewExperimentAdded = false
+    // MARK: - Properties
     
     var experiment: Experiment! {
         didSet {
@@ -27,24 +20,24 @@ class DetailViewController: UIViewController {
         }
     }
     
-    func configureBarButtons() {
-        if !isNewExperimentAdded {
-            navigationItem.rightBarButtonItem = editButtonItem()
-        } else {
-            editing = true
+    @IBOutlet weak var tableView: UITableView! {
+        didSet {
+            tableView.estimatedRowHeight = Storyboard.TableViewEstimatedRowHeight
+            tableView.rowHeight = UITableViewAutomaticDimension
         }
     }
+
+    lazy var fetchedDataController: FetchedDataController = {
+       var lazyCreateFetchedDataController = FetchedDataController(experiment: self.experiment)
+        lazyCreateFetchedDataController.delegate = self
+        return lazyCreateFetchedDataController
+    }()
     
-    func updateUI() {
-        configureView()
-        tableView?.reloadData()
-    }
+    var isNewExperimentAdded = false
+
     
-    func configureView() {
-        // Update the user interface for the detail item.
-        
-    }
-    
+    // MARK: - View Controller Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -62,39 +55,16 @@ class DetailViewController: UIViewController {
         stopOberveTextField()
     }
     
-    
+    // MARK: - User Actions
+
     override func setEditing(editing: Bool, animated: Bool) {
         if self.editing != editing {
             super.setEditing(editing, animated: true)
             tableView.setEditing(editing, animated: true)
-            toggleTableViewEditingMode(editing)
+            fetchedDataController.editing = editing
         }
     }
-    
-    private func toggleTableViewEditingMode(editing: Bool) {
-        guard let sections = self.sections else { return }
-        tableView.beginUpdates()
-        for (sectionIndex, section) in sections.enumerate() {
 
-            if section.title == Experiment.Constants.PropertyKey {
-                tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-            }
-            
-            if section.entityToAddWhileEditingWithNameKey != nil {
-                var indexPath: NSIndexPath!
-                if editing {
-                    indexPath = NSIndexPath(forRow: section.rowsWhenEditing.count - 1, inSection: sectionIndex)
-                    tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                } else {
-                    indexPath = NSIndexPath(forRow: section.rows.count, inSection: sectionIndex)
-                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                }
-            }
-
-        }
-        tableView.endUpdates()
-        
-    }
     
     
     @IBAction func save(sender: UIBarButtonItem) {
@@ -103,15 +73,11 @@ class DetailViewController: UIViewController {
     
     @IBAction func cancel(sender: UIBarButtonItem) {
         dismissSelfAndSveContext {
-            [unowned self] _ in
-            if let context = self.experiment!.managedObjectContext {
-                if self.isNewExperimentAdded {
-                    context.deleteObject(self.experiment!)
-                }
+            [unowned self] in
+            if self.isNewExperimentAdded {
+                NSManagedObjectContext.defaultContext().deleteObject(self.experiment!)
             }
         }
-        
-        
     }
     
     private func dismissSelfAndSveContext(completion: (() -> Void)?) {
@@ -121,184 +87,83 @@ class DetailViewController: UIViewController {
         }
     }
     
+    private func doLike() {
+        print("doLike")
+    }
+    
+    private func doUnLike() {
+        print("doUnLike")
+    }
+    
+    private func doDelete() {
+        dismissSelfAndSveContext {
+            [unowned self] in
+            NSManagedObjectContext.defaultContext().deleteObject(self.experiment!)
+        }
+    }
+    
+    
+    // MARK: - View Configure
+    
+    private func configureBarButtons() {
+        if !isNewExperimentAdded {
+            navigationItem.rightBarButtonItem = editButtonItem()
+        } else {
+            editing = true
+        }
+    }
+    
+    private func updateUI() {
+        configureView()
+        tableView?.reloadData()
+    }
+    
+    private func configureView() {
+        // Update the user interface for the detail item.
+        
+    }
+    
 }
 
 
 extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     private struct Storyboard {
-        static let BasicCellReuseIdentifier = "BasicCell"
-        static let RightDetailReuseIdentifier = "RightDetailCell"
-        static let TextFieldCellReuseIdentifier = "TextFieldCell"
-        static let ButtonCellReuseIdentifier = "ButtonCell"
         static let TableViewEstimatedRowHeight: CGFloat = 44
-        
     }
     
-    // MARK: - Table View Data Struct
-    var sections: [DetailViewController.Section]? {
-        var result: [DetailViewController.Section] = []
-        
-        // Section 0: Property
-        let titleRow = DetailViewController.Row.TextField(Experiment.Constants.TitleKey, experiment.title)
-        
-        let bodyRow = DetailViewController.Row.TextField(Experiment.Constants.BodyKey, experiment.body)
-        let propertySection = DetailViewController.Section(title: Experiment.Constants.PropertyKey, rows: [titleRow, bodyRow], entityToAddWhileEditingWithNameKey: nil)
-        result.append(propertySection)
-        
-        // Section 1: Reviews
-        var reviewRows: [DetailViewController.Row] = []
-        if let reviews = experiment.reviewsAsArray {
-            for review in reviews {
-                let row = DetailViewController.Row.RightDetail(review.whoReview!.name!, review.createDate!.description)
-                reviewRows.append(row)
-            }
-        }
-        
-
-        let reviewsSection = DetailViewController.Section(title: Experiment.Constants.ReviewsKey, rows: reviewRows, entityToAddWhileEditingWithNameKey: Review.Constants.EntityNameKey)
-        result.append(reviewsSection)
-        
-        
-        // Section 2: UsersLikeMe
-        var usersLikeMeRows: [DetailViewController.Row] = []
-        if let usersLikeMe = experiment.usersLikeMeAsArray {
-            for user in usersLikeMe {
-                let row = DetailViewController.Row.Basic(user.name!)
-                usersLikeMeRows.append(row)
-            }
-        }
-        
-        let usersLikeMeSection = DetailViewController.Section(title: Experiment.Constants.UsersLikeMeKey, rows: usersLikeMeRows, entityToAddWhileEditingWithNameKey: nil)
-        result.append(usersLikeMeSection)
-        
-        // Section 3: User Actions - Delete, Like Or UnLike
-        var buttonRow: Row!
-        if experiment.whoPost! == User.currentUser() {
-            buttonRow = Row.Button(.Delete)
-        } else {
-            var type: ButtonCellType =  .UnLike
-            if experiment.usersLikeMeAsArray?.count > 0 {
-                if experiment.usersLikeMeAsArray!.contains(User.currentUser()) {
-                    type = .Like
-                }
-            }
-            buttonRow = Row.Button(type)
-        }
-        
-        let userActionSection = DetailViewController.Section(title: Experiment.Constants.UserActionsKey, rows: [buttonRow], entityToAddWhileEditingWithNameKey: nil)
-        result.append(userActionSection)
-        
-        return result
-    }
-
-    struct Section {
-        var title: String?
-        var rows: [Row]!
-        var entityToAddWhileEditingWithNameKey: String?
-        
-        var rowsWhenEditing: [Row]! {
-            var result = rows
-            if let entityName = entityToAddWhileEditingWithNameKey {
-                let row = DetailViewController.Row.Basic(entityName)
-                result.append(row)
-            }
-            return result
-        }
-        
-    }
-    
-    enum Row {
-        
-        case Basic(String)
-        case RightDetail(String, String)
-        case TextField(String, String?)
-        case Button(ButtonCellType)
-        
-        var cellReuseIdentifier: String {
-            switch self {
-            case .Basic(_):
-                return Storyboard.BasicCellReuseIdentifier
-            case .RightDetail(_, _):
-                return Storyboard.RightDetailReuseIdentifier
-            case .TextField(_, _):
-                return Storyboard.TextFieldCellReuseIdentifier
-            case .Button(_):
-                return Storyboard.ButtonCellReuseIdentifier
-            }
-        }
-    }
-    
-    enum ButtonCellType: CustomStringConvertible{
-        
-        case Delete
-        case Like
-        case UnLike
-        
-        var backgroundColor: UIColor {
-            switch self {
-            case Delete:
-                return UIColor.flatRedColor()
-            case Like:
-                return UIColor.flatSandColorDark()
-            case UnLike:
-                return UIColor.flatSandColor()
-            }
-        }
-        
-        var description: String {
-            switch self {
-            case Delete:
-                return "Delete"
-            case Like:
-                return "Like"
-            case UnLike:
-                return "UnLike"
-            }
-        }
-    }
-
-    
-    
-    func rowAtIndexPath(indexPath: NSIndexPath) -> DetailViewController.Row?{
-        let section =  sections?[indexPath.section]
-        let rows = tableView.editing == false ? section?.rows  : section?.rowsWhenEditing
-        return rows?[indexPath.row]
-    }
-    
-    
-    // MARK: - Table View Data Source
+       // MARK: - Table View Data Source
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return sections?.count ?? 0
+        return fetchedDataController.sections.count ?? 0
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let experimentSection = sections![section]
-        return tableView.editing == false ? experimentSection.rows.count  : experimentSection.rowsWhenEditing.count
+        let experimentSection = fetchedDataController.sections[section]
+        return  experimentSection.objects.count ?? 0
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell: UITableViewCell?
 
-        if let row = rowAtIndexPath(indexPath) {
-            cell = tableView.dequeueReusableCellWithIdentifier(row.cellReuseIdentifier, forIndexPath: indexPath)
-                self.configureCell(cell!, useRow: row)
+        if let object = fetchedDataController.obectAtIndexPath(indexPath) {
+            cell = tableView.dequeueReusableCellWithIdentifier(object.cellReuseIdentifier, forIndexPath: indexPath)
+                self.configureCell(cell!, useRow: object)
         }
         
         return cell ?? UITableViewCell()
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let experimentSection = sections![section]
-        return experimentSection.title
+        let experimentSection = fetchedDataController.sections[section]
+        return experimentSection.name
     }
 
     
 
-    func configureCell(cell: UITableViewCell, useRow row: Row) {
+    func configureCell(cell: UITableViewCell, useRow object: FetchedDataController.Object) {
         
-        switch row {
+        switch object {
         case .Basic(let title):
             cell.textLabel?.text = title
         case .RightDetail(let title, let detailText):
@@ -310,11 +175,10 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
                 textFieldTableViewCell.textField.text = editableText
                 textFieldTableViewCell.textField.enabled = editing
                 textFieldTableViewCell.textField.delegate = self
-                
             }
         case .Button(let type):
             cell.textLabel?.text = type.description
-            cell.backgroundColor = type.backgroundColor
+            cell.backgroundColor = type.preferedColor
         }
     }
     
@@ -328,25 +192,41 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
             self.tableView(tableView, commitEditingStyle: cell.editingStyle, forRowAtIndexPath: indexPath)
         }
         
+        // Handle User Actions
+        if let object = fetchedDataController.obectAtIndexPath(indexPath)  {
+            switch object {
+            case .Button(let type):
+                performAction(type: type)
+            default: break
+            }
+        }
+        
         tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow!, animated: true)
     }
     
-    
+    private func performAction(type type: FetchedDataController.ButtonCellType) {
+        switch type {
+        case .Like:
+            doLike()
+        case .UnLike:
+            doUnLike()
+        case .Delete:
+            doDelete()
+        }
+    }
+
     // MARK: - Table View Edited Method
     
     
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
-        if tableView.editing {
-            if let sectionTitle = sections?[indexPath.section].title {
-                switch sectionTitle {
-                case Experiment.Constants.ReviewsKey:
-                    return true
-                default: break
-                }
-                
-            }
+        let sectionTitle = fetchedDataController.sections[indexPath.section].name
+        
+        switch sectionTitle {
+        case Experiment.Constants.ReviewsKey:
+            return true
+        default: break
         }
 
         return false
@@ -355,19 +235,19 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
         
-        if let sectionTitle = sections?[indexPath.section].title {
-            switch sectionTitle {
-            case Experiment.Constants.ReviewsKey:
-                let numberOfRows = tableView.numberOfRowsInSection(indexPath.section)
-                if (indexPath.row == numberOfRows - 1) && tableView.editing {
-                    return .Insert
-                } else {
-                    return .Delete
-                }
-            default: break
+        let sectionTitle = fetchedDataController.sections[indexPath.section].name
+        
+        switch sectionTitle {
+        case Experiment.Constants.ReviewsKey:
+            let numberOfRows = tableView.numberOfRowsInSection(indexPath.section)
+            if (indexPath.row == numberOfRows - 1) && tableView.editing {
+                return .Insert
+            } else {
+                return .Delete
             }
-            
+        default: break
         }
+        
         
         return .None
     }
@@ -375,25 +255,17 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
         tableView.beginUpdates()
-        if let sectionTitle = sections?[indexPath.section].title {
-            
+        let sectionTitle = fetchedDataController.sections[indexPath.section].name
             
             switch sectionTitle {
             case Experiment.Constants.ReviewsKey:
                 switch editingStyle {
                 case .Insert:
-                    Review.insertNewReviewInExperiment(experiment)
-                    let indexPathToInsert = NSIndexPath(forRow: 0, inSection: indexPath.section)
-                    tableView.insertRowsAtIndexPaths([indexPathToInsert], withRowAnimation: .Fade)
-
-                    NSManagedObjectContext.saveDefaultContext()
+                    let review = Review.insertNewReview()
+                    fetchedDataController.addRelationshipObject(review, inSection: indexPath.section)
                     
                 case .Delete:
-                    let context = NSManagedObjectContext.defaultContext()
-                    context.deleteObject(experiment.reviewsAsArray![indexPath.row])
-                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                    
-                    NSManagedObjectContext.saveDefaultContext()
+                    fetchedDataController.removeRelationshipObjectAtIndexPath(indexPath)
                     
                 default: break
                 }
@@ -404,15 +276,36 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
             
             
             
-        }
+        
         tableView.endUpdates()
 
     }
+    
+    // MARK: - Fetched Data Controller Delegate
+    
+    func controllerWillChangeContent(controller: FetchedDataController) {
+        self.tableView.beginUpdates()
+    }
+    
+    func controller(controller: FetchedDataController, didChangeObjectAtIndexPath indexPath: NSIndexPath, forChangeType type: FetchedDataController.ChangeType) {
+        switch type {
+        case .Insert:
+            tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        case .Delete:
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        }
+    }
 
+    
+    func controllerDidlChangeContent(controller: FetchedDataController) {
+        self.tableView.endUpdates()
+    }
+    
 }
 
 extension DetailViewController: UITextFieldDelegate {
-    
+    // MARK: - Text Field Delegate
+
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
@@ -448,10 +341,7 @@ extension DetailViewController: UITextFieldDelegate {
     
 }
 
-public func ==(date0: NSDate, date1: NSDate) -> Bool { return date0.compare(date1) == NSComparisonResult.OrderedSame }
-public func <(date0: NSDate, date1: NSDate) -> Bool { return date0.compare(date1) == NSComparisonResult.OrderedAscending }
 
-extension NSDate: Comparable {}
 
 
 

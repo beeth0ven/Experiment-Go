@@ -21,7 +21,8 @@ class Root: NSManagedObject {
     }
     
     override func awakeFromInsert() {
-        
         createDate = NSDate()
         id = createDate?.timeIntervalSinceReferenceDate.description
-    }}
+    }
+
+}

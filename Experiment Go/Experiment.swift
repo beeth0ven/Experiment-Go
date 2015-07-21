@@ -23,15 +23,15 @@ class Experiment: Root {
         
     }
     
-    var reviewsAsArray: [Review]? {
-        let array = reviews?.allObjects as? [Review]
-        return array?.sort { $0.createDate! > $1.createDate! }
-    }
-    
-    var usersLikeMeAsArray: [User]? {
-        let array = reviews?.allObjects as? [User]
-        return array?.sort { $0.createDate! > $1.createDate! }
-    }
+//    var reviewsAsArray: [Review]? {
+//        let array = reviews?.allObjects as? [Review]
+//        return array?.sort { $0.createDate! > $1.createDate! }
+//    }
+//    
+//    var usersLikeMeAsArray: [User]? {
+//        let array = reviews?.allObjects as? [User]
+//        return array?.sort { $0.createDate! > $1.createDate! }
+//    }
     
     // Insert code here to add functionality to your managed object subclass
     class func insertNewExperiment() -> Experiment! {

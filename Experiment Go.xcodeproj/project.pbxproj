@@ -27,6 +27,8 @@
 		45629F611B5811E8000F41E6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45629F521B5811E8000F41E6 /* User.swift */; };
 		45629F951B5BC386000F41E6 /* ChameleonFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45629F941B5BC386000F41E6 /* ChameleonFramework.framework */; };
 		4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */; };
+		45672C0B1B5CE7B000B7E8F7 /* FetchedDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45672C0A1B5CE7B000B7E8F7 /* FetchedDataController.swift */; };
+		45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */; };
 		AF79662E4748E3048A76116B /* Pods_Experiment_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2877209060858C580BC83B66 /* Pods_Experiment_Go.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -68,6 +70,8 @@
 		45629F521B5811E8000F41E6 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		45629F941B5BC386000F41E6 /* ChameleonFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChameleonFramework.framework; path = "Pods/../build/Debug-iphoneos/Pods-Experiment Go/ChameleonFramework.framework"; sourceTree = "<group>"; };
 		4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
+		45672C0A1B5CE7B000B7E8F7 /* FetchedDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedDataController.swift; sourceTree = "<group>"; };
+		45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicExtension.swift; sourceTree = "<group>"; };
 		459C3DB7BFCEAA28C645268E /* Pods-Experiment Go.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Experiment Go.release.xcconfig"; path = "Pods/Target Support Files/Pods-Experiment Go/Pods-Experiment Go.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -135,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				4511B2841B4FB7CF0046DF76 /* AppDelegate.swift */,
+				45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */,
 				4511B2831B4FB7CF0046DF76 /* Info.plist */,
 				4511B2B01B4FBACA0046DF76 /* Experiment Go-Bridging-Header.h */,
 			);
@@ -176,6 +181,7 @@
 				4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */,
 				4511B2891B4FB7CF0046DF76 /* MasterViewController.swift */,
 				4511B28B1B4FB7CF0046DF76 /* DetailViewController.swift */,
+				45672C0A1B5CE7B000B7E8F7 /* FetchedDataController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -377,11 +383,13 @@
 			files = (
 				4511B2881B4FB7CF0046DF76 /* Experiment_Go.xcdatamodeld in Sources */,
 				45629F5D1B5811E8000F41E6 /* Root.swift in Sources */,
+				45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */,
 				4511B2851B4FB7CF0046DF76 /* AppDelegate.swift in Sources */,
 				4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */,
 				4511B28A1B4FB7CF0046DF76 /* MasterViewController.swift in Sources */,
 				45629F531B5811E8000F41E6 /* Review+CoreDataProperties.swift in Sources */,
 				4511B2AA1B4FB9790046DF76 /* RootSplitViewController.swift in Sources */,
+				45672C0B1B5CE7B000B7E8F7 /* FetchedDataController.swift in Sources */,
 				45629EFA1B578B22000F41E6 /* TextFieldTableViewCell.swift in Sources */,
 				45629F551B5811E8000F41E6 /* Review.swift in Sources */,
 				45629F571B5811E8000F41E6 /* Experiment+CoreDataProperties.swift in Sources */,
