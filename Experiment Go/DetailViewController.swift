@@ -28,7 +28,7 @@ class DetailViewController: UIViewController ,FetchedDataControllerDelegate {
     }
 
     lazy var fetchedDataController: FetchedDataController = {
-       var lazyCreateFetchedDataController = FetchedDataController(experiment: self.experiment)
+       var lazyCreateFetchedDataController = FetchedDataController(experiment: self.experiment, isNewExperimentAdded: self.isNewExperimentAdded)
         lazyCreateFetchedDataController.delegate = self
         return lazyCreateFetchedDataController
     }()
@@ -87,15 +87,17 @@ class DetailViewController: UIViewController ,FetchedDataControllerDelegate {
         }
     }
     
-    private func doLike() {
-        print("doLike")
+    private func doLikeExperiment() {
+        fetchedDataController.addRelationshipObject(User.currentUser(), withSectionIdentifier: .UsersLikeMe)
+        fetchedDataController.reloadSectionWithIdentifier(.UserActions)
     }
     
-    private func doUnLike() {
-        print("doUnLike")
+    private func doUnLikeExperiment() {
+        fetchedDataController.removeRelationshipObject(User.currentUser(), withSectionIdentifier: .UsersLikeMe)
+        fetchedDataController.reloadSectionWithIdentifier(.UserActions)
     }
     
-    private func doDelete() {
+    private func doDeleteExperiment() {
         dismissSelfAndSveContext {
             [unowned self] in
             NSManagedObjectContext.defaultContext().deleteObject(self.experiment!)
@@ -155,8 +157,8 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let experimentSection = fetchedDataController.sections[section]
-        return experimentSection.name
+        let experimentSectionInfo = fetchedDataController.sections[section]
+        return experimentSectionInfo.identifier.key
     }
 
     
@@ -187,6 +189,9 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     // MARK: - Table View Delegate
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow!, animated: true)
+        
         let cell = tableView.cellForRowAtIndexPath(indexPath)!
         if cell.editingStyle == .Insert {
             self.tableView(tableView, commitEditingStyle: cell.editingStyle, forRowAtIndexPath: indexPath)
@@ -201,18 +206,18 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
             }
         }
         
-        tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow!, animated: true)
     }
     
     private func performAction(type type: FetchedDataController.ButtonCellType) {
         switch type {
         case .Like:
-            doLike()
-        case .UnLike:
-            doUnLike()
+            doLikeExperiment()
+        case .Liking:
+            doUnLikeExperiment()
         case .Delete:
-            doDelete()
+            doDeleteExperiment()
         }
+        
     }
 
     // MARK: - Table View Edited Method
@@ -221,10 +226,9 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
-        let sectionTitle = fetchedDataController.sections[indexPath.section].name
-        
-        switch sectionTitle {
-        case Experiment.Constants.ReviewsKey:
+        let sectionIdentifier = fetchedDataController.sections[indexPath.section].identifier
+        switch sectionIdentifier {
+        case .Reviews:
             return true
         default: break
         }
@@ -235,10 +239,10 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
         
-        let sectionTitle = fetchedDataController.sections[indexPath.section].name
+        let sectionIdentifier = fetchedDataController.sections[indexPath.section].identifier
         
-        switch sectionTitle {
-        case Experiment.Constants.ReviewsKey:
+        switch sectionIdentifier {
+        case .Reviews:
             let numberOfRows = tableView.numberOfRowsInSection(indexPath.section)
             if (indexPath.row == numberOfRows - 1) && tableView.editing {
                 return .Insert
@@ -254,31 +258,26 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
-        tableView.beginUpdates()
-        let sectionTitle = fetchedDataController.sections[indexPath.section].name
-            
-            switch sectionTitle {
-            case Experiment.Constants.ReviewsKey:
-                switch editingStyle {
-                case .Insert:
-                    let review = Review.insertNewReview()
-                    fetchedDataController.addRelationshipObject(review, inSection: indexPath.section)
-                    
-                case .Delete:
-                    fetchedDataController.removeRelationshipObjectAtIndexPath(indexPath)
-                    
-                default: break
-                }
-
-                
-            default: break
-            }
-            
-            
-            
+        let sectionIdentifier = fetchedDataController.sections[indexPath.section].identifier
+        switch sectionIdentifier {
+        case .Reviews:
+            commitEditingStyle(editingStyle, forReviewAtIndexPath: indexPath)
+        default: break
+        }
         
-        tableView.endUpdates()
-
+    }
+    
+    private func commitEditingStyle(editingStyle: UITableViewCellEditingStyle, forReviewAtIndexPath indexPath: NSIndexPath) {
+        switch editingStyle {
+        case .Insert:
+            let review = Review.insertNewReview()
+            fetchedDataController.addRelationshipObject(review, withSectionIdentifier: .Reviews)
+            
+        case .Delete:
+            fetchedDataController.removeRelationshipObjectAtIndexPath(indexPath)
+            
+        default: break
+        }
     }
     
     // MARK: - Fetched Data Controller Delegate
@@ -293,6 +292,19 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
             tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         case .Delete:
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        case .Update:
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        }
+    }
+    
+    func controller(controller: FetchedDataController, didChangeSectionAtIndex sectionIndex: Int, forChangeType type: FetchedDataController.ChangeType) {
+        switch type {
+        case .Insert:
+            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+        case .Delete:
+            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+        case .Update:
+            tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
         }
     }
 

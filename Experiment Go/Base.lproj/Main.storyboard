@@ -110,7 +110,7 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="200" horizontalCompressionResistancePriority="700" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Experiment" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EIp-qh-KvZ">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="200" horizontalCompressionResistancePriority="700" selected="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="TextField" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EIp-qh-KvZ">
                                                     <rect key="frame" x="65" y="15" width="527" height="20"/>
                                                     <animations/>
                                                     <color key="textColor" red="0.68888300657272339" green="0.71366006135940552" blue="0.73448425531387329" alpha="1" colorSpace="calibratedRGB"/>
@@ -428,7 +428,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="VLF-L7-gi0"/>
+        <segue reference="Ns1-L4-7VU"/>
     </inferredMetricsTieBreakers>
-    <color key="tintColor" red="0.90823972230000005" green="0.92638683320000004" blue="0.93171715740000005" alpha="1" colorSpace="calibratedRGB"/>
+    <color key="tintColor" red="0.15294117647058825" green="0.41176470588235292" blue="0.69019607843137254" alpha="1" colorSpace="calibratedRGB"/>
 </document>

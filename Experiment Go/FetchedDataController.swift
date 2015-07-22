@@ -20,6 +20,11 @@ protocol FetchedDataControllerDelegate: class {
         forChangeType type: FetchedDataController.ChangeType
     )
     
+    func controller(controller: FetchedDataController,
+        didChangeSectionAtIndex sectionIndex: Int,
+        forChangeType type: FetchedDataController.ChangeType
+    )
+    
     func controllerDidlChangeContent(controller: FetchedDataController)
 
 }
@@ -38,7 +43,7 @@ class FetchedDataController {
     
     var sections: [SectionInfo]
     
-    var editing: Bool {
+    var editing: Bool = false {
         didSet {
             if editing != oldValue {
                 toggleEditingMode(editing)
@@ -46,73 +51,154 @@ class FetchedDataController {
         }
     }
     
+    var isNewExperimentAdded = false
+
+    
     weak var delegate: FetchedDataControllerDelegate?
     
     // MARK: - Init Method
     
-    init(experiment: Experiment, sections: [SectionInfo], editing: Bool) {
+    init(experiment: Experiment,sections: [SectionInfo], editing: Bool, isNewExperimentAdded: Bool) {
         self.sections = sections
         self.editing = editing
         self.experiment = experiment
+        self.isNewExperimentAdded = isNewExperimentAdded
     }
     
-    convenience init(experiment: Experiment) {
-        self.init(experiment: experiment, sections: [], editing: false)
+    convenience init(experiment: Experiment, isNewExperimentAdded: Bool ) {
+        self.init(experiment: experiment, sections: [], editing: false, isNewExperimentAdded: isNewExperimentAdded)
         configureDataStruct()
     }
     
-    // MARK: - Public Method
+    // MARK: - Manage Sections
+    
+    func sectionIndexForIdentifier(identifier: SectionInfo.Identifier) -> Int? {
+        var sectionIndex: Int?
+        for (index, sectionInfo) in sections.enumerate() {
+            if sectionInfo.identifier == identifier {
+                sectionIndex = index
+                break
+            }
+        }
+        return sectionIndex
+    }
+    
+    func reloadSectionWithIdentifier(identifier: SectionInfo.Identifier) {
+        guard let sectionIndex = sectionIndexForIdentifier(identifier) else { return }
+        guard let sectionInfo = sectionInfoForIdentifier(identifier) else { return }
+        
+        let type: FetchedDataController.ChangeType = .Update
+        didChangeSectionAtIndex(sectionIndex, forChangeType: type) {
+            [unowned self] in
+            self.sections.removeAtIndex(sectionIndex)
+            self.sections.insert(sectionInfo, atIndex: sectionIndex)
+        }
+        
+        
+    }
+    
 
+    // MARK: - Manage Relationships
+    
+    func relationshipObjectAtIndexPath(indexPath: NSIndexPath) -> NSManagedObject? {
+        guard indexPath.section < sections.count else { return nil }
+        let sectionInfo = sections[indexPath.section]
+        let relationshipObjectSet = experiment.mutableSetValueForKey(sectionInfo.identifier.key)
+        
+        guard indexPath.row < relationshipObjectSet.count else { return nil }
+        return relationshipObjectSet.allObjects[indexPath.row] as? NSManagedObject
+    }
+    
+    func addRelationshipObject(managedObject: NSManagedObject, withSectionIdentifier identifier: SectionInfo.Identifier) {
+        //Operate Core Data
+        let relationshipObjectSet: NSMutableSet = experiment.mutableSetValueForKey(identifier.key)
+        guard !relationshipObjectSet.containsObject(managedObject) else { return }
+        relationshipObjectSet.addObject(managedObject)
+
+        //Operate Fetched Data Controller and Table View
+        guard let object = objectFromManagedObject(managedObject) else { return }
+        guard let row: Int = (relationshipObjectSet.allObjects as! [NSManagedObject]).indexOf(managedObject)  else { return }
+        guard let section: Int = sectionIndexForIdentifier(identifier) else { return }
+        let indexPath = NSIndexPath(forRow: row, inSection: section)
+        insertObect(object, atIndexPath: indexPath)
+    }
+    
+    func removeRelationshipObject(managedObject: NSManagedObject, withSectionIdentifier identifier: SectionInfo.Identifier) {
+        let relationshipObjectSet: NSMutableSet = experiment.mutableSetValueForKey(identifier.key)
+        guard let section = sectionIndexForIdentifier(identifier) else { return }
+        guard let row: Int = (relationshipObjectSet.allObjects as! [NSManagedObject]).indexOf(managedObject)  else { return }
+        let indexPath = NSIndexPath(forRow: row, inSection: section)
+        
+        //Operate Core Data
+        relationshipObjectSet.removeObject(managedObject)
+        
+        //Operate Fetched Data Controller and Table View
+        removeObectAtIndexPath(indexPath)
+        
+    }
+    
+    func removeRelationshipObjectAtIndexPath(indexPath: NSIndexPath) {
+        guard let managedObject = relationshipObjectAtIndexPath(indexPath) else { return }
+        let identifier = sections[indexPath.section].identifier
+        removeRelationshipObject(managedObject, withSectionIdentifier: identifier)
+    }
+    
+    // MARK: - Manage SectionInfo
+
+    private func sectionInfoForIdentifier(identifier: SectionInfo.Identifier) -> SectionInfo? {
+        switch identifier {
+        case .Properties:
+            let titleObject = Object.TextField(Experiment.Constants.TitleKey, experiment.title)
+            let bodyObject = Object.TextField(Experiment.Constants.BodyKey, experiment.body)
+            return SectionInfo(identifier: identifier, objects: [titleObject, bodyObject], type: .Properties)
+            
+        case .Reviews:
+            return sectionInfoFromRelationshipIdentifier(.Reviews, entityNameWhileEditing: Review.Constants.EntityNameKey)
+            
+        case .UsersLikeMe:
+            return sectionInfoFromRelationshipIdentifier(.UsersLikeMe, entityNameWhileEditing: nil)
+            
+        case .UserActions:
+            var buttonObject: Object?
+            if experiment.whoPost! == User.currentUser() {
+                if !isNewExperimentAdded { buttonObject = Object.Button(.Delete) }
+            } else {
+                var type: ButtonCellType =  .Like
+                if let usersLikeMe = experiment.usersLikeMe?.allObjects as? [User] {
+                    if usersLikeMe.contains(User.currentUser()) {
+                        type = .Liking
+                    }
+                }
+                buttonObject = Object.Button(type)
+            }
+            
+            return buttonObject != nil ? SectionInfo(identifier: .UserActions, objects: [buttonObject!], type: .UserActions) : nil
+        }
+    }
+    
+    
+    private func sectionInfoFromRelationshipIdentifier(identifier: SectionInfo.Identifier, entityNameWhileEditing entityNameKey: String?) -> SectionInfo {
+        
+        var objects: [Object] = []
+        
+        if let relationshipObjectSet = experiment.valueForKey(identifier.key) as? NSSet {
+            if let managedObjects = relationshipObjectSet.allObjects as? [NSManagedObject] {
+                objects = managedObjects.map { self.objectFromManagedObject($0)! }
+            }
+        }
+        
+        return SectionInfo(identifier: identifier, objects: objects, type: .Relationships(entityNameKey))
+    }
+    
+    
+  
+    // MARK: - Manage Object
     
     func obectAtIndexPath(indexPath: NSIndexPath) -> Object? {
         return sections[indexPath.section].objects[indexPath.row]
     }
     
     
-    func relationshipObjectAtIndexPath(indexPath: NSIndexPath) -> NSManagedObject? {
-        guard indexPath.section < sections.count else { return nil }
-        let sectionInfo = sections[indexPath.section]
-        let sectionName = sectionInfo.name
-        let relationshipObjectSet = experiment.mutableSetValueForKey(sectionName)
-        guard indexPath.row < relationshipObjectSet.count else { return nil }
-        return relationshipObjectSet.allObjects[indexPath.row] as? NSManagedObject
-    }
-    
-    func addRelationshipObject(managedObject: NSManagedObject, inSection section: Int) {
-        guard section < sections.count else { return }
-        //Operate Core Data
-        let sectionInfo = sections[section]
-        let sectionName = sectionInfo.name
-        let relationshipObjectSet: NSMutableSet = experiment.mutableSetValueForKey(sectionName)
-        relationshipObjectSet.addObject(managedObject)
-        
-        //Operate Fetched Data Controller and Table View
-        guard let object = objectFromManagedObject(managedObject) else { return }
-        guard let row: Int = (relationshipObjectSet.allObjects as! [NSManagedObject]).indexOf(managedObject)  else { return }
-        let indexPath = NSIndexPath(forRow: row, inSection: section)
-        insertObect(object, atIndexPath: indexPath)
-    }
-    
-    func removeRelationshipObjectAtIndexPath(indexPath: NSIndexPath) {
-        guard indexPath.section < sections.count else { return }
-        let sectionInfo = sections[indexPath.section]
-        let sectionName = sectionInfo.name
-        let relationshipObjectSet = experiment.mutableSetValueForKey(sectionName)
-        
-        guard indexPath.row < relationshipObjectSet.count else { return }
-        //Operate Fetched Data Controller and Table View
-        removeObectAtIndexPath(indexPath)
-        
-        //Operate Core Data
-        let managedObject = relationshipObjectSet.allObjects[indexPath.row] as! NSManagedObject
-        relationshipObjectSet.removeObject(managedObject)
-        
-        
-    }
-    
-    
-    // MARK: - Private Method
-  
     private func insertObect(object: Object, atIndexPath indexPath: NSIndexPath) {
         let type: FetchedDataController.ChangeType = .Insert
         didChangeObjectAtIndexPath(indexPath, forChangeType: type) {
@@ -143,42 +229,41 @@ class FetchedDataController {
 
     }
     
+    private func didChangeSectionAtIndex(
+        sectionIndex: Int,
+        forChangeType type: FetchedDataController.ChangeType,
+        changes: (()->()) ) {
+            delegate?.controllerWillChangeContent(self)
+            changes()
+            delegate?.controller(self,
+                didChangeSectionAtIndex: sectionIndex,
+                forChangeType: type)
+            delegate?.controllerDidlChangeContent(self)
+            
+    }
+    
+    
+    private func objectFromManagedObject(managedObject: NSManagedObject) -> Object? {
+        var result:  Object? = nil
+        if let review = managedObject as? Review {
+            result = Object.RightDetail(review.whoReview!.name!, review.createDate!.description)
+        } else if let user = managedObject as? User {
+            result = Object.Basic(user.name!)
+        }
+        return result
+    }
+    
+    
+    // MARK: - Configure Data Struct
+
     private func configureDataStruct() {
         
         var result: [SectionInfo] = []
-        // Section 0: Property
-        let titleObject = Object.TextField(Experiment.Constants.TitleKey, experiment.title)
-        let bodyObject = Object.TextField(Experiment.Constants.BodyKey, experiment.body)
-        let propertySectionInfo = SectionInfo(name: Experiment.Constants.PropertyKey, objects: [titleObject, bodyObject], type: .Properties)
-        result.append(propertySectionInfo)
-        
-        // Section 1: Reviews
-        
-        let reviewsSectionInfo = sectionInfoFromRelationshipName(Experiment.Constants.ReviewsKey, entityNameWhileEditing: Review.Constants.EntityNameKey)
-        result.append(reviewsSectionInfo)
-        
-        
-        // Section 2: UsersLikeMe
-        let usersLikeMeSectionInfo = sectionInfoFromRelationshipName(Experiment.Constants.UsersLikeMeKey, entityNameWhileEditing: nil)
-        result.append(usersLikeMeSectionInfo)
-        
-        // Section 3: User Actions - Delete, Like Or UnLike
-        var buttonObject: Object!
-        if experiment.whoPost! == User.currentUser() {
-            buttonObject = Object.Button(.Delete)
-        } else {
-            var type: ButtonCellType =  .UnLike
-            if let usersLikeMe = experiment.usersLikeMe?.allObjects as? [User] {
-                if usersLikeMe.contains(User.currentUser()) {
-                    type = .Like
-                }
-            }
-            buttonObject = Object.Button(type)
+        for identifier in SectionInfo.Identifier.allIdentifiers {
+            guard let sectionInfo = sectionInfoForIdentifier(identifier) else { continue }
+            result.append(sectionInfo)
         }
-        
-        let userActionSectionInfo = SectionInfo(name: Experiment.Constants.UserActionsKey, objects: [buttonObject], type: .UserActions)
-        result.append(userActionSectionInfo)
-        
+   
         sections = result
         
     }
@@ -206,50 +291,28 @@ class FetchedDataController {
             
         }
         
+        reloadSectionWithIdentifier(.Properties)
+        
     }
 
-
-    private func sectionInfoFromRelationshipName(name: String, entityNameWhileEditing entityNameKey: String?) -> SectionInfo {
     
-        var objects: [Object] = []
-
-        if let relationshipObjectSet = experiment.valueForKey(name) as? NSSet {
-            if let managedObjects = relationshipObjectSet.allObjects as? [NSManagedObject] {
-                objects = managedObjects.map { self.objectFromManagedObject($0)! }
-            }
-        }
-
-        return SectionInfo(name: name, objects: objects, type: .Relationships(entityNameKey))
-    }
-    
-    private func objectFromManagedObject(managedObject: NSManagedObject) -> Object? {
-        var result:  Object? = nil
-        if let review = managedObject as? Review {
-            result = Object.RightDetail(review.whoReview!.name!, review.createDate!.description)
-        } else if let user = managedObject as? User {
-            result = Object.Basic(user.name!)
-        }
-        return result
-    }
-    
-    
-        // MARK: - Data Struct
+    // MARK: - Data Struct
 
      struct SectionInfo {
-        var name: String
+        var identifier: Identifier
         var objects: [Object]
         var type: Type
         
-        init(name: String, objects: [Object], type: Type) {
-            self.name = name
+
+        
+        init(identifier: Identifier, objects: [Object], type: Type) {
+            self.identifier = identifier
             self.objects = objects
             self.type = type
         }
         
-
-        
         var indexTitle: String {
-            return String(name.characters.first).uppercaseString
+            return String(identifier.key.characters.first).uppercaseString
         }
         
         var numberOfObjects: Int {
@@ -263,6 +326,36 @@ class FetchedDataController {
             case Relationships(String?)
             case UserActions
             
+        }
+        
+        enum Identifier {
+            case Properties
+            case Reviews
+            case UsersLikeMe
+            case UserActions
+            
+            var key: String {
+                switch self {
+                case .Properties:
+                    return Experiment.Constants.PropertyKey
+                case .Reviews:
+                    return Experiment.Constants.ReviewsKey
+                case .UsersLikeMe:
+                    return Experiment.Constants.UsersLikeMeKey
+                case .UserActions:
+                    return Experiment.Constants.UserActionsKey
+                }
+                
+            }
+            
+            static var allIdentifiers: [Identifier] {
+                return [
+                    .Properties,
+                    .Reviews,
+                    .UsersLikeMe,
+                    .UserActions
+                ]
+            }
         }
         
     }
@@ -300,16 +393,16 @@ class FetchedDataController {
         
         case Delete
         case Like
-        case UnLike
+        case Liking
         
         var preferedColor: UIColor {
             switch self {
             case Delete:
                 return UIColor.flatRedColor()
             case Like:
-                return UIColor.flatSandColorDark()
-            case UnLike:
                 return UIColor.flatSandColor()
+            case Liking:
+                return UIColor.flatSandColorDark()
             }
         }
         
@@ -319,18 +412,22 @@ class FetchedDataController {
                 return "Delete"
             case Like:
                 return "Like"
-            case UnLike:
-                return "UnLike"
+            case Liking:
+                return "Liking"
             }
         }
     }
     
-    
     enum ChangeType {
         case Insert
         case Delete
+        case Update
     }
     
 
 }
+
+
+
+
 

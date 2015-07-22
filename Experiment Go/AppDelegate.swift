@@ -20,7 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
         navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
         splitViewController.delegate = self
-
         return true
     }
 
@@ -51,20 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     // MARK: - Split view
 
     func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
-//        guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
-//        guard let topAsDetailController = secondaryAsNavController.topViewController as? MasterViewController else { return false }
-//        if topAsDetailController.fetchedResultsController.fetchedObjects?.count > 0 {
-//            //             Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
-//            guard let primaryAsNavController = primaryViewController as? UINavigationController else { return false }
-//            guard let topAsprimaryController = primaryAsNavController.topViewController as? MenuTableViewController else { return false }
-//            topAsprimaryController.showHomeVC()
-//            splitViewController.showDetailViewController(secondaryViewController, sender: nil)
-//            topAsDetailController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
-//        }
         return true
-
-//        return false
-        
     }
     // MARK: - Core Data stack
 
@@ -143,13 +129,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
 
 }
-
-extension UIViewController {
-//    var managedObjectContext: NSManagedObjectContext? {
-//        return  (UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext
-//    }
-}
-
 
 
 extension NSManagedObjectContext {
