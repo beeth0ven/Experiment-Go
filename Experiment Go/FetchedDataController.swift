@@ -189,9 +189,7 @@ class FetchedDataController {
         
         return SectionInfo(identifier: identifier, objects: objects, type: .Relationships(entityNameKey))
     }
-    
-    
-  
+
     // MARK: - Manage Object
     
     func obectAtIndexPath(indexPath: NSIndexPath) -> Object? {
@@ -337,13 +335,13 @@ class FetchedDataController {
             var key: String {
                 switch self {
                 case .Properties:
-                    return Experiment.Constants.PropertyKey
+                    return Experiment.Constants.AttributeKey
                 case .Reviews:
                     return Experiment.Constants.ReviewsKey
                 case .UsersLikeMe:
                     return Experiment.Constants.UsersLikeMeKey
                 case .UserActions:
-                    return Experiment.Constants.UserActionsKey
+                    return "UserActionsKey"
                 }
                 
             }

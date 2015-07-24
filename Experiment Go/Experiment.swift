@@ -16,10 +16,10 @@ class Experiment: Root {
         static let  EntityNameKey = "Experiment"
         static let  TitleKey = "title"
         static let  BodyKey = "body"
-        static let  PropertyKey = "Property"
+        static let  AttributeKey = "Attribute"
         static let  ReviewsKey = "reviews"
         static let  UsersLikeMeKey = "usersLikeMe"
-        static let  UserActionsKey = "userActions"
+        static let  WhoPostKey = "whoPost"
         
     }
     

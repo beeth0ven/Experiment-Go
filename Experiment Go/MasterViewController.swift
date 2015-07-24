@@ -66,8 +66,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             } else if sender is UIBarButtonItem {
                 let experiment = Experiment.insertNewExperiment()
                 controller.experiment = experiment
-                controller.isNewExperimentAdded = true
-
             }
             
         }

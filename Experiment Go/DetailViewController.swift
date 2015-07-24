@@ -9,16 +9,19 @@
 import UIKit
 import CoreData
 
-class DetailViewController: UIViewController ,FetchedDataControllerDelegate {
+class DetailViewController: UIViewController {
     
     // MARK: - Properties
     
     var experiment: Experiment! {
         didSet {
             // Update the view.
-            self.configureView()
+            configureDataStruct()
+            updateUI()
         }
     }
+    
+    var sections = [SectionInfo]()
     
     @IBOutlet weak var tableView: UITableView! {
         didSet {
@@ -26,23 +29,17 @@ class DetailViewController: UIViewController ,FetchedDataControllerDelegate {
             tableView.rowHeight = UITableViewAutomaticDimension
         }
     }
-
-    lazy var fetchedDataController: FetchedDataController = {
-       var lazyCreateFetchedDataController = FetchedDataController(experiment: self.experiment, isNewExperimentAdded: self.isNewExperimentAdded)
-        lazyCreateFetchedDataController.delegate = self
-        return lazyCreateFetchedDataController
-    }()
     
-    var isNewExperimentAdded = false
-
+    
     
     // MARK: - View Controller Lifecycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        configureDataStruct()
         self.configureBarButtons()
-        self.configureView()
+        updateUI()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -56,15 +53,14 @@ class DetailViewController: UIViewController ,FetchedDataControllerDelegate {
     }
     
     // MARK: - User Actions
-
+    
     override func setEditing(editing: Bool, animated: Bool) {
         if self.editing != editing {
             super.setEditing(editing, animated: true)
             tableView.setEditing(editing, animated: true)
-            fetchedDataController.editing = editing
         }
     }
-
+    
     
     
     @IBAction func save(sender: UIBarButtonItem) {
@@ -74,7 +70,7 @@ class DetailViewController: UIViewController ,FetchedDataControllerDelegate {
     @IBAction func cancel(sender: UIBarButtonItem) {
         dismissSelfAndSveContext {
             [unowned self] in
-            if self.isNewExperimentAdded {
+            if self.experiment.inserted {
                 NSManagedObjectContext.defaultContext().deleteObject(self.experiment!)
             }
         }
@@ -88,13 +84,11 @@ class DetailViewController: UIViewController ,FetchedDataControllerDelegate {
     }
     
     private func doLikeExperiment() {
-        fetchedDataController.addRelationshipObject(User.currentUser(), withSectionIdentifier: .UsersLikeMe)
-        fetchedDataController.reloadSectionWithIdentifier(.UserActions)
+        
     }
     
     private func doUnLikeExperiment() {
-        fetchedDataController.removeRelationshipObject(User.currentUser(), withSectionIdentifier: .UsersLikeMe)
-        fetchedDataController.reloadSectionWithIdentifier(.UserActions)
+        
     }
     
     private func doDeleteExperiment() {
@@ -108,7 +102,7 @@ class DetailViewController: UIViewController ,FetchedDataControllerDelegate {
     // MARK: - View Configure
     
     private func configureBarButtons() {
-        if !isNewExperimentAdded {
+        if !experiment.inserted {
             navigationItem.rightBarButtonItem = editButtonItem()
         } else {
             editing = true
@@ -128,44 +122,187 @@ class DetailViewController: UIViewController ,FetchedDataControllerDelegate {
 }
 
 
+
+
 extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
-    private struct Storyboard {
+    struct Storyboard {
         static let TableViewEstimatedRowHeight: CGFloat = 44
+        
+        enum CellStyle {
+            case Basic(String)
+            case RightDetail(String, String)
+            case TextField(String, String?)
+            
+            var cellReuseIdentifier: String {
+                switch self {
+                case .Basic(_):
+                    return "BasicCell"
+                case .RightDetail(_, _):
+                    return "RightDetailCell"
+                case .TextField(_, _):
+                    return "TextFieldCell"
+                }
+            }
+        }
+        
     }
     
-       // MARK: - Table View Data Source
+    // MARK: - Configure Data Struct
+    
+    private func configureDataStruct() {
+        
+        var result = [SectionInfo]()
+        for identifier in SectionInfo.Identifier.allIdentifiers {
+            let sectionInfo = sectionInfoForIdentifier(identifier)
+            result.append(sectionInfo)
+        }
+        
+        sections = result
+        
+    }
+    
+
+    
+    // MARK: - Table View Data Struct
+    
+    struct SectionInfo {
+        var identifier: Identifier
+        var cellStyles: [Storyboard.CellStyle]
+        var name: String {
+              return identifier.key
+        }
+        
+        init(identifier: Identifier, cellStyles: [Storyboard.CellStyle]) {
+            self.identifier = identifier
+            self.cellStyles = cellStyles
+        }
+        
+        var indexTitle: String {
+            return String(name.characters.first).uppercaseString
+        }
+        
+        var numberOfObjects: Int {
+            return cellStyles.count
+        }
+        
+        enum Identifier {
+            case Attribute
+            case WhoPost
+            case Reviews
+            case UsersLikeMe
+            
+            var key: String {
+                get {
+                    switch self {
+                    case .Attribute:
+                        return Experiment.Constants.AttributeKey
+                    case .WhoPost:
+                        return Experiment.Constants.WhoPostKey
+                    case .Reviews:
+                        return Experiment.Constants.ReviewsKey
+                    case .UsersLikeMe:
+                        return Experiment.Constants.UsersLikeMeKey
+                    }
+                }
+            }
+
+            
+            static var allIdentifiers: [Identifier] {
+                return [
+                    .Attribute,
+                    .WhoPost,
+                    .Reviews,
+                    .UsersLikeMe,
+                ]
+            }
+        }
+        
+    }
+    
+    
+    func sectionInfoForIdentifier(identifier: SectionInfo.Identifier) -> SectionInfo {
+        switch identifier {
+        case .Attribute:
+            let titleCellStyle = Storyboard.CellStyle.TextField(Experiment.Constants.TitleKey, experiment.title)
+            let bodyCellStyle =  Storyboard.CellStyle.TextField(Experiment.Constants.BodyKey, experiment.body)
+            return SectionInfo(identifier: identifier, cellStyles: [titleCellStyle, bodyCellStyle])
+            
+        case .WhoPost:
+            let whoPostCellStyle = cellStyleFromManagedObject(experiment.whoPost!)!
+            return SectionInfo(identifier: identifier, cellStyles: [whoPostCellStyle])
+            
+        case .Reviews:
+            return sectionInfoFromRelationshipIdentifier(.Reviews)
+            
+        case .UsersLikeMe:
+            return sectionInfoFromRelationshipIdentifier(.UsersLikeMe)
+            
+        }
+    }
+    
+    
+    private func sectionInfoFromRelationshipIdentifier(identifier: SectionInfo.Identifier) -> SectionInfo {
+        
+        var cellStyles: [Storyboard.CellStyle] = []
+        
+        if let relationshipObjectSet = experiment.valueForKey(identifier.key) as? NSSet {
+            if let managedObjects = relationshipObjectSet.allObjects as? [NSManagedObject] {
+                cellStyles = managedObjects.map { self.cellStyleFromManagedObject($0)! }
+            }
+        }
+        
+        return SectionInfo(identifier: identifier, cellStyles: cellStyles)
+    }
+    
+    
+    private func cellStyleFromManagedObject(managedObject: NSManagedObject) -> Storyboard.CellStyle? {
+        var result: Storyboard.CellStyle? = nil
+        if let review = managedObject as? Review {
+            result = Storyboard.CellStyle.RightDetail(review.whoReview!.name!, review.createDate!.description)
+        } else if let user = managedObject as? User {
+            result = Storyboard.CellStyle.Basic(user.name!)
+        }
+        return result
+    }
+    
+    
+    func cellStyleAtIndexPath(indexPath: NSIndexPath) -> Storyboard.CellStyle? {
+        return sections[indexPath.section].cellStyles[indexPath.row]
+    }
+
+    // MARK: - Table View Data Source
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return fetchedDataController.sections.count ?? 0
+        return sections.count ?? 0
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let experimentSection = fetchedDataController.sections[section]
-        return  experimentSection.objects.count ?? 0
+        let experimentSection = sections[section]
+        return  experimentSection.cellStyles.count ?? 0
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell: UITableViewCell?
-
-        if let object = fetchedDataController.obectAtIndexPath(indexPath) {
-            cell = tableView.dequeueReusableCellWithIdentifier(object.cellReuseIdentifier, forIndexPath: indexPath)
-                self.configureCell(cell!, useRow: object)
+        
+        if let cellStyle = cellStyleAtIndexPath(indexPath) {
+            cell = tableView.dequeueReusableCellWithIdentifier(cellStyle.cellReuseIdentifier, forIndexPath: indexPath)
+            self.configureCell(cell!, useCellStyle: cellStyle)
         }
         
         return cell ?? UITableViewCell()
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let experimentSectionInfo = fetchedDataController.sections[section]
-        return experimentSectionInfo.identifier.key
+        let experimentSectionInfo = sections[section]
+        return experimentSectionInfo.name
     }
-
     
-
-    func configureCell(cell: UITableViewCell, useRow object: FetchedDataController.Object) {
+    
+    
+    func configureCell(cell: UITableViewCell, useCellStyle cellStyle: Storyboard.CellStyle) {
         
-        switch object {
+        switch cellStyle {
         case .Basic(let title):
             cell.textLabel?.text = title
         case .RightDetail(let title, let detailText):
@@ -178,13 +315,9 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
                 textFieldTableViewCell.textField.enabled = editing
                 textFieldTableViewCell.textField.delegate = self
             }
-        case .Button(let type):
-            cell.textLabel?.text = type.description
-            cell.backgroundColor = type.preferedColor
         }
+        
     }
-    
-    
     
     // MARK: - Table View Delegate
     
@@ -197,27 +330,6 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
             self.tableView(tableView, commitEditingStyle: cell.editingStyle, forRowAtIndexPath: indexPath)
         }
         
-        // Handle User Actions
-        if let object = fetchedDataController.obectAtIndexPath(indexPath)  {
-            switch object {
-            case .Button(let type):
-                performAction(type: type)
-            default: break
-            }
-        }
-        
-    }
-    
-    private func performAction(type type: FetchedDataController.ButtonCellType) {
-        switch type {
-        case .Like:
-            doLikeExperiment()
-        case .Liking:
-            doUnLikeExperiment()
-        case .Delete:
-            doDeleteExperiment()
-        }
-        
     }
 
     // MARK: - Table View Edited Method
@@ -226,20 +338,20 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
-        let sectionIdentifier = fetchedDataController.sections[indexPath.section].identifier
+        let sectionIdentifier = sections[indexPath.section].identifier
         switch sectionIdentifier {
         case .Reviews:
             return true
         default: break
         }
-
+        
         return false
     }
     
     
     func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
         
-        let sectionIdentifier = fetchedDataController.sections[indexPath.section].identifier
+        let sectionIdentifier = sections[indexPath.section].identifier
         
         switch sectionIdentifier {
         case .Reviews:
@@ -258,7 +370,7 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
-        let sectionIdentifier = fetchedDataController.sections[indexPath.section].identifier
+        let sectionIdentifier = sections[indexPath.section].identifier
         switch sectionIdentifier {
         case .Reviews:
             commitEditingStyle(editingStyle, forReviewAtIndexPath: indexPath)
@@ -268,56 +380,25 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     private func commitEditingStyle(editingStyle: UITableViewCellEditingStyle, forReviewAtIndexPath indexPath: NSIndexPath) {
-        switch editingStyle {
-        case .Insert:
-            let review = Review.insertNewReview()
-            fetchedDataController.addRelationshipObject(review, withSectionIdentifier: .Reviews)
-            
-        case .Delete:
-            fetchedDataController.removeRelationshipObjectAtIndexPath(indexPath)
-            
-        default: break
-        }
-    }
-    
-    // MARK: - Fetched Data Controller Delegate
-    
-    func controllerWillChangeContent(controller: FetchedDataController) {
-        self.tableView.beginUpdates()
-    }
-    
-    func controller(controller: FetchedDataController, didChangeObjectAtIndexPath indexPath: NSIndexPath, forChangeType type: FetchedDataController.ChangeType) {
-        switch type {
-        case .Insert:
-            tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        case .Delete:
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        case .Update:
-            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        }
-    }
-    
-    func controller(controller: FetchedDataController, didChangeSectionAtIndex sectionIndex: Int, forChangeType type: FetchedDataController.ChangeType) {
-        switch type {
-        case .Insert:
-            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        case .Delete:
-            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        case .Update:
-            tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        }
-    }
-
-    
-    func controllerDidlChangeContent(controller: FetchedDataController) {
-        self.tableView.endUpdates()
+//        switch editingStyle {
+//        case .Insert:
+//            let review = Review.insertNewReview()
+//            fetchedDataController.addRelationshipObject(review, withSectionIdentifier: .Reviews)
+//
+//        case .Delete:
+//            fetchedDataController.removeRelationshipObjectAtIndexPath(indexPath)
+//
+//        default: break
+//        }
     }
     
 }
 
+
+
 extension DetailViewController: UITextFieldDelegate {
     // MARK: - Text Field Delegate
-
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
