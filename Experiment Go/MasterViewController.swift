@@ -60,12 +60,12 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             if sender is UITableViewCell {
                 if let indexPath = self.tableView.indexPathForSelectedRow {
                     if let experiment = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Experiment {
-                        controller.experiment = experiment
+                        controller.detailItem = experiment
                     }
                 }
             } else if sender is UIBarButtonItem {
                 let experiment = Experiment.insertNewExperiment()
-                controller.experiment = experiment
+                controller.detailItem = experiment
             }
             
         }

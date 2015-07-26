@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 LuoJie. All rights reserved.
 //
 
-import UIKit
 import XCTest
 
 class Experiment_GoTests: XCTestCase {

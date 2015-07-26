@@ -27,8 +27,8 @@
 		45629F611B5811E8000F41E6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45629F521B5811E8000F41E6 /* User.swift */; };
 		45629F951B5BC386000F41E6 /* ChameleonFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45629F941B5BC386000F41E6 /* ChameleonFramework.framework */; };
 		4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */; };
-		45672C0B1B5CE7B000B7E8F7 /* FetchedDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45672C0A1B5CE7B000B7E8F7 /* FetchedDataController.swift */; };
 		45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */; };
+		45EA15431B64B5AF006421C6 /* FetchedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EA15421B64B5AF006421C6 /* FetchedInfoController.swift */; };
 		AF79662E4748E3048A76116B /* Pods_Experiment_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2877209060858C580BC83B66 /* Pods_Experiment_Go.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -70,9 +70,9 @@
 		45629F521B5811E8000F41E6 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		45629F941B5BC386000F41E6 /* ChameleonFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChameleonFramework.framework; path = "Pods/../build/Debug-iphoneos/Pods-Experiment Go/ChameleonFramework.framework"; sourceTree = "<group>"; };
 		4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
-		45672C0A1B5CE7B000B7E8F7 /* FetchedDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedDataController.swift; sourceTree = "<group>"; };
 		45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicExtension.swift; sourceTree = "<group>"; };
 		459C3DB7BFCEAA28C645268E /* Pods-Experiment Go.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Experiment Go.release.xcconfig"; path = "Pods/Target Support Files/Pods-Experiment Go/Pods-Experiment Go.release.xcconfig"; sourceTree = "<group>"; };
+		45EA15421B64B5AF006421C6 /* FetchedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedInfoController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,7 +181,7 @@
 				4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */,
 				4511B2891B4FB7CF0046DF76 /* MasterViewController.swift */,
 				4511B28B1B4FB7CF0046DF76 /* DetailViewController.swift */,
-				45672C0A1B5CE7B000B7E8F7 /* FetchedDataController.swift */,
+				45EA15421B64B5AF006421C6 /* FetchedInfoController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -389,13 +389,13 @@
 				4511B28A1B4FB7CF0046DF76 /* MasterViewController.swift in Sources */,
 				45629F531B5811E8000F41E6 /* Review+CoreDataProperties.swift in Sources */,
 				4511B2AA1B4FB9790046DF76 /* RootSplitViewController.swift in Sources */,
-				45672C0B1B5CE7B000B7E8F7 /* FetchedDataController.swift in Sources */,
 				45629EFA1B578B22000F41E6 /* TextFieldTableViewCell.swift in Sources */,
 				45629F551B5811E8000F41E6 /* Review.swift in Sources */,
 				45629F571B5811E8000F41E6 /* Experiment+CoreDataProperties.swift in Sources */,
 				45629F5B1B5811E8000F41E6 /* Root+CoreDataProperties.swift in Sources */,
 				4511B28C1B4FB7CF0046DF76 /* DetailViewController.swift in Sources */,
 				45629F5F1B5811E8000F41E6 /* User+CoreDataProperties.swift in Sources */,
+				45EA15431B64B5AF006421C6 /* FetchedInfoController.swift in Sources */,
 				45629F591B5811E8000F41E6 /* Experiment.swift in Sources */,
 				45629F611B5811E8000F41E6 /* User.swift in Sources */,
 			);
@@ -519,6 +519,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -564,10 +565,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -584,10 +582,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Experiment GoTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "-BDKUNMM63.cn.beeth0ven.$(PRODUCT_NAME:rfc1034identifier)";
