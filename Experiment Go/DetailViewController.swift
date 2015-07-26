@@ -16,12 +16,11 @@ class DetailViewController: UIViewController {
     var experiment: Experiment! {
         didSet {
             // Update the view.
-            configureDataStruct()
             updateUI()
         }
     }
     
-    var sections = [SectionInfo]()
+    var tableViewDataStruct = TableViewDataStruct()
     
     @IBOutlet weak var tableView: UITableView! {
         didSet {
@@ -37,7 +36,6 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        configureDataStruct()
         self.configureBarButtons()
         updateUI()
     }
@@ -58,10 +56,36 @@ class DetailViewController: UIViewController {
         if self.editing != editing {
             super.setEditing(editing, animated: true)
             tableView.setEditing(editing, animated: true)
+            toggleEditingMode(editing)
         }
     }
     
-    
+    private func toggleEditingMode(editing: Bool) {
+        tableView.beginUpdates()
+        
+        for (sectionIndex, section) in tableViewDataStruct.sections.enumerate() {
+            switch section.identifier {
+            case .Attribute:
+                tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+            case .Reviews:
+                var indexPath: NSIndexPath!
+                let objectsCount = experiment.mutableSetValueForKey(section.identifier.key).count
+                if editing {
+                    indexPath = NSIndexPath(forRow: objectsCount, inSection: sectionIndex)
+                    tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                } else {
+                    indexPath = NSIndexPath(forRow: objectsCount , inSection: sectionIndex)
+                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                }
+                
+            default: break
+            }
+            
+        }
+        
+        
+        tableView.endUpdates()
+    }
     
     @IBAction func save(sender: UIBarButtonItem) {
         dismissSelfAndSveContext(nil)
@@ -131,12 +155,15 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
         
         enum CellStyle {
             case Basic(String)
+            case Insert(String)
             case RightDetail(String, String)
             case TextField(String, String?)
             
             var cellReuseIdentifier: String {
                 switch self {
                 case .Basic(_):
+                    return "BasicCell"
+                case .Insert(_):
                     return "BasicCell"
                 case .RightDetail(_, _):
                     return "RightDetailCell"
@@ -148,170 +175,226 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
         
     }
     
-    // MARK: - Configure Data Struct
-    
-    private func configureDataStruct() {
-        
-        var result = [SectionInfo]()
-        for identifier in SectionInfo.Identifier.allIdentifiers {
-            let sectionInfo = sectionInfoForIdentifier(identifier)
-            result.append(sectionInfo)
-        }
-        
-        sections = result
-        
-    }
     
 
     
-    // MARK: - Table View Data Struct
-    
-    struct SectionInfo {
-        var identifier: Identifier
-        var cellStyles: [Storyboard.CellStyle]
-        var name: String {
-              return identifier.key
-        }
+    struct TableViewDataStruct {
         
-        init(identifier: Identifier, cellStyles: [Storyboard.CellStyle]) {
-            self.identifier = identifier
-            self.cellStyles = cellStyles
-        }
+        var sections = [SectionStyle]()
         
-        var indexTitle: String {
-            return String(name.characters.first).uppercaseString
-        }
-        
-        var numberOfObjects: Int {
-            return cellStyles.count
-        }
-        
-        enum Identifier {
-            case Attribute
-            case WhoPost
-            case Reviews
-            case UsersLikeMe
+        init() {
+            var sections = [SectionStyle]()
+            for identifier in SectionStyle.Identifier.allIdentifiers {
+                let sectionStyle = SectionStyle.styleForIdentifier(identifier)
+                sections.append(sectionStyle)
+            }
             
-            var key: String {
-                get {
-                    switch self {
-                    case .Attribute:
-                        return Experiment.Constants.AttributeKey
-                    case .WhoPost:
-                        return Experiment.Constants.WhoPostKey
-                    case .Reviews:
-                        return Experiment.Constants.ReviewsKey
-                    case .UsersLikeMe:
-                        return Experiment.Constants.UsersLikeMeKey
-                    }
+            self.sections = sections
+        }
+        
+        // MARK: - Table View Data Struct
+        
+        func cellStyleAtIndexPath(indexPath: NSIndexPath) -> Storyboard.CellStyle? {
+            
+            guard indexPath.section < sections.count else { return nil }
+            let sectionStyle = sections[indexPath.section]
+            
+            switch sectionStyle {
+            case .Attribute(_, let styles):
+                guard indexPath.row < styles.count else { return nil }
+                return styles[indexPath.row]
+                
+            case .ToOneRelationship(_, let style):
+                return style
+                
+            case .ToManyRelationship(_, let style):
+                return style
+                
+            }
+        }
+        
+    
+        enum SectionStyle {
+            case Attribute(Identifier, [Storyboard.CellStyle])
+            case ToOneRelationship(Identifier, Storyboard.CellStyle)
+            case ToManyRelationship(Identifier, Storyboard.CellStyle)
+            
+            static func styleForIdentifier(identifier: Identifier) -> SectionStyle {
+                switch identifier {
+                case .Attribute:
+                    let titleCellStyle = Storyboard.CellStyle.TextField(Experiment.Constants.TitleKey, Experiment.Constants.TitleKey)
+                    let bodyCellStyle =  Storyboard.CellStyle.TextField(Experiment.Constants.BodyKey, Experiment.Constants.BodyKey)
+                    return .Attribute(identifier, [titleCellStyle, bodyCellStyle])
+                    
+                case .WhoPost:
+                    let whoPostCellStyle = Storyboard.CellStyle.Basic(User.Constants.NameKey)
+                    return .ToOneRelationship(identifier, whoPostCellStyle)
+                    
+                case .Reviews:
+                    let reviewCellStyle = Storyboard.CellStyle.RightDetail("\(Review.Constants.WhoReviewKey).\(User.Constants.NameKey)", Root.Constants.CreateDateKey)
+                    return .ToManyRelationship(identifier, reviewCellStyle)
+                    
+                case .UsersLikeMe:
+                    let reviewCellStyle = Storyboard.CellStyle.Basic(User.Constants.NameKey)
+                    return .ToManyRelationship(identifier, reviewCellStyle)
+
                 }
             }
-
             
-            static var allIdentifiers: [Identifier] {
-                return [
-                    .Attribute,
-                    .WhoPost,
-                    .Reviews,
-                    .UsersLikeMe,
-                ]
+            var identifier: Identifier {
+                switch self {
+                case .Attribute(let id, _):
+                    return id
+                case .ToOneRelationship(let id, _):
+                    return id
+                case .ToManyRelationship(let id, _):
+                    return id
+                }
+            }
+            
+            var name: String {
+                return identifier.key
+            }
+            
+            enum Identifier {
+                case Attribute
+                case WhoPost
+                case Reviews
+                case UsersLikeMe
+                
+                var key: String {
+                    get {
+                        switch self {
+                        case .Attribute:
+                            return Experiment.Constants.AttributeKey
+                        case .WhoPost:
+                            return Experiment.Constants.WhoPostKey
+                        case .Reviews:
+                            return Experiment.Constants.ReviewsKey
+                        case .UsersLikeMe:
+                            return Experiment.Constants.UsersLikeMeKey
+                        }
+                    }
+                }
+                
+                
+                static var allIdentifiers: [Identifier] {
+                    return [
+                        .Attribute,
+                        .WhoPost,
+                        .Reviews,
+                        .UsersLikeMe,
+                    ]
+                }
             }
         }
         
-    }
-    
-    
-    func sectionInfoForIdentifier(identifier: SectionInfo.Identifier) -> SectionInfo {
-        switch identifier {
-        case .Attribute:
-            let titleCellStyle = Storyboard.CellStyle.TextField(Experiment.Constants.TitleKey, experiment.title)
-            let bodyCellStyle =  Storyboard.CellStyle.TextField(Experiment.Constants.BodyKey, experiment.body)
-            return SectionInfo(identifier: identifier, cellStyles: [titleCellStyle, bodyCellStyle])
-            
-        case .WhoPost:
-            let whoPostCellStyle = cellStyleFromManagedObject(experiment.whoPost!)!
-            return SectionInfo(identifier: identifier, cellStyles: [whoPostCellStyle])
-            
-        case .Reviews:
-            return sectionInfoFromRelationshipIdentifier(.Reviews)
-            
-        case .UsersLikeMe:
-            return sectionInfoFromRelationshipIdentifier(.UsersLikeMe)
-            
-        }
-    }
-    
-    
-    private func sectionInfoFromRelationshipIdentifier(identifier: SectionInfo.Identifier) -> SectionInfo {
         
-        var cellStyles: [Storyboard.CellStyle] = []
         
-        if let relationshipObjectSet = experiment.valueForKey(identifier.key) as? NSSet {
-            if let managedObjects = relationshipObjectSet.allObjects as? [NSManagedObject] {
-                cellStyles = managedObjects.map { self.cellStyleFromManagedObject($0)! }
-            }
-        }
-        
-        return SectionInfo(identifier: identifier, cellStyles: cellStyles)
-    }
-    
-    
-    private func cellStyleFromManagedObject(managedObject: NSManagedObject) -> Storyboard.CellStyle? {
-        var result: Storyboard.CellStyle? = nil
-        if let review = managedObject as? Review {
-            result = Storyboard.CellStyle.RightDetail(review.whoReview!.name!, review.createDate!.description)
-        } else if let user = managedObject as? User {
-            result = Storyboard.CellStyle.Basic(user.name!)
-        }
-        return result
-    }
-    
-    
-    func cellStyleAtIndexPath(indexPath: NSIndexPath) -> Storyboard.CellStyle? {
-        return sections[indexPath.section].cellStyles[indexPath.row]
-    }
 
+
+    }
+    
+    
+   
     // MARK: - Table View Data Source
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return sections.count ?? 0
+        return tableViewDataStruct.sections.count ?? 0
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let experimentSection = sections[section]
-        return  experimentSection.cellStyles.count ?? 0
+        guard section < tableViewDataStruct.sections.count else { return 0 }
+        let sectionStyle = tableViewDataStruct.sections[section]
+        return numberOfRowsForSectionStyle(sectionStyle)
+        
+    }
+    
+    private func numberOfRowsForSectionStyle(sectionStyle : TableViewDataStruct.SectionStyle) -> Int {
+        switch sectionStyle {
+        case .Attribute(_, let styles):
+            return styles.count
+            
+        case .ToOneRelationship(let identifier, _):
+            return experiment.valueForKey(identifier.key) != nil ? 1 : 0
+            
+        case .ToManyRelationship(let identifier, _):
+            let managedObjectSet = experiment.mutableSetValueForKey(identifier.key)
+            return (identifier == .Reviews && editing) ? managedObjectSet.count + 1 : managedObjectSet.count
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell: UITableViewCell?
-        
-        if let cellStyle = cellStyleAtIndexPath(indexPath) {
-            cell = tableView.dequeueReusableCellWithIdentifier(cellStyle.cellReuseIdentifier, forIndexPath: indexPath)
-            self.configureCell(cell!, useCellStyle: cellStyle)
+        guard let cellStyle = tableViewDataStruct.cellStyleAtIndexPath(indexPath) else { return UITableViewCell() }
+        guard let objectToConfigureCell = objectToConfigureCellAtIndexPath(indexPath) else {
+            // Only happen, when the section last row show insertStyle at bottom while editing mode.
+            let identifier = tableViewDataStruct.sections[indexPath.section].identifier
+            return cellToInsertForSectionIdentifier(identifier)
         }
-        
-        return cell ?? UITableViewCell()
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellStyle.cellReuseIdentifier, forIndexPath: indexPath)
+        configureCell(cell, useCellStyle: cellStyle, withManagedObject: objectToConfigureCell)
+        return cell
+    }
+    
+    private func cellToInsertForSectionIdentifier(identifier: TableViewDataStruct.SectionStyle.Identifier) -> UITableViewCell {
+        if identifier == .Reviews {
+            let cellStyle = Storyboard.CellStyle.Insert(Review.Constants.EntityNameKey)
+            guard let cell = tableView.dequeueReusableCellWithIdentifier(cellStyle.cellReuseIdentifier) else { return UITableViewCell() }
+            configureCell(cell, useCellStyle: cellStyle, withManagedObject: nil)
+            return cell
+        } else {
+            return UITableViewCell()
+        }
+    }
+    
+    private func objectToConfigureCellAtIndexPath(indexPath: NSIndexPath) -> NSManagedObject? {
+        let sectionStyle = tableViewDataStruct.sections[indexPath.section]
+        switch sectionStyle {
+        case .Attribute(_, _):
+            return experiment
+            
+        case .ToOneRelationship(let identifier, _):
+            return experiment.valueForKey(identifier.key) as? NSManagedObject
+            
+            
+        case .ToManyRelationship(let identifier, _):
+            let managedObjects = experiment.mutableSetValueForKey(identifier.key).allObjects as! [NSManagedObject]
+            guard indexPath.row < managedObjects.count else { return nil }
+            return managedObjects[indexPath.row]
+            
+        }
+
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let experimentSectionInfo = sections[section]
-        return experimentSectionInfo.name
+        let sectionStyle = tableViewDataStruct.sections[section]
+        return sectionStyle.name
     }
     
     
     
-    func configureCell(cell: UITableViewCell, useCellStyle cellStyle: Storyboard.CellStyle) {
+    private func configureCell(cell: UITableViewCell, useCellStyle cellStyle: Storyboard.CellStyle, withManagedObject managedObject: NSManagedObject?) {
         
         switch cellStyle {
-        case .Basic(let title):
-            cell.textLabel?.text = title
-        case .RightDetail(let title, let detailText):
-            cell.textLabel?.text = title
-            cell.detailTextLabel?.text = detailText
-        case .TextField(let title, let editableText):
+        case .Basic(let key):
+            guard managedObject != nil else { return }
+            cell.textLabel?.text = managedObject!.descriptionForKeyPath(key)
+            
+        case .Insert(let entityName):
+            cell.textLabel?.text = "Add New \(entityName)."
+            
+        case .RightDetail(let keyToConfigTextLabel, let keyToConfigDetailTextLabel):
+            guard managedObject != nil else { return }
+            cell.textLabel?.text = managedObject!.descriptionForKeyPath(keyToConfigTextLabel)
+            cell.detailTextLabel?.text = managedObject!.descriptionForKeyPath(keyToConfigDetailTextLabel)
+            
+        case .TextField(let title, let keyToBeEdite):
             if let textFieldTableViewCell = cell as? TextFieldTableViewCell {
                 textFieldTableViewCell.titleLabel.text = title
-                textFieldTableViewCell.textField.text = editableText
+                if keyToBeEdite != nil {
+                    guard managedObject != nil else { return }
+                    textFieldTableViewCell.textField.text = managedObject!.descriptionForKeyPath(keyToBeEdite!)
+                }
                 textFieldTableViewCell.textField.enabled = editing
                 textFieldTableViewCell.textField.delegate = self
             }
@@ -324,7 +407,6 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow!, animated: true)
-        
         let cell = tableView.cellForRowAtIndexPath(indexPath)!
         if cell.editingStyle == .Insert {
             self.tableView(tableView, commitEditingStyle: cell.editingStyle, forRowAtIndexPath: indexPath)
@@ -338,7 +420,7 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
-        let sectionIdentifier = sections[indexPath.section].identifier
+        let sectionIdentifier = tableViewDataStruct.sections[indexPath.section].identifier
         switch sectionIdentifier {
         case .Reviews:
             return true
@@ -351,7 +433,7 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
         
-        let sectionIdentifier = sections[indexPath.section].identifier
+        let sectionIdentifier = tableViewDataStruct.sections[indexPath.section].identifier
         
         switch sectionIdentifier {
         case .Reviews:
@@ -370,7 +452,7 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
-        let sectionIdentifier = sections[indexPath.section].identifier
+        let sectionIdentifier = tableViewDataStruct.sections[indexPath.section].identifier
         switch sectionIdentifier {
         case .Reviews:
             commitEditingStyle(editingStyle, forReviewAtIndexPath: indexPath)
@@ -434,7 +516,11 @@ extension DetailViewController: UITextFieldDelegate {
     
 }
 
-
+extension NSManagedObject {
+    func descriptionForKeyPath(keyPath: String) -> String {
+        return (valueForKeyPath(keyPath) as? CustomStringConvertible)?.description ?? ""
+    }
+}
 
 
 

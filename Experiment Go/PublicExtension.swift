@@ -13,3 +13,12 @@ public func ==(date0: NSDate, date1: NSDate) -> Bool { return date0.compare(date
 public func <(date0: NSDate, date1: NSDate) -> Bool { return date0.compare(date1) == NSComparisonResult.OrderedAscending }
 
 extension NSDate: Comparable {}
+
+
+
+extension String: CustomStringConvertible {
+    public var description: String {
+        return self
+    }
+}
+

@@ -15,6 +15,7 @@ class User: Root {
     struct Constants {
         static let  UserNumber: Int = 1
         static let  EntityNameKey = "User"
+        static let  NameKey = "name"
     }
     
     

@@ -51,6 +51,8 @@ class FetchedDataController {
         }
     }
     
+    
+    
     var isNewExperimentAdded = false
 
     
@@ -424,8 +426,5 @@ class FetchedDataController {
     
 
 }
-
-
-
 
 

@@ -15,7 +15,7 @@ class Review: Root {
 // Insert code here to add functionality to your managed object subclass
     struct Constants {
         static let  EntityNameKey = "Review"
-//        static let  TitleKey = "title"
+        static let  WhoReviewKey = "whoReview"
 //        static let  BodyKey = "body"
 //        static let  PropertyKey = "Property"
 //        static let  ReviewsKey = "reviews"
