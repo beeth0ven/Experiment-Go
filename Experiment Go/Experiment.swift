@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 //@objc(Experiment)
-class Experiment: Root {
+class Experiment: RootObect {
     
     struct Constants {
         static let  EntityNameKey = "Experiment"
@@ -34,12 +34,11 @@ class Experiment: Root {
 //    }
     
     // Insert code here to add functionality to your managed object subclass
-    class func insertNewExperiment() -> Experiment! {
-        let context = NSManagedObjectContext.defaultContext()
-        let experiment = NSEntityDescription.insertNewObjectForEntityForName(Constants.EntityNameKey, inManagedObjectContext: context) as! Experiment
-        experiment.title = "Hallo"
-        experiment.whoPost = User.currentUser()
-        return experiment
+    
+    override func awakeFromInsert() {
+        super.awakeFromInsert()
+        title = "Hallo"
+        whoPost = User.currentUser()
     }
     
 }

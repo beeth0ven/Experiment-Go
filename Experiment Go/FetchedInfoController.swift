@@ -25,6 +25,13 @@ protocol FetchedInfoControllerDataSource: class {
 
 class FetchedInfoController {
     
+    
+    struct Constants {
+        static let InsertStyleKey = "InsertStyleKey"
+    }
+    
+
+    
     weak var dataSource: FetchedInfoControllerDataSource? {
         didSet {
             configureDataStruct()
@@ -32,6 +39,23 @@ class FetchedInfoController {
     }
     
     var sections: [SectionInfo] = []
+    
+    func cellInfoForInsertStyleAtIndexPath(indexPath: NSIndexPath) -> CellInfo? {
+        guard indexPath.section < sections.count else { return nil }
+        let sectionInfo = sections[indexPath.section]
+        
+        switch sectionInfo.style {
+        case .Attribute:
+            return nil
+            
+        case .ToOneRelationship(_):
+            return nil
+            
+        case .ToManyRelationship(_):
+            return sectionInfo.cellInfos.filter { $0.key == Constants.InsertStyleKey }.first
+            
+        }
+    }
     
     func cellInfoAtIndexPath(indexPath: NSIndexPath) -> CellInfo? {
         guard indexPath.section < sections.count else { return nil }
@@ -80,11 +104,15 @@ class FetchedInfoController {
 class SectionInfo {
     var key: String
     var style: Style
+    var editingStyles: [EditingStyle]
+
     var cellInfos = [CellInfo]()
+
     
-    required init(key: String, style: Style) {
+    required init(key: String, style: Style, editingStyles: [EditingStyle]) {
         self.key = key
         self.style = style
+        self.editingStyles = editingStyles
     }
     
     var name: String {
@@ -94,10 +122,19 @@ class SectionInfo {
     enum Style {
         case Attribute
         case ToOneRelationship(String)
-        case ToManyRelationship(String)
+        case ToManyRelationship(String, IsManagedObjectOrderedBefore)
         
     }
+    
+    enum EditingStyle {
+        case Insert
+        case Delete
+    }
+    
 }
+
+typealias ConfigureCellUseObect = (UITableViewCell, RootObect) -> ()
+typealias IsManagedObjectOrderedBefore = (RootObect, RootObect) -> Bool
 
 class CellInfo {
     struct Storyboard {
@@ -108,6 +145,7 @@ class CellInfo {
         
     }
     
+
     var key: String
     var style: Style
     
@@ -116,18 +154,16 @@ class CellInfo {
         self.style = style
     }
     
+    
     enum Style {
-        case Basic(         (UITableViewCell, NSManagedObject) -> () )
-        case Insert(        (UITableViewCell, NSManagedObject) -> () )
-        case RightDetail(   (UITableViewCell, NSManagedObject) -> () )
-        case TextField(     (UITableViewCell, NSManagedObject) -> () )
+        case Basic(         ConfigureCellUseObect )
+        case RightDetail(   ConfigureCellUseObect )
+        case TextField(     ConfigureCellUseObect )
         
         var cellReuseIdentifier: String {
             switch self {
             case .Basic(_):
                 return Storyboard.BasicCellReuseIdentifier
-            case .Insert(_):
-                return Storyboard.InsertCellReuseIdentifier
             case .RightDetail(_):
                 return Storyboard.RightDetailCellReuseIdentifier
             case .TextField(_):
@@ -135,11 +171,9 @@ class CellInfo {
             }
         }
         
-        var configureCellOperation: (UITableViewCell, NSManagedObject) -> () {
+        var configureCellUseObect: ConfigureCellUseObect {
             switch self {
             case .Basic(let op):
-                return op
-            case .Insert(let op):
                 return op
             case .RightDetail(let op):
                 return op

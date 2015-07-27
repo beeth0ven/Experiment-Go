@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 //@objc(Review)
-class Review: Root {
+class Review: RootObect {
 
 // Insert code here to add functionality to your managed object subclass
     struct Constants {
@@ -22,14 +22,10 @@ class Review: Root {
 //        static let  UsersLikeMeKey = "usersLikeMe"
     }
     
-    
-    class func insertNewReview() -> Review! {
-        let context = NSManagedObjectContext.defaultContext()
-        let review = NSEntityDescription.insertNewObjectForEntityForName(Constants.EntityNameKey, inManagedObjectContext: context) as! Review
-        review.body = "How do you do!"
-        review.whoReview = User.currentUser()
-        return review
+    override func awakeFromInsert() {
+        super.awakeFromInsert()
+        body = "How do you do!"
+        whoReview = User.currentUser()
     }
-    
     
 }

@@ -14,18 +14,20 @@ class DetailViewController: UIViewController {
     private struct Storyboard {
         static let TableViewEstimatedRowHeight: CGFloat = 44
     }
+    
+    
 
     
     // MARK: - Properties
     
-    var detailItem: NSManagedObject! {
+    var detailItem: RootObect! {
         didSet {
             // Update the view.
             updateUI()
         }
         
     }
-
+    
     lazy var fetchedInfoController: FetchedInfoController = {
         let lazyCreateFetchedInfoController = FetchedInfoController()
         lazyCreateFetchedInfoController.dataSource = self
@@ -38,7 +40,7 @@ class DetailViewController: UIViewController {
             tableView.rowHeight = UITableViewAutomaticDimension
         }
     }
-    
+
     
     
     // MARK: - View Controller Lifecycle
@@ -55,36 +57,35 @@ class DetailViewController: UIViewController {
     override func setEditing(editing: Bool, animated: Bool) {
         if self.editing != editing {
             super.setEditing(editing, animated: true)
-            tableView.setEditing(editing, animated: true)
             toggleEditingMode(editing)
+            tableView.setEditing(editing, animated: true)
         }
     }
     
     private func toggleEditingMode(editing: Bool) {
-        //        tableView.beginUpdates()
-        //
-        //        for (sectionIndex, section) in tableViewDataStruct.sections.enumerate() {
-        //            switch section.identifier {
-        //            case .Attribute:
-        //                tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        //            case .Reviews:
-        //                var indexPath: NSIndexPath!
-        //                let objectsCount = experiment.mutableSetValueForKey(section.identifier.key).count
-        //                if editing {
-        //                    indexPath = NSIndexPath(forRow: objectsCount, inSection: sectionIndex)
-        //                    tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        //                } else {
-        //                    indexPath = NSIndexPath(forRow: objectsCount , inSection: sectionIndex)
-        //                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        //                }
-        //
-        //            default: break
-        //            }
-        //
-        //        }
-        //
-        //
-        //        tableView.endUpdates()
+        tableView.beginUpdates()
+        
+        for (sectionIndex, sectionInfo) in fetchedInfoController.sections.enumerate() {
+            switch sectionInfo.style {
+            case .ToManyRelationship(_):
+                guard sectionInfo.editingStyles.contains(.Insert) else { continue }
+                var indexPath: NSIndexPath!
+                let objectsCount = detailItem.mutableSetValueForKey(sectionInfo.key).count
+                if editing {
+                    indexPath = NSIndexPath(forRow: objectsCount, inSection: sectionIndex)
+                    tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                } else {
+                    indexPath = NSIndexPath(forRow: objectsCount , inSection: sectionIndex)
+                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                }
+                
+            default: break
+            }
+            
+        }
+        
+        
+        tableView.endUpdates()
     }
     
     @IBAction func save(sender: UIBarButtonItem) {
@@ -114,7 +115,7 @@ class DetailViewController: UIViewController {
         if !detailItem.inserted {
             navigationItem.rightBarButtonItem = editButtonItem()
         } else {
-            editing = true
+            self.editing = true
         }
     }
     
@@ -149,23 +150,25 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
         case .ToOneRelationship(let toOneRelationshipKey):
             return detailItem.valueForKey(toOneRelationshipKey) != nil ? 1 : 0
             
-        case .ToManyRelationship(let toManyRelationshipKey):
+        case .ToManyRelationship(let toManyRelationshipKey, _):
             let managedObjectSet = detailItem.mutableSetValueForKey(toManyRelationshipKey)
-            return managedObjectSet.count
+            return (sectionInfo.editingStyles.contains(.Insert) && editing) ?  managedObjectSet.count + 1 : managedObjectSet.count
         }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        guard let cellInfo = fetchedInfoController.cellInfoAtIndexPath(indexPath) else { return UITableViewCell() }
         guard let objectToConfigureCell = objectToConfigureCellAtIndexPath(indexPath) else {
             // Only happen, when the section last row show insertStyle at bottom while editing mode.
-            //            let identifier = tableViewDataStruct.sections[indexPath.section].identifier
-            //            return cellToInsertForSectionIdentifier(identifier)
-            return UITableViewCell()
+            guard let cellInfo = fetchedInfoController.cellInfoForInsertStyleAtIndexPath(indexPath) else { return UITableViewCell() }
+            let cell = tableView.dequeueReusableCellWithIdentifier(cellInfo.style.cellReuseIdentifier, forIndexPath: indexPath)
+            let configureCellUseObect = cellInfo.style.configureCellUseObect
+            configureCellUseObect(cell, detailItem)
+            return cell
         }
+        guard let cellInfo = fetchedInfoController.cellInfoAtIndexPath(indexPath) else { return UITableViewCell() }
         let cell = tableView.dequeueReusableCellWithIdentifier(cellInfo.style.cellReuseIdentifier, forIndexPath: indexPath)
-        let configureCellOperation = cellInfo.style.configureCellOperation
-        configureCellOperation(cell, objectToConfigureCell)
+        let configureCellUseObect = cellInfo.style.configureCellUseObect
+        configureCellUseObect(cell, objectToConfigureCell)
         return cell
     }
     
@@ -180,18 +183,18 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     //        }
     //    }
     
-    private func objectToConfigureCellAtIndexPath(indexPath: NSIndexPath) -> NSManagedObject? {
+    private func objectToConfigureCellAtIndexPath(indexPath: NSIndexPath) -> RootObect? {
         let sectionInfo = fetchedInfoController.sections[indexPath.section]
         switch sectionInfo.style {
         case .Attribute:
             return detailItem
             
         case .ToOneRelationship(let toOneRelationshipKey):
-            return detailItem.valueForKey(toOneRelationshipKey) as? NSManagedObject
+            return detailItem.valueForKey(toOneRelationshipKey) as? RootObect
             
             
-        case .ToManyRelationship(let toManyRelationshipKey):
-            let managedObjects = detailItem.mutableSetValueForKey(toManyRelationshipKey).allObjects as! [NSManagedObject]
+        case .ToManyRelationship(let toManyRelationshipKey, let isManagedObjectOrderedBefore):
+            let managedObjects = (detailItem.mutableSetValueForKey(toManyRelationshipKey).allObjects as! [RootObect]).sort(isManagedObjectOrderedBefore)
             guard indexPath.row < managedObjects.count else { return nil }
             return managedObjects[indexPath.row]
             
@@ -210,10 +213,12 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow!, animated: true)
-        //        let cell = tableView.cellForRowAtIndexPath(indexPath)!
-        //        if cell.editingStyle == .Insert {
-        //            self.tableView(tableView, commitEditingStyle: cell.editingStyle, forRowAtIndexPath: indexPath)
-        //        }
+        
+        // When tap a cell which editingStyle is Insert, then do it.
+        let cell = tableView.cellForRowAtIndexPath(indexPath)!
+        if cell.editingStyle == .Insert {
+            self.tableView(tableView, commitEditingStyle: cell.editingStyle, forRowAtIndexPath: indexPath)
+        }
         
     }
     
@@ -221,112 +226,70 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     
     
-    //    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-    //        // Return false if you do not want the specified item to be editable.
-    //        let sectionIdentifier = tableViewDataStruct.sections[indexPath.section].identifier
-    //        switch sectionIdentifier {
-    //        case .Reviews:
-    //            return true
-    //        default: break
-    //        }
-    //
-    //        return false
-    //    }
-    
-    //
-    //    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
-    //
-    //        let sectionIdentifier = tableViewDataStruct.sections[indexPath.section].identifier
-    //
-    //        switch sectionIdentifier {
-    //        case .Reviews:
-    //            let numberOfRows = tableView.numberOfRowsInSection(indexPath.section)
-    //            if (indexPath.row == numberOfRows - 1) && tableView.editing {
-    //                return .Insert
-    //            } else {
-    //                return .Delete
-    //            }
-    //        default: break
-    //        }
-    //
-    //
-    //        return .None
-    //    }
-    //
-    //    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-    //
-    //        let sectionIdentifier = tableViewDataStruct.sections[indexPath.section].identifier
-    //        switch sectionIdentifier {
-    //        case .Reviews:
-    //            commitEditingStyle(editingStyle, forReviewAtIndexPath: indexPath)
-    //        default: break
-    //        }
-    //
-    //    }
-    
-    private func commitEditingStyle(editingStyle: UITableViewCellEditingStyle, forReviewAtIndexPath indexPath: NSIndexPath) {
-        //        switch editingStyle {
-        //        case .Insert:
-        //            let review = Review.insertNewReview()
-        //            fetchedDataController.addRelationshipObject(review, withSectionIdentifier: .Reviews)
-        //
-        //        case .Delete:
-        //            fetchedDataController.removeRelationshipObjectAtIndexPath(indexPath)
-        //
-        //        default: break
-        //        }
-    }
-    
-}
-
-
-
-extension DetailViewController: UITextFieldDelegate {
-    // MARK: - Text Field Delegate
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    
-    @objc private func handleTextFieldTextDidChange(notification: NSNotification) {
-        guard let textField = notification.object as? UITextField else { return }
-        if let textFieldTableViewCell = textFieldTableViewCellWhichContainsTextField(textField) {
-            detailItem?.setValue(textField.text, forKey: textFieldTableViewCell.titleLabel.text!)
+        func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+            // Return false if you do not want the specified item to be editable.
+            let editingStyle = self.tableView(tableView, editingStyleForRowAtIndexPath: indexPath)
+            return editingStyle == .None ? false : true
         }
-    }
     
-    private func oberveTextField() {
-        let center = NSNotificationCenter.defaultCenter()
-        center.addObserver(self,
-            selector: "handleTextFieldTextDidChange:",
-            name: UITextFieldTextDidChangeNotification,
-            object: nil
-        )
-    }
     
-    private func stopOberveTextField() {
-        let center = NSNotificationCenter.defaultCenter()
-        center.removeObserver(self)
-    }
-    
-    func textFieldTableViewCellWhichContainsTextField(textField: UITextField) -> TextFieldTableViewCell? {
-        var superView: UIView? = textField
-        repeat { superView = superView!.superview }
-            while  (superView != nil) && (superView is TextFieldTableViewCell) == false
-        return superView == nil ? nil : (superView as! TextFieldTableViewCell)
-    }
-    
-}
+        func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+            let sectionInfo = fetchedInfoController.sections[indexPath.section]
+            let numberOfRows = tableView.numberOfRowsInSection(indexPath.section)
+            
+            if sectionInfo.editingStyles.contains(.Insert) && sectionInfo.editingStyles.contains(.Delete) {
+                // Can insert and delete object in section
+                let matchInsertCondition: Bool = tableView.editing && (indexPath.row == numberOfRows - 1)
+                return matchInsertCondition ? .Insert : .Delete
+                
+            } else if (sectionInfo.editingStyles.contains(.Insert)) {
+                // Can only insert object in section
+                let matchInsertCondition: Bool = tableView.editing && (indexPath.row == numberOfRows - 1)
+                return matchInsertCondition ? .Insert : .None
+                
+            } else if (sectionInfo.editingStyles.contains(.Delete)) {
+                // Can only delete object in section
+                return .Delete
+                
+            } else {
+                return .None
+                
+            }
 
-extension NSManagedObject {
-    func descriptionForKeyPath(keyPath: String) -> String {
-        return (valueForKeyPath(keyPath) as? CustomStringConvertible)?.description ?? ""
-    }
+        }
     
-    func destinationEntityNameForRelationshipKey(key: String) -> String? {
-        let relationshipDescription = self.entity.relationshipsByName[key]
-        return relationshipDescription?.destinationEntity?.name
+        func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+            tableView.beginUpdates()
+            
+            let sectionInfo = fetchedInfoController.sections[indexPath.section]
+            switch sectionInfo.style {
+            case .ToManyRelationship(let toManyRelationshipKey, let isManagedObjectOrderedBefore):
+                commitEditingStyle(editingStyle, atIndexPath: indexPath, toManyRelationshipKey: toManyRelationshipKey, isManagedObjectOrderedBefore:isManagedObjectOrderedBefore)
+                
+            default: break
+            }
+            
+            
+            tableView.endUpdates()
+        }
+    
+    private func commitEditingStyle(editingStyle: UITableViewCellEditingStyle, atIndexPath indexPath: NSIndexPath, toManyRelationshipKey: String, isManagedObjectOrderedBefore: IsManagedObjectOrderedBefore) {
+        let destinationEntityName = detailItem.destinationEntityNameForRelationshipKey(toManyRelationshipKey)!
+        let relationshipObjectSet = detailItem.mutableSetValueForKey(toManyRelationshipKey)
+        
+        switch editingStyle {
+        case .Insert:
+            let relationshipObject = RootObect.insertNewObjectForEntityForName(destinationEntityName)
+            relationshipObjectSet.addObject(relationshipObject)
+            let row: Int = detailItem.arrayForRelationshipKey(toManyRelationshipKey, isOrderedBefore: isManagedObjectOrderedBefore).indexOf(relationshipObject)!
+            let relationshipObjectIndexPath = NSIndexPath(forRow: row, inSection: indexPath.section)
+            tableView.insertRowsAtIndexPaths([relationshipObjectIndexPath], withRowAnimation: .Fade)
+        case .Delete:
+            let relationshipObject = (relationshipObjectSet.allObjects as! [RootObect])[indexPath.row]
+            relationshipObjectSet.removeObject(relationshipObject)
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        default: break
+        }
     }
 }
 
@@ -338,6 +301,25 @@ extension DetailViewController: FetchedInfoControllerDataSource {
     }
     
     
+    struct ConfigCellOperationName {
+        static let Default = "Default"
+    }
+    
+    
+    var knownCellStyle: Dictionary<String, CellInfo.Style> {
+        get {
+            var result = Dictionary<String, CellInfo.Style>()
+            
+            result[ConfigCellOperationName.Default] = CellInfo.Style.RightDetail {
+                (cell, managedObject) in
+                cell.textLabel?.text = managedObject.entity.name
+                cell.detailTextLabel?.text = managedObject.descriptionForKeyPath(RootObect.Constants.CreateDateKey)
+            }
+            
+            
+            return result
+        }
+    }
     
     func keysForSectionInfos() -> [String] {
         var relationshipNames = detailItem.entity.relationshipsByName.keys.array
@@ -347,25 +329,33 @@ extension DetailViewController: FetchedInfoControllerDataSource {
     
     func sectionInfoForKey(key: String) -> SectionInfo {
         let style: SectionInfo.Style!
+        var editingStyles: [SectionInfo.EditingStyle] = []
+        
         if key == Constants.AttributeSectionKey {
             style = .Attribute
         } else {
             let relationshipDescription = detailItem.entity.relationshipsByName[key]!
-            style = relationshipDescription.toMany ? .ToManyRelationship(key) : .ToOneRelationship(key)
+            style = relationshipDescription.toMany ? .ToManyRelationship(key , < ) : .ToOneRelationship(key)
+            if relationshipDescription.toMany { editingStyles = [.Insert, .Delete] }
         }
-        return SectionInfo(key: key, style: style)
+        
+        return SectionInfo(key: key, style: style, editingStyles: editingStyles)
     }
-    
     
     
     func keysForCellInfosBySectionInfo(sectionInfo: SectionInfo) -> [String] {
         switch sectionInfo.style {
         case .Attribute:
             return detailItem.entity.attributesByName.keys.array
+            
         case .ToOneRelationship(let toOneRelationshipName):
             return [detailItem.destinationEntityNameForRelationshipKey(toOneRelationshipName)!]
-        case .ToManyRelationship(let toManyRelationshipName):
-            return [detailItem.destinationEntityNameForRelationshipKey(toManyRelationshipName)!]
+            
+        case .ToManyRelationship(let toManyRelationshipName, _):
+            var keys = [detailItem.destinationEntityNameForRelationshipKey(toManyRelationshipName)!]
+            if sectionInfo.editingStyles.contains(.Insert) { keys.append(FetchedInfoController.Constants.InsertStyleKey) }
+            
+            return  keys
         }
     }
     
@@ -373,28 +363,42 @@ extension DetailViewController: FetchedInfoControllerDataSource {
         let style: CellInfo.Style!
         switch sectionInfo.style {
         case .Attribute:
-            style = .RightDetail({
+            style = CellInfo.Style.TextField {
                 (cell, managedObject) in
-                cell.textLabel?.text = key
-                cell.detailTextLabel?.text = managedObject.descriptionForKeyPath(key)
-            })
+                guard let textFieldCell = cell as? TextFieldTableViewCell else { return }
+                textFieldCell.detailItem = managedObject
+                textFieldCell.stringKey = key
+            }
+
+            
+//                .RightDetail {
+//                (cell, managedObject) in
+//                cell.textLabel?.text = key
+//                cell.detailTextLabel?.text = managedObject.descriptionForKeyPath(key)
+//            }
             
         case .ToOneRelationship(_):
-            style = .RightDetail({
-                (cell, managedObject) in
-                cell.textLabel?.text = managedObject.entity.name
-                cell.detailTextLabel?.text = managedObject.descriptionForKeyPath(Root.Constants.CreateDateKey)
-            })
+            style = knownCellStyle[ConfigCellOperationName.Default]
             
         case .ToManyRelationship(_):
-            style = .RightDetail({
-                (cell, managedObject) in
-                cell.textLabel?.text = managedObject.entity.name
-                cell.detailTextLabel?.text = managedObject.descriptionForKeyPath(Root.Constants.CreateDateKey)
-            })
+            if key != FetchedInfoController.Constants.InsertStyleKey {
+                // Normal Cell Configure
+                style = knownCellStyle[ConfigCellOperationName.Default]
+            } else {
+                // Insert Editing Style Cell Configure
+                style = CellInfo.Style.Basic {
+                    (cell, managedObject) in
+                    let entityName = managedObject.destinationEntityNameForRelationshipKey(sectionInfo.key)!
+                    cell.textLabel?.text = "Add New \(entityName)."
+                }
+            }
+            
+            
             
         }
         return CellInfo(key: key, style: style)
     }
 }
+
+
 

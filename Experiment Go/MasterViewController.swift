@@ -59,13 +59,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             controller.title = fetchedEntityName!
             if sender is UITableViewCell {
                 if let indexPath = self.tableView.indexPathForSelectedRow {
-                    if let experiment = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Experiment {
-                        controller.detailItem = experiment
-                    }
+                    let detailItem = self.fetchedResultsController.objectAtIndexPath(indexPath) as! RootObect
+                    controller.detailItem = detailItem
+                    
                 }
             } else if sender is UIBarButtonItem {
-                let experiment = Experiment.insertNewExperiment()
-                controller.detailItem = experiment
+                let detailItem = RootObect.insertNewObjectForEntityForName(Experiment.Constants.EntityNameKey)
+                controller.detailItem = detailItem
             }
             
         }
@@ -139,7 +139,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         fetchRequest.fetchBatchSize = 20
         
         // Edit the sort key as appropriate.
-        let sortDescriptor = NSSortDescriptor(key: Root.Constants.DefaultSortKey, ascending: false)
+        let sortDescriptor = NSSortDescriptor(key: RootObect.Constants.DefaultSortKey, ascending: false)
         
         fetchRequest.sortDescriptors = [sortDescriptor]
         

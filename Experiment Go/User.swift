@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 //@objc(User)
-class User: Root {
+class User: RootObect {
     
     struct Constants {
         static let  UserNumber: Int = 1
@@ -31,7 +31,7 @@ class User: Root {
         let context = NSManagedObjectContext.defaultContext()
         let request = NSFetchRequest(entityName: Constants.EntityNameKey)
         request.predicate = NSPredicate(format: "name == %@", userName)
-        request.sortDescriptors = [NSSortDescriptor(key: Root.Constants.DefaultSortKey, ascending: false)]
+        request.sortDescriptors = [NSSortDescriptor(key: RootObect.Constants.DefaultSortKey, ascending: false)]
         
         var matches: [AnyObject]
         do {

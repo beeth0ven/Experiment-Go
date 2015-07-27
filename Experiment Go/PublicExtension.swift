@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 
 public func ==(date0: NSDate, date1: NSDate) -> Bool { return date0.compare(date1) == NSComparisonResult.OrderedSame }
