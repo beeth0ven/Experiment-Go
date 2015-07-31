@@ -2,7 +2,7 @@
 //  Experiment+CoreDataProperties.swift
 //  Experiment Go
 //
-//  Created by luojie on 7/27/15.
+//  Created by luojie on 7/30/15.
 //  Copyright © 2015 LuoJie. All rights reserved.
 //
 //  Delete this file and regenerate it using "Create NSManagedObject Subclass…"
@@ -15,6 +15,7 @@ import CoreData
 extension Experiment {
 
     @NSManaged var body: String?
+    @NSManaged var imageData: NSData?
     @NSManaged var title: String?
     @NSManaged var reviews: NSSet?
     @NSManaged var usersLikeMe: NSSet?

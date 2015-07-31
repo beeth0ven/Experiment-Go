@@ -8,11 +8,7 @@
 
 import UIKit
 
-class TextFieldTableViewCell: UITableViewCell {
-    
-    var detailItem: RootObect? { didSet { updateUI() } }
-    
-    var stringKey: String? { didSet { updateUI() } }
+class TextFieldTableViewCell: ObjectValueTableViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var textField: UITextField! {
@@ -23,23 +19,17 @@ class TextFieldTableViewCell: UITableViewCell {
         }
     }
     
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-    
     deinit {
         stopOberveTextField()
     }
     
-    func updateUI() {
+    override func updateUI() {
         titleLabel.text = ""
         textField.text = ""
-        guard let detailItem = detailItem else { return }
-        guard let stringKey = stringKey else { return }
-        titleLabel.text = stringKey
-        textField.text = (detailItem.valueForKey(stringKey) as? CustomStringConvertible)?.description
+        textField.enabled = false
+        guard let objectValue = objectValue else { return }
+        titleLabel.text = objectValue.key.capitalizedString
+        textField.text = objectValue.value as? String 
     }
     
     private func superTableViewIsEditing() -> Bool {
@@ -56,9 +46,9 @@ class TextFieldTableViewCell: UITableViewCell {
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
-        let editing = superTableViewIsEditing()
-        textField.enabled = editing
         if selected {
+            let editing = superTableViewIsEditing()
+            textField.enabled = editing
             textField.becomeFirstResponder()
         }
     }
@@ -75,8 +65,7 @@ extension TextFieldTableViewCell: UITextFieldDelegate {
     
     @objc private func handleTextFieldTextDidChange(notification: NSNotification) {
         guard let textField = notification.object as? UITextField else { return }
-        guard let detailItem = detailItem else { return }
-        detailItem.setValue(textField.text, forKey: titleLabel.text!)
+        objectValue?.value = textField.text
     }
     
     private func oberveTextField() {

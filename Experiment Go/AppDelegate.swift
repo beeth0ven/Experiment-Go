@@ -20,8 +20,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
         navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
         splitViewController.delegate = self
+        
+        if NSUserDefaults.standardUserDefaults().boolForKey("AppDelegate.HasRunedBefore") == false {
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "AppDelegate.HasRunedBefore")
+            User.initAllUsers()
+            NSManagedObjectContext.saveDefaultContext()
+        }
+        
         return true
     }
+
+    lazy var currentUser: User = {
+        return User.randomUser()
+    }()
+
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

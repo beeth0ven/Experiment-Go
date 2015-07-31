@@ -13,12 +13,11 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     
     private struct Storyboard {
-        static let CellReuseIdentifier = "Cell"
+        static let TableViewEstimatedRowHeight: CGFloat = 87
+        static let CellReuseIdentifier = "ExperimentCell"
         static let ShowExperimentDetailSegueIdentifier = "showDetail"
     }
-
     
-
 //    var managedObjectContext: NSManagedObjectContext? = nil
     var fetchedEntityName: String? {
         get {
@@ -29,12 +28,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.estimatedRowHeight = Storyboard.TableViewEstimatedRowHeight
+        tableView.rowHeight = UITableViewAutomaticDimension
         // Do any additional setup after loading the view, typically from a nib.
         navigationController?.hidesBarsOnSwipe = true
-
+        
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
         self.navigationItem.rightBarButtonItem = addButton
-
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -59,12 +59,12 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             controller.title = fetchedEntityName!
             if sender is UITableViewCell {
                 if let indexPath = self.tableView.indexPathForSelectedRow {
-                    let detailItem = self.fetchedResultsController.objectAtIndexPath(indexPath) as! RootObect
+                    let detailItem = self.fetchedResultsController.objectAtIndexPath(indexPath) as! RootObject
                     controller.detailItem = detailItem
                     
                 }
             } else if sender is UIBarButtonItem {
-                let detailItem = RootObect.insertNewObjectForEntityForName(Experiment.Constants.EntityNameKey)
+                let detailItem = RootObject.insertNewObjectForEntityForName(Experiment.Constants.EntityNameKey)
                 controller.detailItem = detailItem
             }
             
@@ -84,7 +84,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(Storyboard.CellReuseIdentifier, forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(Storyboard.CellReuseIdentifier, forIndexPath: indexPath) as! ExperimentTableViewCell
         self.configureCell(cell, atIndexPath: indexPath)
         return cell
     }
@@ -112,10 +112,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
         let experiment = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Experiment
-        cell.textLabel!.text = experiment.whoPost?.name ?? "Niu Dun"
-        cell.detailTextLabel?.text = experiment.valueForKey(Experiment.Constants.TitleKey)?.description
+        (cell as? ExperimentTableViewCell)?.experiment = experiment
     }
-    
+//
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         guard let cell = tableView.cellForRowAtIndexPath(indexPath) else { return }
         performSegueWithIdentifier(Storyboard.ShowExperimentDetailSegueIdentifier, sender: cell)
@@ -139,7 +138,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         fetchRequest.fetchBatchSize = 20
         
         // Edit the sort key as appropriate.
-        let sortDescriptor = NSSortDescriptor(key: RootObect.Constants.DefaultSortKey, ascending: false)
+        let sortDescriptor = NSSortDescriptor(key: RootObject.Constants.DefaultSortKey, ascending: false)
         
         fetchRequest.sortDescriptors = [sortDescriptor]
         

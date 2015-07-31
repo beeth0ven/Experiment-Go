@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 //@objc(Review)
-class Review: RootObect {
+class Review: RootObject {
 
 // Insert code here to add functionality to your managed object subclass
     struct Constants {

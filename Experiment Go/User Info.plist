@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Users</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>Luo Jie</string>
+			<key>email</key>
+			<string>15342299921@163.com</string>
+			<key>profileImageName</key>
+			<string>BlackCat</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>iPhone</string>
+			<key>email</key>
+			<string>iPhone@dream.com</string>
+			<key>profileImageName</key>
+			<string>BearDog</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>iPad Mini</string>
+			<key>email</key>
+			<string>15342299921@163.com</string>
+			<key>profileImageName</key>
+			<string>GlassDog</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>iPad Air</string>
+			<key>email</key>
+			<string>15342299921@163.com</string>
+			<key>profileImageName</key>
+			<string>LazyDog</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Mac Air</string>
+			<key>email</key>
+			<string>15342299921@163.com</string>
+			<key>profileImageName</key>
+			<string>YellowDog</string>
+		</dict>
+	</array>
+</dict>
+</plist>
