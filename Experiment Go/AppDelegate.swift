@@ -21,11 +21,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
         splitViewController.delegate = self
         
+        // Init all users for the first time.
         if NSUserDefaults.standardUserDefaults().boolForKey("AppDelegate.HasRunedBefore") == false {
             NSUserDefaults.standardUserDefaults().setBool(true, forKey: "AppDelegate.HasRunedBefore")
             User.initAllUsers()
             NSManagedObjectContext.saveDefaultContext()
         }
+        
+        //  Set default UI style.
+        DefaultStyleController.applyStyle()
         
         return true
     }

@@ -12,12 +12,14 @@ import CoreData
 class MenuTableViewController: UITableViewController {
     
     private struct Storyboard {
-        static let ProfileImagViewDefualtHeight: CGFloat = 96
+        static let TableHeaderViewDefualtHeight: CGFloat = 136
     }
 
     private enum Segue: String {
         case ShowUserDetail = "showUserDetail"
     }
+    
+    @IBOutlet weak var tableHeaderContentViewHeightConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var profileImagView: UIImageView! {
         didSet {
@@ -25,12 +27,9 @@ class MenuTableViewController: UITableViewController {
             profileImagView.layer.borderWidth = profileImagView.bounds.size.height / 32
         }
     }
-
-    @IBOutlet weak var profileImagViewHeightConstraint: NSLayoutConstraint!
-    
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        let height = Storyboard.ProfileImagViewDefualtHeight - scrollView.contentOffset.y
-        profileImagViewHeightConstraint.constant = height > 0 ? height : 0
+        let height = Storyboard.TableHeaderViewDefualtHeight - scrollView.contentOffset.y
+        tableHeaderContentViewHeightConstraint.constant = max(40, height)
     }
     
     override func viewDidLoad() {
@@ -44,8 +43,11 @@ class MenuTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-            guard cell.textLabel?.text != "Profile" else { return }
-            performSegueWithIdentifier("showMaster", sender: cell)
+            if cell.textLabel?.text == "Profile" {
+                performSegueWithIdentifier("showUserDetail", sender: cell)
+            } else {
+                performSegueWithIdentifier("showMaster", sender: cell)
+            }
         }
     }
 

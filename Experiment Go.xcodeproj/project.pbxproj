@@ -34,10 +34,12 @@
 		45BC4E951B6A24CE00A9963F /* User Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45BC4E941B6A24CE00A9963F /* User Info.plist */; };
 		45BC4E971B6B45B200A9963F /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E961B6B45B200A9963F /* UserDetailViewController.swift */; };
 		45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */; };
+		45BC4E9E1B6DCDB800A9963F /* DefaultStyleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E9D1B6DCDB800A9963F /* DefaultStyleController.swift */; };
 		45BE16D01B6766C600D6383A /* ObjectValueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE16CF1B6766C600D6383A /* ObjectValueTableViewCell.swift */; };
 		45BE16D21B6767B900D6383A /* RootObjectTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE16D11B6767B900D6383A /* RootObjectTableViewCell.swift */; };
 		45C35C8A1B6620EA0055E92A /* RootObject+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C35C891B6620EA0055E92A /* RootObject+CoreDataProperties.swift */; };
 		45EA15431B64B5AF006421C6 /* FetchedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EA15421B64B5AF006421C6 /* FetchedInfoController.swift */; };
+		45FC5F771B6DD7080045F178 /* MenuItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */; };
 		AF79662E4748E3048A76116B /* Pods_Experiment_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2877209060858C580BC83B66 /* Pods_Experiment_Go.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -87,10 +89,12 @@
 		45BC4E941B6A24CE00A9963F /* User Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "User Info.plist"; sourceTree = "<group>"; };
 		45BC4E961B6B45B200A9963F /* UserDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
 		45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentTableViewCell.swift; sourceTree = "<group>"; };
+		45BC4E9D1B6DCDB800A9963F /* DefaultStyleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultStyleController.swift; sourceTree = "<group>"; };
 		45BE16CF1B6766C600D6383A /* ObjectValueTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectValueTableViewCell.swift; sourceTree = "<group>"; };
 		45BE16D11B6767B900D6383A /* RootObjectTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootObjectTableViewCell.swift; sourceTree = "<group>"; };
 		45C35C891B6620EA0055E92A /* RootObject+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootObject+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		45EA15421B64B5AF006421C6 /* FetchedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedInfoController.swift; sourceTree = "<group>"; };
+		45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItemTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +162,7 @@
 			children = (
 				4511B2841B4FB7CF0046DF76 /* AppDelegate.swift */,
 				45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */,
+				45BC4E9D1B6DCDB800A9963F /* DefaultStyleController.swift */,
 				4511B2AB1B4FBA320046DF76 /* Images.xcassets */,
 				4511B2921B4FB7CF0046DF76 /* LaunchScreen.xib */,
 				4511B2831B4FB7CF0046DF76 /* Info.plist */,
@@ -188,6 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				4511B28D1B4FB7CF0046DF76 /* Main.storyboard */,
+				45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */,
 				45BC4E9B1B6B5CFD00A9963F /* RootObjectTableViewCell */,
 				45BC4E9A1B6B5CA500A9963F /* ObjectValueTableViewCell */,
 			);
@@ -436,6 +442,7 @@
 				45130DDB1B68D92900F7F34D /* ImageTableViewCell.swift in Sources */,
 				45BC4E931B6A145F00A9963F /* AuthorTableViewCell.swift in Sources */,
 				45BC4E971B6B45B200A9963F /* UserDetailViewController.swift in Sources */,
+				45FC5F771B6DD7080045F178 /* MenuItemTableViewCell.swift in Sources */,
 				4511B2881B4FB7CF0046DF76 /* Experiment_Go.xcdatamodeld in Sources */,
 				45629F5D1B5811E8000F41E6 /* RootObject.swift in Sources */,
 				45BE16D21B6767B900D6383A /* RootObjectTableViewCell.swift in Sources */,
@@ -452,6 +459,7 @@
 				45BE16D01B6766C600D6383A /* ObjectValueTableViewCell.swift in Sources */,
 				4511B28C1B4FB7CF0046DF76 /* DetailViewController.swift in Sources */,
 				45130DD91B68D6B500F7F34D /* DateTableViewCell.swift in Sources */,
+				45BC4E9E1B6DCDB800A9963F /* DefaultStyleController.swift in Sources */,
 				45629F5F1B5811E8000F41E6 /* User+CoreDataProperties.swift in Sources */,
 				45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */,
 				45BC4E8D1B69C4A300A9963F /* ExperimentDetailViewController.swift in Sources */,

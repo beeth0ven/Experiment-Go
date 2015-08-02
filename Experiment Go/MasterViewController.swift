@@ -31,10 +31,18 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         tableView.estimatedRowHeight = Storyboard.TableViewEstimatedRowHeight
         tableView.rowHeight = UITableViewAutomaticDimension
         // Do any additional setup after loading the view, typically from a nib.
-        navigationController?.hidesBarsOnSwipe = true
         
-        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
+        let addButton = UIBarButtonItem(title: "Add", style: .Plain, target: self, action: "insertNewObject:")
         self.navigationItem.rightBarButtonItem = addButton
+        
+        hideBarSeparator()
+        
+//        let masterNav = splitViewController?.viewControllers.first as? UINavigationController
+//        let myNav = navigationController
+//        masterNav?.navigationBar.barTintColor = myNav?.navigationBar.barTintColor
+//        masterNav?.navigationBar.tintColor = myNav?.navigationBar.tintColor
+//        masterNav?.navigationBar.titleTextAttributes = myNav?.navigationBar.titleTextAttributes
+
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -114,7 +122,11 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         let experiment = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Experiment
         (cell as? ExperimentTableViewCell)?.experiment = experiment
     }
-//
+    
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return self.fetchedEntityName
+    }
+
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         guard let cell = tableView.cellForRowAtIndexPath(indexPath) else { return }
         performSegueWithIdentifier(Storyboard.ShowExperimentDetailSegueIdentifier, sender: cell)
