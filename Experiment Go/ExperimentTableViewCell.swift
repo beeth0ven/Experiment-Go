@@ -20,6 +20,7 @@ class ExperimentTableViewCell: RootObjectTableViewCell {
             detailItem = newValue
         }
     }
+    
     var authorProfileImage: UIImage? {
         get {
             return authorProfileImageView.image

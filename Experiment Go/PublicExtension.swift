@@ -33,6 +33,18 @@ extension UIViewController {
     }
 }
 
+extension UISplitViewController {
+    func toggleMasterView() {
+        let barButtonItem = self.displayModeButtonItem()
+        UIApplication.sharedApplication().sendAction(barButtonItem.action,
+            to: barButtonItem.target,
+            from: barButtonItem,
+            forEvent: nil
+        )
+    }
+}
+
+
 extension NSDateFormatter {
     class func smartStringFormDate(date: NSDate) -> String {
         let absTimeIntervalSinceNow = -date.timeIntervalSinceNow
@@ -44,15 +56,15 @@ extension NSDateFormatter {
         } else if absTimeIntervalSinceNow < OneHour {
             // eg. 10 Minutes
             let minutes = Int(absTimeIntervalSinceNow / OneMinute)
-            return "\(minutes) m"
+            return "\(minutes) min"
         } else if absTimeIntervalSinceNow < OneDay {
             // eg. 10 Hours
             let hours = Int(absTimeIntervalSinceNow / OneHour)
-            return "\(hours) h"
+            return "\(hours) hour"
         } else {
             // eg. 10 Days
             let days = Int(absTimeIntervalSinceNow / OneDay)
-            return "\(days) d"
+            return "\(days) day"
 
         }
     }

@@ -14,8 +14,9 @@ import CoreData
 
 class ExperimentDetailViewController: DetailViewController {
     
-    private enum Segue: String {
-        case ShowUserDetail = "showUserDetail"
+    private enum SegueID: String {
+        case ShowUserDetail
+        case AddNewReview
     }
 
     
@@ -33,6 +34,10 @@ class ExperimentDetailViewController: DetailViewController {
     
 
     @IBOutlet weak var likeBarButtonItem: UIBarButtonItem!
+    @IBOutlet weak var cancelBarButtonItem: UIBarButtonItem!
+    @IBOutlet weak var closeBarButtonItem: UIBarButtonItem!
+    @IBOutlet weak var saveBarButtonItem: UIBarButtonItem!
+    
     
     // MARK: - View Controller Lifecycle
     
@@ -41,14 +46,22 @@ class ExperimentDetailViewController: DetailViewController {
         hideBarSeparator()
     }
     
-    // MARK: - User Actions
-    
-    @IBAction func doDelete(sender: UIBarButtonItem) {
-        dismissSelfAndSveContextAfter {
-            [unowned self] in
-                NSManagedObjectContext.defaultContext().deleteObject(self.experiment!)
+     override func configureBarButtons() {
+        if detailItem.inserted {
+            self.editing = true
+            navigationItem.leftBarButtonItems = [cancelBarButtonItem]
+            navigationItem.rightBarButtonItems = [saveBarButtonItem]
+            
+        } else {
+            navigationItem.leftBarButtonItems = [closeBarButtonItem]
+            navigationItem.rightBarButtonItems = [editButtonItem()]
+            
         }
+        super.configureBarButtons()
     }
+
+    
+    // MARK: - User Actions
     
     @IBAction func toggleLikeStates(sender: UIBarButtonItem) {
         var success = false
@@ -136,12 +149,20 @@ class ExperimentDetailViewController: DetailViewController {
     // MARK: - Segues
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == Segue.ShowUserDetail.rawValue {
+        guard segue.identifier != nil else { return }
+        guard let segueID = SegueID(rawValue: segue.identifier!) else { return }
+        switch segueID {
+        case .ShowUserDetail:
             let controller = segue.destinationViewController as! DetailViewController
             if let cell = sender as? RootObjectTableViewCell {
                 controller.detailItem = cell.detailItem!
             }
+        case .AddNewReview:
+            let controller = (segue.destinationViewController as! UINavigationController).topViewController as! ReviewViewController
+            let review = RootObject.insertNewObjectForEntityForName(Review.Constants.EntityNameKey) as! Review
+            controller.review = review
         }
+
     }
     
     // MARK: - Table View Data Source
@@ -223,8 +244,9 @@ class ExperimentDetailViewController: DetailViewController {
         case SectionUnique.WhoPost.rawValue:
             return Storyboard.UserCellReuseIdentifier
             
-//        case SectionUnique.Reviews.rawValue:
-//            
+        case SectionUnique.Reviews.rawValue:
+            return Storyboard.ReviewCellReuseIdentifier
+
         case SectionUnique.UsersLikeMe.rawValue:
             return Storyboard.UserCellReuseIdentifier
             
@@ -268,4 +290,46 @@ class ExperimentDetailViewController: DetailViewController {
 extension DetailViewController.Storyboard {
     static let EmptyStyleCellReuseIdentifier = "EmptyStyleCell"
     static let UserCellReuseIdentifier = "UserCell"
+    static let ReviewCellReuseIdentifier = "ReviewCell"
 }
+
+
+extension ExperimentDetailViewController {
+    // MARK: - Unwind Segue
+    @IBAction func cancelToExperimentDetail(segue: UIStoryboardSegue) {
+        guard let dvc = segue.sourceViewController as? DetailViewController else { return }
+        if dvc.detailItem!.inserted {
+            NSManagedObjectContext.defaultContext().deleteObject(dvc.detailItem!)
+        }
+    }
+    
+    @IBAction func saveToExperimentDetail(segue: UIStoryboardSegue) {
+        if let rvc = segue.sourceViewController as? ReviewViewController {
+            let review = rvc.review!
+            review.body = rvc.bodyTextView.text
+            let sectionUnique = SectionUnique.Reviews
+            let reviewSet = relationshipSetForSectionUnique(sectionUnique)!
+            reviewSet.addObject(review)
+            let reviews = relationshipArrayForSectionUnique(sectionUnique)!
+            let row: Int = reviews.indexOf(review)!
+            let section: Int = identifiersForSectionInfos().indexOf(sectionUnique.rawValue)!
+            let indexPath = NSIndexPath(forRow: row, inSection: section)
+            
+            tableView.beginUpdates()
+            if reviews.count == 1 {
+                // Empty Cell Change to Normal Cell
+                tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            } else {
+                tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            }
+            tableView.endUpdates()
+        }
+        
+        NSManagedObjectContext.saveDefaultContext()
+    }
+    
+    @IBAction func closeToExperimentDetail(segue: UIStoryboardSegue) {
+    }
+    
+}
+

@@ -33,7 +33,9 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
             tableView.rowHeight = UITableViewAutomaticDimension
         }
     }
+    
 
+    
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
@@ -90,39 +92,23 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
         tableView.endUpdates()
     }
     
-    @IBAction func save(sender: UIBarButtonItem) {
-        dismissSelfAndSveContextAfter(nil)
-    }
-    
-    @IBAction func close(sender: UIBarButtonItem) {
-        dismissSelfAndSveContextAfter {
-            [unowned self] in
-            if self.detailItem.inserted {
-                NSManagedObjectContext.defaultContext().deleteObject(self.detailItem!)
-            }
-        }
-    }
-    
-    func dismissSelfAndSveContextAfter(operation: (() -> Void)?) {
-        presentingViewController?.dismissViewControllerAnimated(true) {
-            operation?()
-            NSManagedObjectContext.saveDefaultContext()
-        }
-    }
-    
-    
     // MARK: - View Configure
     
-    private func configureBarButtons() {
-        if !detailItem.inserted {
-            navigationItem.rightBarButtonItem = editButtonItem()
-        } else {
-            self.editing = true
-        }
+    func configureBarButtons() {
         if navigationController?.viewControllers.first != self {
             navigationItem.leftBarButtonItem = nil
         }
     }
+    
+//    lazy var closeBarButtonItem: UIBarButtonItem = {
+//        let result = UIBarButtonItem(title: "Close", style: .Plain, target: self, action: "performUnwindCloseToMVC:")
+//        return result
+//    }()
+    
+//    func performUnwindCloseToMVC(sender: UIBarButtonItem) {
+//        performSegueWithIdentifier("unwindCloseToMVC", sender: sender)
+//    }
+    
     
     func updateUI() {
         tableView?.reloadData()
@@ -362,6 +348,4 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
 
 
 }
-
-
 

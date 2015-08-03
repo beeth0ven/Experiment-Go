@@ -14,7 +14,6 @@
 		4511B28F1B4FB7CF0046DF76 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4511B28D1B4FB7CF0046DF76 /* Main.storyboard */; };
 		4511B2941B4FB7CF0046DF76 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4511B2921B4FB7CF0046DF76 /* LaunchScreen.xib */; };
 		4511B2A01B4FB7CF0046DF76 /* Experiment_GoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B29F1B4FB7CF0046DF76 /* Experiment_GoTests.swift */; };
-		4511B2AA1B4FB9790046DF76 /* RootSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B2A91B4FB9790046DF76 /* RootSplitViewController.swift */; };
 		4511B2AC1B4FBA320046DF76 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4511B2AB1B4FBA320046DF76 /* Images.xcassets */; };
 		45130DD91B68D6B500F7F34D /* DateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45130DD81B68D6B500F7F34D /* DateTableViewCell.swift */; };
 		45130DDB1B68D92900F7F34D /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45130DDA1B68D92900F7F34D /* ImageTableViewCell.swift */; };
@@ -29,6 +28,8 @@
 		45629F951B5BC386000F41E6 /* ChameleonFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45629F941B5BC386000F41E6 /* ChameleonFramework.framework */; };
 		4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */; };
 		45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */; };
+		4599C90D1B6F469B0040461F /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4599C90C1B6F469B0040461F /* ReviewViewController.swift */; };
+		45AAB0A21B6E117200595467 /* ReviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */; };
 		45BC4E8D1B69C4A300A9963F /* ExperimentDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E8C1B69C4A300A9963F /* ExperimentDetailViewController.swift */; };
 		45BC4E931B6A145F00A9963F /* AuthorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E921B6A145F00A9963F /* AuthorTableViewCell.swift */; };
 		45BC4E951B6A24CE00A9963F /* User Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45BC4E941B6A24CE00A9963F /* User Info.plist */; };
@@ -67,7 +68,6 @@
 		4511B2991B4FB7CF0046DF76 /* Experiment GoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Experiment GoTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4511B29E1B4FB7CF0046DF76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4511B29F1B4FB7CF0046DF76 /* Experiment_GoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Experiment_GoTests.swift; sourceTree = "<group>"; };
-		4511B2A91B4FB9790046DF76 /* RootSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootSplitViewController.swift; sourceTree = "<group>"; };
 		4511B2AB1B4FBA320046DF76 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4511B2B01B4FBACA0046DF76 /* Experiment Go-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Experiment Go-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		45130DD81B68D6B500F7F34D /* DateTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateTableViewCell.swift; sourceTree = "<group>"; };
@@ -83,7 +83,9 @@
 		45629F941B5BC386000F41E6 /* ChameleonFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChameleonFramework.framework; path = "Pods/../build/Debug-iphoneos/Pods-Experiment Go/ChameleonFramework.framework"; sourceTree = "<group>"; };
 		4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicExtension.swift; sourceTree = "<group>"; };
+		4599C90C1B6F469B0040461F /* ReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		459C3DB7BFCEAA28C645268E /* Pods-Experiment Go.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Experiment Go.release.xcconfig"; path = "Pods/Target Support Files/Pods-Experiment Go/Pods-Experiment Go.release.xcconfig"; sourceTree = "<group>"; };
+		45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewTableViewCell.swift; sourceTree = "<group>"; };
 		45BC4E8C1B69C4A300A9963F /* ExperimentDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentDetailViewController.swift; sourceTree = "<group>"; };
 		45BC4E921B6A145F00A9963F /* AuthorTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorTableViewCell.swift; sourceTree = "<group>"; };
 		45BC4E941B6A24CE00A9963F /* User Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "User Info.plist"; sourceTree = "<group>"; };
@@ -203,9 +205,9 @@
 		4511B2AE1B4FBA7F0046DF76 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				4511B2A91B4FB9790046DF76 /* RootSplitViewController.swift */,
 				4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */,
 				4511B2891B4FB7CF0046DF76 /* MasterViewController.swift */,
+				4599C90C1B6F469B0040461F /* ReviewViewController.swift */,
 				45BC4E9C1B6B5D1300A9963F /* DetailViewController */,
 			);
 			name = Controller;
@@ -257,6 +259,7 @@
 		45BC4E9B1B6B5CFD00A9963F /* RootObjectTableViewCell */ = {
 			isa = PBXGroup;
 			children = (
+				45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */,
 				45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */,
 				45BC4E921B6A145F00A9963F /* AuthorTableViewCell.swift */,
 				45BE16D11B6767B900D6383A /* RootObjectTableViewCell.swift */,
@@ -441,9 +444,11 @@
 			files = (
 				45130DDB1B68D92900F7F34D /* ImageTableViewCell.swift in Sources */,
 				45BC4E931B6A145F00A9963F /* AuthorTableViewCell.swift in Sources */,
+				4599C90D1B6F469B0040461F /* ReviewViewController.swift in Sources */,
 				45BC4E971B6B45B200A9963F /* UserDetailViewController.swift in Sources */,
 				45FC5F771B6DD7080045F178 /* MenuItemTableViewCell.swift in Sources */,
 				4511B2881B4FB7CF0046DF76 /* Experiment_Go.xcdatamodeld in Sources */,
+				45AAB0A21B6E117200595467 /* ReviewTableViewCell.swift in Sources */,
 				45629F5D1B5811E8000F41E6 /* RootObject.swift in Sources */,
 				45BE16D21B6767B900D6383A /* RootObjectTableViewCell.swift in Sources */,
 				45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */,
@@ -452,7 +457,6 @@
 				4511B28A1B4FB7CF0046DF76 /* MasterViewController.swift in Sources */,
 				45629F531B5811E8000F41E6 /* Review+CoreDataProperties.swift in Sources */,
 				45C35C8A1B6620EA0055E92A /* RootObject+CoreDataProperties.swift in Sources */,
-				4511B2AA1B4FB9790046DF76 /* RootSplitViewController.swift in Sources */,
 				45629EFA1B578B22000F41E6 /* TextFieldTableViewCell.swift in Sources */,
 				45629F551B5811E8000F41E6 /* Review.swift in Sources */,
 				45629F571B5811E8000F41E6 /* Experiment+CoreDataProperties.swift in Sources */,

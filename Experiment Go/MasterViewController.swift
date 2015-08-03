@@ -33,6 +33,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         // Do any additional setup after loading the view, typically from a nib.
         
         let addButton = UIBarButtonItem(title: "Add", style: .Plain, target: self, action: "insertNewObject:")
+//        addButton.tintColor = DefaultStyleController.Color.DarkSand
         self.navigationItem.rightBarButtonItem = addButton
         
         hideBarSeparator()
@@ -208,4 +209,27 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
 
 }
+
+extension MasterViewController {
+    // MARK: - Unwind Segue
+    @IBAction func cancelToMaster(segue: UIStoryboardSegue) {
+        guard let dvc = segue.sourceViewController as? DetailViewController else { return }
+        if dvc.detailItem!.inserted {
+            NSManagedObjectContext.defaultContext().deleteObject(dvc.detailItem!)
+        }
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    @IBAction func saveToMaster(segue: UIStoryboardSegue) {
+        NSManagedObjectContext.saveDefaultContext()
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    @IBAction func closeToMaster(segue: UIStoryboardSegue) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+}
+
+
 

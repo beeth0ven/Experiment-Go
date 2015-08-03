@@ -40,7 +40,6 @@ class MenuTableViewController: UITableViewController {
         hideBarSeparator()
     }
     
-    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
             if cell.textLabel?.text == "Profile" {
@@ -50,7 +49,6 @@ class MenuTableViewController: UITableViewController {
             }
         }
     }
-
     
     // MARK: - Segues
     
@@ -72,18 +70,10 @@ class MenuTableViewController: UITableViewController {
                 controller.detailItem = User.currentUser()
         }
     }
-
-
-}
-
-
-extension UISplitViewController {
-    func toggleMasterView() {
-        let barButtonItem = self.displayModeButtonItem()
-        UIApplication.sharedApplication().sendAction(barButtonItem.action,
-            to: barButtonItem.target,
-            from: barButtonItem,
-            forEvent: nil
-        )
+    
+    @IBAction func closeToMenu(segue: UIStoryboardSegue) {
+        dismissViewControllerAnimated(true, completion: nil)
     }
+
 }
+
