@@ -30,7 +30,7 @@ class FetchedInfoController {
     }
     
     var sections: [SectionInfo] = []
-        private func configureDataStruct() {
+    private func configureDataStruct() {
         guard dataSource != nil else { return }
         var result: [SectionInfo] = []
         for identifer in dataSource!.identifiersForSectionInfos() {
@@ -43,6 +43,10 @@ class FetchedInfoController {
             result.append(sectionInfo)
         }
         sections = result
+    }
+    
+    func reloadDataStruct() {
+        configureDataStruct()
     }
     
 }

@@ -12,9 +12,9 @@ import CoreData
 class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
     
     
-    private struct Storyboard {
+    struct Storyboard {
         static let TableViewEstimatedRowHeight: CGFloat = 87
-        static let CellReuseIdentifier = "ExperimentCell"
+        static let ExperimentCellReuseIdentifier = "ExperimentCell"
         static let ShowExperimentDetailSegueIdentifier = "showDetail"
     }
     
@@ -93,7 +93,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(Storyboard.CellReuseIdentifier, forIndexPath: indexPath) as! ExperimentTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(Storyboard.ExperimentCellReuseIdentifier, forIndexPath: indexPath) as! ExperimentTableViewCell
         self.configureCell(cell, atIndexPath: indexPath)
         return cell
     }

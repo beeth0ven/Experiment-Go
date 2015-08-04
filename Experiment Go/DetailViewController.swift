@@ -65,90 +65,90 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
     }
     
     private func toggleEditingMode(editing: Bool) {
-        tableView.beginUpdates()
-        for (sectionIndex, sectionInfo) in fetchedInfoController.sections.enumerate() {
-            switch sectionInfo.style {
-            case .Attribute:
-                tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-                
-            case .ToManyRelationship(_):
-                guard sectionInfo.editingStyles.contains(.Insert) else { continue }
-                var indexPath: NSIndexPath!
-                let objectsCount = detailItem.mutableSetValueForKey(sectionInfo.identifier).count
-                if editing {
-                    indexPath = NSIndexPath(forRow: objectsCount, inSection: sectionIndex)
-                    tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                } else {
-                    indexPath = NSIndexPath(forRow: objectsCount , inSection: sectionIndex)
-                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                }
-                
-            default: break
-            }
-            
-        }
-        
-        
-        tableView.endUpdates()
+        let options: UIViewAnimationOptions = editing ? .TransitionCurlUp : .TransitionCurlDown
+        UIView.transitionWithView(tableView,
+            duration: 0.4,
+            options: options,
+            animations: {
+                self.fetchedInfoController.reloadDataStruct()
+                self.tableView.reloadData()
+            },
+            completion: nil)
+//        tableView.beginUpdates()
+//        for (sectionIndex, sectionInfo) in fetchedInfoController.sections.enumerate() {
+//            switch sectionInfo.style {
+//            case .Attribute:
+//                tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+//                
+//            case .ToManyRelationship(_):
+//                guard sectionInfo.editingStyles.contains(.Insert) else { continue }
+//                var indexPath: NSIndexPath!
+//                let objectsCount = detailItem.mutableSetValueForKey(sectionInfo.identifier).count
+//                if editing {
+//                    indexPath = NSIndexPath(forRow: objectsCount, inSection: sectionIndex)
+//                    tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+//                } else {
+//                    indexPath = NSIndexPath(forRow: objectsCount , inSection: sectionIndex)
+//                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+//                }
+//                
+//            default: break
+//            }
+//            
+//        }
+//        
+//        
+//        tableView.endUpdates()
     }
     
     // MARK: - View Configure
     
     func configureBarButtons() {
-        if navigationController?.viewControllers.first != self {
-            navigationItem.leftBarButtonItem = nil
-        }
+
     }
-    
-//    lazy var closeBarButtonItem: UIBarButtonItem = {
-//        let result = UIBarButtonItem(title: "Close", style: .Plain, target: self, action: "performUnwindCloseToMVC:")
-//        return result
-//    }()
-    
-//    func performUnwindCloseToMVC(sender: UIBarButtonItem) {
-//        performSegueWithIdentifier("unwindCloseToMVC", sender: sender)
-//    }
-    
     
     func updateUI() {
         tableView?.reloadData()
     }
     
-    struct Storyboard {
-        static let TableViewEstimatedRowHeight: CGFloat = 44
+    
+    // MARK: - Help Method
+    
+    func addObject(rootObject: RootObject, forToManyRelationshipKey key: String) -> NSIndexPath? {
+        let sectionInfo = sectionInfoForIdentifier(key)
+        guard case .ToManyRelationship(let key,let isOrderdBefore) = sectionInfo.style else { return nil }
+        let relationshipSet = detailItem!.mutableSetValueForKey(key)
         
-        static let InsertStyleCellReuseIdentifier = "InsertStyleCell"
-        static let NumberCellReuseIdentifier = "NumberCell"
-        static let BoolCellReuseIdentifier = "BoolCell"
-        static let TextCellReuseIdentifier = "TextCell"
-        static let DateCellReuseIdentifier = "DateCell"
-        static let ImageCellReuseIdentifier = "ImageCell"
-        static let DetailItemCellReuseIdentifier = "DetailItemCell"
+        guard relationshipSet.containsObject(rootObject) == false else { return nil }
+        guard detailItem.destinationEntityNameForRelationshipKey(key) == rootObject.entity.name else { return nil }
+        relationshipSet.addObject(rootObject)
         
+        let relationshipAsArray = (relationshipSet.allObjects as! [RootObject]).sort(isOrderdBefore)
+        guard
+            let row: Int = relationshipAsArray.indexOf(rootObject),
+            let section: Int = identifiersForSectionInfos().indexOf(key)
+            else { return nil }
+        return NSIndexPath(forRow: row, inSection: section)
     }
     
-    func cellReuseIdentifierFromItemKey(key: String) -> String? {
+    func removeObject(rootObject: RootObject, forToManyRelationshipKey key: String) -> NSIndexPath? {
         
-        switch key {
-        case "title", "body", "id":
-            return Storyboard.TextCellReuseIdentifier
-            
-        case "createDate", "modifyDate":
-            return Storyboard.DateCellReuseIdentifier
-            
-        case "imageData":
-            return Storyboard.ImageCellReuseIdentifier
-            case "reviews", "usersLikeMe", "whoPost":
-            return Storyboard.DetailItemCellReuseIdentifier
-            
-        default:
-            return nil
-            
-        }
+        let sectionInfo = sectionInfoForIdentifier(key)
+        guard case .ToManyRelationship(let key,let isOrderdBefore) = sectionInfo.style else { return nil }
+        let relationshipSet = detailItem!.mutableSetValueForKey(key)
+        
+        guard relationshipSet.containsObject(rootObject) == true else { return nil }
+        
+        let relationshipAsArray = (relationshipSet.allObjects as! [RootObject]).sort(isOrderdBefore)
+        guard
+            let row: Int = relationshipAsArray.indexOf(rootObject),
+            let section: Int = identifiersForSectionInfos().indexOf(key)
+            else { return nil }
+        
+        relationshipSet.removeObject(rootObject)
+        return NSIndexPath(forRow: row, inSection: section)
         
     }
-
-    
     // MARK: - Table View Data Source
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -172,7 +172,17 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
             
         case .ToManyRelationship(let toManyRelationshipKey, _):
             let managedObjectSet = detailItem.mutableSetValueForKey(toManyRelationshipKey)
-            return (sectionInfo.editingStyles.contains(.Insert) && editing) ?  managedObjectSet.count + 1 : managedObjectSet.count
+            if sectionInfo.editingStyles.contains(.Insert) && editing {
+                // Editing mode and section can insert cell, then show a insert cell at bottom.
+                return managedObjectSet.count + 1
+            } else if managedObjectSet.count == 0 {
+                // Show a empty cell at bottom when the section is empty.
+                return managedObjectSet.count + 1
+            } else {
+                // Normal case here.
+                return managedObjectSet.count
+            }
+
         }
     }
     
@@ -196,21 +206,24 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
             
         case .ToManyRelationship(let toManyRelationshipKey, let isOrderdBefore):
             let managedObjectSet = detailItem.mutableSetValueForKey(toManyRelationshipKey)
-            if indexPath.row < managedObjectSet.count {
+            if sectionInfo.editingStyles.contains(.Insert) && editing {
+                // Editing mode and section can insert cell, then show a insert cell at bottom.
+                let destinationEntityName = detailItem.destinationEntityNameForRelationshipKey(toManyRelationshipKey)!
+                let cell = tableView.dequeueReusableCellWithIdentifier(Storyboard.InsertStyleCellReuseIdentifier, forIndexPath: indexPath)
+                cell.textLabel?.text = "Add New \(destinationEntityName)."
+                return cell
+            } else if managedObjectSet.count == 0 {
+                // Show a empty cell at bottom when the section is empty.
+                let cell = tableView.dequeueReusableCellWithIdentifier(Storyboard.EmptyStyleCellReuseIdentifier, forIndexPath: indexPath)
+                return cell
+            } else {
+                // Normal case here.
                 let managedObjects = (managedObjectSet.allObjects as! [RootObject]).sort(isOrderdBefore)
                 let cellDetailItem = managedObjects[indexPath.row]
                 guard let identifier = cellReuseIdentifierFromItemKey(toManyRelationshipKey) else { return UITableViewCell() }
                 let cell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! RootObjectTableViewCell
                 cell.detailItem = cellDetailItem
-                return cell
-
-            } else {
-                // Only happen, when the section last row shows insert style while editing mode.
-                let destinationEntityName = detailItem.destinationEntityNameForRelationshipKey(toManyRelationshipKey)!
-                let cell = tableView.dequeueReusableCellWithIdentifier(Storyboard.InsertStyleCellReuseIdentifier, forIndexPath: indexPath)
-                cell.textLabel?.text = "Add New \(destinationEntityName)."
-                return cell
-            }
+                return cell            }
         }
         
     }
@@ -313,12 +326,23 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
     
     
     func identifiersForSectionInfos() -> [String] {
-        var relationshipNames = detailItem.entity.relationshipsByName.keys.array
-        relationshipNames.insert(Constants.AttributeSectionKey, atIndex: 0)
-        return relationshipNames
+        if editing == false {
+            var relationshipNames = detailItem.entity.relationshipsByName.keys.array
+            relationshipNames.insert(Constants.AttributeSectionKey, atIndex: 0)
+            return relationshipNames
+        } else {
+            return []
+        }
+        
     }
 
     func sectionInfoForIdentifier(identifier: String) -> SectionInfo {
+        
+        if editing == false {
+            
+        } else {
+            
+        }
         let style: SectionInfo.Style!
         var editingStyles: [SectionInfo.EditingStyle] = []
         
@@ -337,6 +361,13 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
 
     
     func cellKeysBySectionInfo(sectionInfo: SectionInfo) -> [String]? {
+        
+        if editing == false {
+            
+        } else {
+            
+        }
+        
         switch sectionInfo.style {
         case .Attribute:
             return detailItem.entity.attributesByName.keys.array
@@ -346,6 +377,41 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
         }
     }
 
-
+    struct Storyboard {
+        static let TableViewEstimatedRowHeight: CGFloat = 44
+        
+        static let EmptyStyleCellReuseIdentifier = "EmptyStyleCell"
+        static let InsertStyleCellReuseIdentifier = "InsertStyleCell"
+        static let NumberCellReuseIdentifier = "NumberCell"
+        static let BoolCellReuseIdentifier = "BoolCell"
+        static let TextCellReuseIdentifier = "TextCell"
+        static let DateCellReuseIdentifier = "DateCell"
+        static let ImageCellReuseIdentifier = "ImageCell"
+        static let DetailItemCellReuseIdentifier = "DetailItemCell"
+        
+    }
+    
+    func cellReuseIdentifierFromItemKey(key: String) -> String? {
+        
+        switch key {
+        case "title", "body", "id":
+            return Storyboard.TextCellReuseIdentifier
+            
+        case "createDate", "modifyDate":
+            return Storyboard.DateCellReuseIdentifier
+            
+        case "imageData":
+            return Storyboard.ImageCellReuseIdentifier
+        case "reviews", "usersLikeMe", "whoPost":
+            return Storyboard.DetailItemCellReuseIdentifier
+            
+        default:
+            return nil
+            
+        }
+        
+    }
+    
+    
 }
 

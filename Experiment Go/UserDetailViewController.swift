@@ -50,40 +50,11 @@ class UserDetailViewController: DetailViewController {
     
     // MARK: - Table View Data Source
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = fetchedInfoController.sections[section]
-        let sectionUnique = SectionUnique(rawValue: sectionInfo.identifier)!
-        switch sectionUnique {
-        case .PostedExperiments, .LikedExperiments, .FollowingUsers, .Followers, .PostedReviews:
-            guard relationshipSetForSectionUnique(sectionUnique)!.count == 0 else { fallthrough }
-            return 1
-        default:
-            return super.tableView(tableView, numberOfRowsInSection: section)
-        }
-    }
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let sectionInfo = fetchedInfoController.sections[indexPath.section]
-        let sectionUnique = SectionUnique(rawValue: sectionInfo.identifier)!
-        switch sectionUnique {
-        case .PostedExperiments, .LikedExperiments, .FollowingUsers, .Followers, .PostedReviews:
-            guard indexPath.row == relationshipSetForSectionUnique(sectionUnique)!.count else { fallthrough }
-            return tableView.dequeueReusableCellWithIdentifier(Storyboard.EmptyStyleCellReuseIdentifier, forIndexPath: indexPath)
-        default:
-            return super.tableView(tableView, cellForRowAtIndexPath: indexPath)
-        }
-    }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let sectionInfo = fetchedInfoController.sections[section]
         let sectionUnique = SectionUnique(rawValue: sectionInfo.identifier)!
         return sectionUnique.name
-    }
-    
-    private func relationshipSetForSectionUnique(sectionUnique :SectionUnique) -> NSMutableSet? {
-        let sectionInfo = sectionInfoForIdentifier(sectionUnique.rawValue)
-        guard case .ToManyRelationship(let key,_) = sectionInfo.style else { return nil }
-        return detailItem?.mutableSetValueForKey(key)
     }
     
     // MARK: - Fetched Info Controller Data Source
@@ -147,10 +118,10 @@ class UserDetailViewController: DetailViewController {
             
             
         case SectionUnique.PostedExperiments.rawValue:
-            return Storyboard.ExperimentCellReuseIdentifier
+            return MasterViewController.Storyboard.ExperimentCellReuseIdentifier
             
         case SectionUnique.LikedExperiments.rawValue:
-            return Storyboard.ExperimentCellReuseIdentifier
+            return MasterViewController.Storyboard.ExperimentCellReuseIdentifier
             
             
         case SectionUnique.FollowingUsers.rawValue:
@@ -201,9 +172,4 @@ class UserDetailViewController: DetailViewController {
             }
         }
     }
-}
-
-extension DetailViewController.Storyboard {
-    static let ExperimentCellReuseIdentifier = "ExperimentCell"
-
 }

@@ -46,21 +46,7 @@ class ExperimentDetailViewController: DetailViewController {
         hideBarSeparator()
     }
     
-     override func configureBarButtons() {
-        if detailItem.inserted {
-            self.editing = true
-            navigationItem.leftBarButtonItems = [cancelBarButtonItem]
-            navigationItem.rightBarButtonItems = [saveBarButtonItem]
-            
-        } else {
-            navigationItem.leftBarButtonItems = [closeBarButtonItem]
-            navigationItem.rightBarButtonItems = [editButtonItem()]
-            
-        }
-        super.configureBarButtons()
-    }
 
-    
     // MARK: - User Actions
     
     @IBAction func toggleLikeStates(sender: UIBarButtonItem) {
@@ -81,18 +67,9 @@ class ExperimentDetailViewController: DetailViewController {
     
     private func doLike() -> Bool {
         let sectionUnique = SectionUnique.UsersLikeMe
-        let user = User.currentUser()
-        let usersLikeMe = relationshipSetForSectionUnique(sectionUnique)!
-        guard usersLikeMe.containsObject(User.currentUser()) == false else { return false }
-        usersLikeMe.addObject(user)
-        let usersLikeMeAsArray = relationshipArrayForSectionUnique(sectionUnique)!
-        guard
-            let row: Int = usersLikeMeAsArray.indexOf(user),
-            let section: Int = identifiersForSectionInfos().indexOf(sectionUnique.rawValue)
-            else { return false }
-        let indexPath = NSIndexPath(forRow: row, inSection: section)
+        guard let indexPath = addObject(User.currentUser(), forToManyRelationshipKey: sectionUnique.rawValue) else { return false }
         tableView.beginUpdates()
-        if usersLikeMe.count == 1 {
+        if detailItem.mutableSetValueForKey(sectionUnique.rawValue).count == 1 {
             // Empty Cell Change to Normal Cell
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         } else {
@@ -105,18 +82,9 @@ class ExperimentDetailViewController: DetailViewController {
 
     private func doUnLike() -> Bool  {
         let sectionUnique = SectionUnique.UsersLikeMe
-        let user = User.currentUser()
-        let usersLikeMe = relationshipSetForSectionUnique(sectionUnique)!
-        guard usersLikeMe.containsObject(User.currentUser()) == true else { return false }
-        let usersLikeMeAsArray = relationshipArrayForSectionUnique(sectionUnique)!
-        guard
-            let row: Int = usersLikeMeAsArray.indexOf(user),
-            let section: Int = identifiersForSectionInfos().indexOf(sectionUnique.rawValue)
-            else { return false }
-        let indexPath = NSIndexPath(forRow: row, inSection: section)
-        usersLikeMe.removeObject(user)
+        guard let indexPath = removeObject(User.currentUser(), forToManyRelationshipKey: sectionUnique.rawValue) else { return false }
         tableView.beginUpdates()
-        if usersLikeMe.count == 0 {
+        if detailItem.mutableSetValueForKey(sectionUnique.rawValue).count == 0 {
             // Normal Cell Change to Empty Cell
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         } else {
@@ -127,23 +95,26 @@ class ExperimentDetailViewController: DetailViewController {
     }
     // MARK: - View Configure
     
-    override func updateUI() {
-        super.updateUI()
-        let usersLikeMe = relationshipSetForSectionUnique(.UsersLikeMe)!
-        likeBarButtonItem?.title = usersLikeMe.containsObject(User.currentUser()) ? "Liking" : "Like"
-    }
-    // MARK: - Help Method
-
-    private func relationshipSetForSectionUnique(sectionUnique :SectionUnique) -> NSMutableSet? {
-        let sectionInfo = sectionInfoForIdentifier(sectionUnique.rawValue)
-        guard case .ToManyRelationship(let key,_) = sectionInfo.style else { return nil }
-        return detailItem?.mutableSetValueForKey(key)
+    override func configureBarButtons() {
+        if detailItem.inserted {
+            self.editing = true
+            navigationItem.leftBarButtonItems = [cancelBarButtonItem]
+            navigationItem.rightBarButtonItems = [saveBarButtonItem]
+            
+        } else {
+            navigationItem.leftBarButtonItems = [closeBarButtonItem]
+            navigationItem.rightBarButtonItems = [editButtonItem()]
+            
+        }
+        if navigationController?.viewControllers.first != self {
+            navigationItem.leftBarButtonItem = nil
+        }
     }
     
-    private func relationshipArrayForSectionUnique(sectionUnique :SectionUnique) -> [RootObject]? {
-        let sectionInfo = sectionInfoForIdentifier(sectionUnique.rawValue)
-        guard case .ToManyRelationship(let key, let isOrderedBefore) = sectionInfo.style else { return nil }
-        return (experiment?.mutableSetValueForKey(key).allObjects as? [RootObject])?.sort(isOrderedBefore)
+    override func updateUI() {
+        super.updateUI()
+        let usersLikeMe = detailItem!.mutableSetValueForKey(SectionUnique.UsersLikeMe.rawValue)
+        likeBarButtonItem?.title = usersLikeMe.containsObject(User.currentUser()) ? "Liking" : "Like"
     }
     
     // MARK: - Segues
@@ -166,30 +137,7 @@ class ExperimentDetailViewController: DetailViewController {
     }
     
     // MARK: - Table View Data Source
-    
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = fetchedInfoController.sections[section]
-        let sectionUnique = SectionUnique(rawValue: sectionInfo.identifier)!
-        switch sectionUnique {
-        case .Reviews, .UsersLikeMe:
-            guard relationshipSetForSectionUnique(sectionUnique)!.count == 0 else { fallthrough }
-            return 1
-        default:
-            return super.tableView(tableView, numberOfRowsInSection: section)
-        }
-    }
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let sectionInfo = fetchedInfoController.sections[indexPath.section]
-        let sectionUnique = SectionUnique(rawValue: sectionInfo.identifier)!
-        switch sectionUnique {
-        case .Reviews, .UsersLikeMe:
-            guard indexPath.row == relationshipSetForSectionUnique(sectionUnique)!.count else { fallthrough }
-            return tableView.dequeueReusableCellWithIdentifier(Storyboard.EmptyStyleCellReuseIdentifier, forIndexPath: indexPath)
-        default:
-            return super.tableView(tableView, cellForRowAtIndexPath: indexPath)
-        }
-    }
+
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let sectionInfo = fetchedInfoController.sections[section]
@@ -200,7 +148,11 @@ class ExperimentDetailViewController: DetailViewController {
     // MARK: - Fetched Info Controller Data Source
     
     override func identifiersForSectionInfos() -> [String] {
-        return SectionUnique.allValues
+        if editing == false {
+            return SectionUnique.allValues
+        } else {
+            return []
+        }
     }
     
     override func sectionInfoForIdentifier(identifier: String) -> SectionInfo {
@@ -288,7 +240,6 @@ class ExperimentDetailViewController: DetailViewController {
 }
 
 extension DetailViewController.Storyboard {
-    static let EmptyStyleCellReuseIdentifier = "EmptyStyleCell"
     static let UserCellReuseIdentifier = "UserCell"
     static let ReviewCellReuseIdentifier = "ReviewCell"
 }
@@ -308,15 +259,9 @@ extension ExperimentDetailViewController {
             let review = rvc.review!
             review.body = rvc.bodyTextView.text
             let sectionUnique = SectionUnique.Reviews
-            let reviewSet = relationshipSetForSectionUnique(sectionUnique)!
-            reviewSet.addObject(review)
-            let reviews = relationshipArrayForSectionUnique(sectionUnique)!
-            let row: Int = reviews.indexOf(review)!
-            let section: Int = identifiersForSectionInfos().indexOf(sectionUnique.rawValue)!
-            let indexPath = NSIndexPath(forRow: row, inSection: section)
-            
+            guard let indexPath = addObject(review, forToManyRelationshipKey: sectionUnique.rawValue) else { return }
             tableView.beginUpdates()
-            if reviews.count == 1 {
+            if detailItem.mutableSetValueForKey(sectionUnique.rawValue).count == 1 {
                 // Empty Cell Change to Normal Cell
                 tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             } else {
