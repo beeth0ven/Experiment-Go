@@ -19,19 +19,20 @@ class DefaultStyleController {
     
 
     class func applyStyle() {
-        // Change tableViewCell selected color
-        let backgroundColor = UIColor.flatSandColor().colorWithAlphaComponent(0.25)
-        UITableViewCell.setSelectedBackgroundColor(backgroundColor)
-        
-        // Remove gray separator
         let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
         let splitViewController = appDelegate?.window?.rootViewController as? UISplitViewController
-        splitViewController?.view.backgroundColor = UIColor.whiteColor()
         
-//        // Set View Corner Radius
-//        let cornerRadius: CGFloat = 5
-//        splitViewController?.view.layer.cornerRadius = cornerRadius
-//        splitViewController?.view.layer.masksToBounds = true
+        // Set global tint color.
+        let globalTintColor = Color.Sand
+        appDelegate?.window?.tintColor = globalTintColor
+        
+        // Change tableViewCell selected color
+        let backgroundColor = globalTintColor.colorWithAlphaComponent(0.25)
+        UITableViewCell.setSelectedBackgroundColor(backgroundColor)
+        
+        // Remove split view gray separator
+        splitViewController?.view.backgroundColor = UIColor.whiteColor()
+
     }
     
 }

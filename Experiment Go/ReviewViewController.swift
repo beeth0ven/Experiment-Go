@@ -41,6 +41,11 @@ class ReviewViewController: UITableViewController {
         hideBarSeparator()
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        bodyTextView.becomeFirstResponder()
+    }
+    
     // MARK: - View Configure
     
     func updateUI() {

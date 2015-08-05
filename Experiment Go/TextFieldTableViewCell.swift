@@ -47,10 +47,13 @@ class TextFieldTableViewCell: ObjectValueTableViewCell {
         super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
         if selected {
-            let editing = superTableViewIsEditing()
-            textField.enabled = editing
             textField.becomeFirstResponder()
         }
+    }
+    
+    override func setEditing(editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        textField.enabled = superTableViewIsEditing()
     }
 
 }

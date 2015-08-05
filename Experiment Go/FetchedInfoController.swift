@@ -6,16 +6,21 @@
 //  Copyright © 2015 LuoJie. All rights reserved.
 //
 
+// FetchedInfoController provide a data structure for the table view controller which has a managed object as model,
+// FetchedInfoController plays like fetched result controller.
+
 import Foundation
 import CoreData
 
 // MARK: - Protocol Fetched Info Controller Data Source
 
 protocol FetchedInfoControllerDataSource: class {
-    
+    // Provide all sections use it's identifier.
     func identifiersForSectionInfos() -> [String]
+    // Provide section detail infomation by it's identifier.
     func sectionInfoForIdentifier(identifier: String) -> SectionInfo
     
+    // Provide keys for cellls in a section which's type is attribute.
     func cellKeysBySectionInfo(sectionInfo: SectionInfo) -> [String]?
 }
 

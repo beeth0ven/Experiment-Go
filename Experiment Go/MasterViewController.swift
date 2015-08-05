@@ -18,7 +18,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         static let ShowExperimentDetailSegueIdentifier = "showDetail"
     }
     
-//    var managedObjectContext: NSManagedObjectContext? = nil
     var fetchedEntityName: String? {
         get {
             let entity = self.fetchedResultsController.fetchRequest.entity!
@@ -32,18 +31,11 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         tableView.rowHeight = UITableViewAutomaticDimension
         // Do any additional setup after loading the view, typically from a nib.
         
-        let addButton = UIBarButtonItem(title: "Add", style: .Plain, target: self, action: "insertNewObject:")
-//        addButton.tintColor = DefaultStyleController.Color.DarkSand
+        let addButton = UIBarButtonItem(title: "New", style: .Plain, target: self, action: "insertNewObject:")
         self.navigationItem.rightBarButtonItem = addButton
         
         hideBarSeparator()
         
-//        let masterNav = splitViewController?.viewControllers.first as? UINavigationController
-//        let myNav = navigationController
-//        masterNav?.navigationBar.barTintColor = myNav?.navigationBar.barTintColor
-//        masterNav?.navigationBar.tintColor = myNav?.navigationBar.tintColor
-//        masterNav?.navigationBar.titleTextAttributes = myNav?.navigationBar.titleTextAttributes
-
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -124,9 +116,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         (cell as? ExperimentTableViewCell)?.experiment = experiment
     }
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return self.fetchedEntityName
-    }
+//    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        return self.fetchedEntityName
+//    }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         guard let cell = tableView.cellForRowAtIndexPath(indexPath) else { return }
@@ -220,12 +212,20 @@ extension MasterViewController {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
+    @IBAction func closeToMaster(segue: UIStoryboardSegue) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     @IBAction func saveToMaster(segue: UIStoryboardSegue) {
         NSManagedObjectContext.saveDefaultContext()
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-    @IBAction func closeToMaster(segue: UIStoryboardSegue) {
+    
+    @IBAction func deleteToMaster(segue: UIStoryboardSegue) {
+        guard let dvc = segue.sourceViewController as? DetailViewController else { return }
+        NSManagedObjectContext.defaultContext().deleteObject(dvc.detailItem!)
+        NSManagedObjectContext.saveDefaultContext()
         dismissViewControllerAnimated(true, completion: nil)
     }
     

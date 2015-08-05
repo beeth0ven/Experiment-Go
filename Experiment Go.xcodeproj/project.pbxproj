@@ -28,6 +28,7 @@
 		45629F951B5BC386000F41E6 /* ChameleonFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45629F941B5BC386000F41E6 /* ChameleonFramework.framework */; };
 		4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */; };
 		45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */; };
+		45983D0F1B71CB1000ABCF38 /* SwitchBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45983D0E1B71CB1000ABCF38 /* SwitchBarButtonItem.swift */; };
 		4599C90D1B6F469B0040461F /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4599C90C1B6F469B0040461F /* ReviewViewController.swift */; };
 		45AAB0A21B6E117200595467 /* ReviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */; };
 		45BC4E8D1B69C4A300A9963F /* ExperimentDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E8C1B69C4A300A9963F /* ExperimentDetailViewController.swift */; };
@@ -83,6 +84,7 @@
 		45629F941B5BC386000F41E6 /* ChameleonFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChameleonFramework.framework; path = "Pods/../build/Debug-iphoneos/Pods-Experiment Go/ChameleonFramework.framework"; sourceTree = "<group>"; };
 		4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicExtension.swift; sourceTree = "<group>"; };
+		45983D0E1B71CB1000ABCF38 /* SwitchBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchBarButtonItem.swift; sourceTree = "<group>"; };
 		4599C90C1B6F469B0040461F /* ReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		459C3DB7BFCEAA28C645268E /* Pods-Experiment Go.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Experiment Go.release.xcconfig"; path = "Pods/Target Support Files/Pods-Experiment Go/Pods-Experiment Go.release.xcconfig"; sourceTree = "<group>"; };
 		45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewTableViewCell.swift; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 			isa = PBXGroup;
 			children = (
 				4511B28D1B4FB7CF0046DF76 /* Main.storyboard */,
+				45983D0E1B71CB1000ABCF38 /* SwitchBarButtonItem.swift */,
 				45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */,
 				45BC4E9B1B6B5CFD00A9963F /* RootObjectTableViewCell */,
 				45BC4E9A1B6B5CA500A9963F /* ObjectValueTableViewCell */,
@@ -463,6 +466,7 @@
 				45BE16D01B6766C600D6383A /* ObjectValueTableViewCell.swift in Sources */,
 				4511B28C1B4FB7CF0046DF76 /* DetailViewController.swift in Sources */,
 				45130DD91B68D6B500F7F34D /* DateTableViewCell.swift in Sources */,
+				45983D0F1B71CB1000ABCF38 /* SwitchBarButtonItem.swift in Sources */,
 				45BC4E9E1B6DCDB800A9963F /* DefaultStyleController.swift in Sources */,
 				45629F5F1B5811E8000F41E6 /* User+CoreDataProperties.swift in Sources */,
 				45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */,

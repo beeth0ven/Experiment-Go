@@ -66,45 +66,25 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
     
     private func toggleEditingMode(editing: Bool) {
         let options: UIViewAnimationOptions = editing ? .TransitionCurlUp : .TransitionCurlDown
-        UIView.transitionWithView(tableView,
+        UIView.transitionWithView(navigationController!.view,
             duration: 0.4,
             options: options,
             animations: {
                 self.fetchedInfoController.reloadDataStruct()
+                self.configureBarButtons()
                 self.tableView.reloadData()
             },
             completion: nil)
-//        tableView.beginUpdates()
-//        for (sectionIndex, sectionInfo) in fetchedInfoController.sections.enumerate() {
-//            switch sectionInfo.style {
-//            case .Attribute:
-//                tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-//                
-//            case .ToManyRelationship(_):
-//                guard sectionInfo.editingStyles.contains(.Insert) else { continue }
-//                var indexPath: NSIndexPath!
-//                let objectsCount = detailItem.mutableSetValueForKey(sectionInfo.identifier).count
-//                if editing {
-//                    indexPath = NSIndexPath(forRow: objectsCount, inSection: sectionIndex)
-//                    tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-//                } else {
-//                    indexPath = NSIndexPath(forRow: objectsCount , inSection: sectionIndex)
-//                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-//                }
-//                
-//            default: break
-//            }
-//            
-//        }
-//        
-//        
-//        tableView.endUpdates()
     }
     
     // MARK: - View Configure
     
     func configureBarButtons() {
-
+        
+        if navigationController?.viewControllers.first != self {
+            navigationItem.leftBarButtonItem = nil
+        }
+        
     }
     
     func updateUI() {
@@ -114,41 +94,63 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
     
     // MARK: - Help Method
     
-    func addObject(rootObject: RootObject, forToManyRelationshipKey key: String) -> NSIndexPath? {
+    func addObject(rootObject: RootObject, forToManyRelationshipKey key: String) -> Bool {
         let sectionInfo = sectionInfoForIdentifier(key)
-        guard case .ToManyRelationship(let key,let isOrderdBefore) = sectionInfo.style else { return nil }
+        guard case .ToManyRelationship(let key,let isOrderdBefore) = sectionInfo.style else { return false }
         let relationshipSet = detailItem!.mutableSetValueForKey(key)
         
-        guard relationshipSet.containsObject(rootObject) == false else { return nil }
-        guard detailItem.destinationEntityNameForRelationshipKey(key) == rootObject.entity.name else { return nil }
+        guard relationshipSet.containsObject(rootObject) == false else { return false }
+        guard detailItem.destinationEntityNameForRelationshipKey(key) == rootObject.entity.name else { return false }
         relationshipSet.addObject(rootObject)
         
         let relationshipAsArray = (relationshipSet.allObjects as! [RootObject]).sort(isOrderdBefore)
         guard
             let row: Int = relationshipAsArray.indexOf(rootObject),
             let section: Int = identifiersForSectionInfos().indexOf(key)
-            else { return nil }
-        return NSIndexPath(forRow: row, inSection: section)
+            else { return false }
+        
+        let indexPath = NSIndexPath(forRow: row, inSection: section)
+        tableView.beginUpdates()
+        if detailItem.mutableSetValueForKey(key).count == 1 {
+            // Empty Cell Change to Normal Cell
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        } else {
+            tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        }
+        tableView.endUpdates()
+        return true
     }
     
-    func removeObject(rootObject: RootObject, forToManyRelationshipKey key: String) -> NSIndexPath? {
+    func removeObject(rootObject: RootObject, forToManyRelationshipKey key: String) -> Bool {
         
         let sectionInfo = sectionInfoForIdentifier(key)
-        guard case .ToManyRelationship(let key,let isOrderdBefore) = sectionInfo.style else { return nil }
+        guard case .ToManyRelationship(let key,let isOrderdBefore) = sectionInfo.style else { return false }
         let relationshipSet = detailItem!.mutableSetValueForKey(key)
         
-        guard relationshipSet.containsObject(rootObject) == true else { return nil }
+        guard relationshipSet.containsObject(rootObject) == true else { return false }
         
         let relationshipAsArray = (relationshipSet.allObjects as! [RootObject]).sort(isOrderdBefore)
         guard
             let row: Int = relationshipAsArray.indexOf(rootObject),
             let section: Int = identifiersForSectionInfos().indexOf(key)
-            else { return nil }
-        
+            else { return false }
+        let indexPath = NSIndexPath(forRow: row, inSection: section)
+
         relationshipSet.removeObject(rootObject)
-        return NSIndexPath(forRow: row, inSection: section)
+        
+        tableView.beginUpdates()
+        if detailItem.mutableSetValueForKey(key).count == 0 {
+            // Normal Cell Change to Empty Cell
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        } else {
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        }
+        tableView.endUpdates()
+        
+        return true
         
     }
+    
     // MARK: - Table View Data Source
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -159,7 +161,33 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
         guard section < fetchedInfoController.sections.count else { return 0 }
         let sectionInfo = fetchedInfoController.sections[section]
         return numberOfRowsForSectionStyle(sectionInfo)
+    }
+
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let sectionInfo = fetchedInfoController.sections[indexPath.section]
+        switch sectionInfo.style {
+        case .Attribute:
+            let key = sectionInfo.cellKeys![indexPath.row]
+            return attributeCellForKey(key, atIndexPath: indexPath)
+            
+        case .ToOneRelationship(let toOneRelationshipKey):
+            return toOneRelationshipCellForKey(toOneRelationshipKey, atIndexPath: indexPath)
+            
+        case .ToManyRelationship(let toManyRelationshipKey, let isOrderdBefore):
+            return toManyRelationshipCellForKey(toManyRelationshipKey,
+                isOrderdBefore: isOrderdBefore,
+                editingStyles: sectionInfo.editingStyles,
+                atIndexPath: indexPath)
+        }
         
+    }
+    
+   
+
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let sectionInfo = fetchedInfoController.sections[section]
+        return sectionInfo.identifier
     }
     
     private func numberOfRowsForSectionStyle(sectionInfo : SectionInfo) -> Int {
@@ -173,65 +201,63 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
         case .ToManyRelationship(let toManyRelationshipKey, _):
             let managedObjectSet = detailItem.mutableSetValueForKey(toManyRelationshipKey)
             if sectionInfo.editingStyles.contains(.Insert) && editing {
-                // Editing mode and section can insert cell, then show a insert cell at bottom.
+                // Editing mode and section can insert new cell, then show a insert style cell at bottom.
                 return managedObjectSet.count + 1
             } else if managedObjectSet.count == 0 {
-                // Show a empty cell at bottom when the section is empty.
+                // Show a empty style cell at bottom when the section is empty.
                 return managedObjectSet.count + 1
             } else {
                 // Normal case here.
                 return managedObjectSet.count
             }
-
+            
         }
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let sectionInfo = fetchedInfoController.sections[indexPath.section]
-        switch sectionInfo.style {
-        case .Attribute:
-            let key = sectionInfo.cellKeys![indexPath.row]
-            let objectValue = ObjectValue(rootObject: detailItem, key: key)
-            guard let identifier = cellReuseIdentifierFromItemKey(key) else { return UITableViewCell() }
-            let cell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! ObjectValueTableViewCell
-            cell.objectValue = objectValue
+    private func attributeCellForKey(key: String, atIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let objectValue = ObjectValue(rootObject: detailItem, key: key)
+        guard let identifier = cellReuseIdentifierFromItemKey(key) else { return UITableViewCell() }
+        let cell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! ObjectValueTableViewCell
+        cell.objectValue = objectValue
+        return cell
+    }
+    
+    private func toOneRelationshipCellForKey(key: String, atIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cellDetailItem = detailItem.valueForKey(key) as! RootObject
+        guard let identifier = cellReuseIdentifierFromItemKey(key) else { return UITableViewCell() }
+        let cell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! RootObjectTableViewCell
+        cell.detailItem = cellDetailItem
+        return cell
+    }
+    
+    private func toManyRelationshipCellForKey(
+        key: String,
+        isOrderdBefore: IsManagedObjectOrderedBefore,
+        editingStyles: [SectionInfo.EditingStyle],
+        atIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        let managedObjectSet = detailItem.mutableSetValueForKey(key)
+        if editingStyles.contains(.Insert) && editing {
+            // Editing mode and section can insert new cell, then show a insert style cell at bottom.
+            let destinationEntityName = detailItem.destinationEntityNameForRelationshipKey(key)!
+            let cell = tableView.dequeueReusableCellWithIdentifier(Storyboard.InsertStyleCellReuseIdentifier, forIndexPath: indexPath)
+            cell.textLabel?.text = "Add New \(destinationEntityName)."
             return cell
-            
-        case .ToOneRelationship(let toOneRelationshipKey):
-            let cellDetailItem = detailItem.valueForKey(toOneRelationshipKey) as! RootObject
-            guard let identifier = cellReuseIdentifierFromItemKey(toOneRelationshipKey) else { return UITableViewCell() }
+        } else if managedObjectSet.count == 0 {
+            // Show a empty style cell at bottom when the section is empty.
+            let cell = tableView.dequeueReusableCellWithIdentifier(Storyboard.EmptyStyleCellReuseIdentifier, forIndexPath: indexPath)
+            return cell
+        } else {
+            // Normal case here.
+            let managedObjects = (managedObjectSet.allObjects as! [RootObject]).sort(isOrderdBefore)
+            let cellDetailItem = managedObjects[indexPath.row]
+            guard let identifier = cellReuseIdentifierFromItemKey(key) else { return UITableViewCell() }
             let cell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! RootObjectTableViewCell
             cell.detailItem = cellDetailItem
             return cell
-            
-        case .ToManyRelationship(let toManyRelationshipKey, let isOrderdBefore):
-            let managedObjectSet = detailItem.mutableSetValueForKey(toManyRelationshipKey)
-            if sectionInfo.editingStyles.contains(.Insert) && editing {
-                // Editing mode and section can insert cell, then show a insert cell at bottom.
-                let destinationEntityName = detailItem.destinationEntityNameForRelationshipKey(toManyRelationshipKey)!
-                let cell = tableView.dequeueReusableCellWithIdentifier(Storyboard.InsertStyleCellReuseIdentifier, forIndexPath: indexPath)
-                cell.textLabel?.text = "Add New \(destinationEntityName)."
-                return cell
-            } else if managedObjectSet.count == 0 {
-                // Show a empty cell at bottom when the section is empty.
-                let cell = tableView.dequeueReusableCellWithIdentifier(Storyboard.EmptyStyleCellReuseIdentifier, forIndexPath: indexPath)
-                return cell
-            } else {
-                // Normal case here.
-                let managedObjects = (managedObjectSet.allObjects as! [RootObject]).sort(isOrderdBefore)
-                let cellDetailItem = managedObjects[indexPath.row]
-                guard let identifier = cellReuseIdentifierFromItemKey(toManyRelationshipKey) else { return UITableViewCell() }
-                let cell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! RootObjectTableViewCell
-                cell.detailItem = cellDetailItem
-                return cell            }
         }
-        
     }
-
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sectionInfo = fetchedInfoController.sections[section]
-        return sectionInfo.identifier
-    }
+    
     
     
     // MARK: - Table View Delegate
@@ -250,54 +276,52 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
     
     // MARK: - Table View Edited Method
     
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        // Return false if you do not want the specified item to be editable.
+        let editingStyle = self.tableView(tableView, editingStyleForRowAtIndexPath: indexPath)
+        return editingStyle == .None ? false : true
+    }
     
     
-        func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-            // Return false if you do not want the specified item to be editable.
-            let editingStyle = self.tableView(tableView, editingStyleForRowAtIndexPath: indexPath)
-            return editingStyle == .None ? false : true
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        let sectionInfo = fetchedInfoController.sections[indexPath.section]
+        let numberOfRows = tableView.numberOfRowsInSection(indexPath.section)
+        
+        if sectionInfo.editingStyles.contains(.Insert) && sectionInfo.editingStyles.contains(.Delete) {
+            // Can insert and delete object in section
+            let matchInsertCondition: Bool = tableView.editing && (indexPath.row == numberOfRows - 1)
+            return matchInsertCondition ? .Insert : .Delete
+            
+        } else if (sectionInfo.editingStyles.contains(.Insert)) {
+            // Can only insert object in section
+            let matchInsertCondition: Bool = tableView.editing && (indexPath.row == numberOfRows - 1)
+            return matchInsertCondition ? .Insert : .None
+            
+        } else if (sectionInfo.editingStyles.contains(.Delete)) {
+            // Can only delete object in section
+            return .Delete
+            
+        } else {
+            return .None
+            
         }
+        
+    }
     
-    
-        func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
-            let sectionInfo = fetchedInfoController.sections[indexPath.section]
-            let numberOfRows = tableView.numberOfRowsInSection(indexPath.section)
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.beginUpdates()
+        
+        let sectionInfo = fetchedInfoController.sections[indexPath.section]
+        switch sectionInfo.style {
+        case .ToManyRelationship(let toManyRelationshipKey, let isManagedObjectOrderedBefore):
+            commitEditingStyle(editingStyle, atIndexPath: indexPath, toManyRelationshipKey: toManyRelationshipKey, isManagedObjectOrderedBefore:isManagedObjectOrderedBefore)
             
-            if sectionInfo.editingStyles.contains(.Insert) && sectionInfo.editingStyles.contains(.Delete) {
-                // Can insert and delete object in section
-                let matchInsertCondition: Bool = tableView.editing && (indexPath.row == numberOfRows - 1)
-                return matchInsertCondition ? .Insert : .Delete
-                
-            } else if (sectionInfo.editingStyles.contains(.Insert)) {
-                // Can only insert object in section
-                let matchInsertCondition: Bool = tableView.editing && (indexPath.row == numberOfRows - 1)
-                return matchInsertCondition ? .Insert : .None
-                
-            } else if (sectionInfo.editingStyles.contains(.Delete)) {
-                // Can only delete object in section
-                return .Delete
-                
-            } else {
-                return .None
-                
-            }
-
+        default: break
         }
-    
-        func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-            tableView.beginUpdates()
-            
-            let sectionInfo = fetchedInfoController.sections[indexPath.section]
-            switch sectionInfo.style {
-            case .ToManyRelationship(let toManyRelationshipKey, let isManagedObjectOrderedBefore):
-                commitEditingStyle(editingStyle, atIndexPath: indexPath, toManyRelationshipKey: toManyRelationshipKey, isManagedObjectOrderedBefore:isManagedObjectOrderedBefore)
-                
-            default: break
-            }
-            
-            
-            tableView.endUpdates()
-        }
+        
+        
+        tableView.endUpdates()
+    }
     
     private func commitEditingStyle(editingStyle: UITableViewCellEditingStyle, atIndexPath indexPath: NSIndexPath, toManyRelationshipKey: String, isManagedObjectOrderedBefore: IsManagedObjectOrderedBefore) {
         let destinationEntityName = detailItem.destinationEntityNameForRelationshipKey(toManyRelationshipKey)!
@@ -317,9 +341,9 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
         default: break
         }
     }
-
+    
     // MARK: - Fetched Info Controller Data Source
-
+    
     private struct Constants {
         static let AttributeSectionKey = "Attribute"
     }
@@ -327,46 +351,42 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
     
     func identifiersForSectionInfos() -> [String] {
         if editing == false {
+            // Public read
             var relationshipNames = detailItem.entity.relationshipsByName.keys.array
             relationshipNames.insert(Constants.AttributeSectionKey, atIndex: 0)
             return relationshipNames
         } else {
-            return []
+            // Private write
+            return [Constants.AttributeSectionKey]
         }
         
     }
-
+    
     func sectionInfoForIdentifier(identifier: String) -> SectionInfo {
         
         if editing == false {
+            // Public read
+            let style: SectionInfo.Style!
+            var editingStyles: [SectionInfo.EditingStyle] = []
             
-        } else {
+            if identifier == Constants.AttributeSectionKey {
+                style = .Attribute
+            } else {
+                let relationshipDescription = detailItem.entity.relationshipsByName[identifier]!
+                style = relationshipDescription.toMany ? .ToManyRelationship(identifier , < ) : .ToOneRelationship(identifier)
+                if relationshipDescription.toMany { editingStyles = [.Insert, .Delete] }
+            }
             
-        }
-        let style: SectionInfo.Style!
-        var editingStyles: [SectionInfo.EditingStyle] = []
-        
-        if identifier == Constants.AttributeSectionKey {
-            style = .Attribute
+            return SectionInfo(identifier: identifier, style: style, editingStyles: editingStyles)
         } else {
-            let relationshipDescription = detailItem.entity.relationshipsByName[identifier]!
-            style = relationshipDescription.toMany ? .ToManyRelationship(identifier , < ) : .ToOneRelationship(identifier)
-            if relationshipDescription.toMany { editingStyles = [.Insert, .Delete] }
+            // Private write
+            return SectionInfo(identifier: identifier, style: .Attribute, editingStyles: [])
         }
         
-        return SectionInfo(identifier: identifier, style: style, editingStyles: editingStyles)
-
+        
     }
     
-
-    
     func cellKeysBySectionInfo(sectionInfo: SectionInfo) -> [String]? {
-        
-        if editing == false {
-            
-        } else {
-            
-        }
         
         switch sectionInfo.style {
         case .Attribute:
@@ -374,21 +394,8 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
             
         default:
             return nil
+            
         }
-    }
-
-    struct Storyboard {
-        static let TableViewEstimatedRowHeight: CGFloat = 44
-        
-        static let EmptyStyleCellReuseIdentifier = "EmptyStyleCell"
-        static let InsertStyleCellReuseIdentifier = "InsertStyleCell"
-        static let NumberCellReuseIdentifier = "NumberCell"
-        static let BoolCellReuseIdentifier = "BoolCell"
-        static let TextCellReuseIdentifier = "TextCell"
-        static let DateCellReuseIdentifier = "DateCell"
-        static let ImageCellReuseIdentifier = "ImageCell"
-        static let DetailItemCellReuseIdentifier = "DetailItemCell"
-        
     }
     
     func cellReuseIdentifierFromItemKey(key: String) -> String? {
@@ -412,6 +419,29 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
         
     }
     
+    struct Storyboard {
+        static let TableViewEstimatedRowHeight: CGFloat = 44
+        
+        static let EmptyStyleCellReuseIdentifier = "EmptyStyleCell"
+        static let InsertStyleCellReuseIdentifier = "InsertStyleCell"
+        static let NumberCellReuseIdentifier = "NumberCell"
+        static let BoolCellReuseIdentifier = "BoolCell"
+        static let TextCellReuseIdentifier = "TextCell"
+        static let DateCellReuseIdentifier = "DateCell"
+        static let ImageCellReuseIdentifier = "ImageCell"
+        static let DetailItemCellReuseIdentifier = "DetailItemCell"
+        
+    }
+    
+    
     
 }
+
+enum DetailItemShowStyle {
+    case AuthorInsert
+    case AuthorRead
+    case AuthorModify
+    case PublicRead
+}
+
 

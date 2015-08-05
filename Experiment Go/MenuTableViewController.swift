@@ -12,7 +12,7 @@ import CoreData
 class MenuTableViewController: UITableViewController {
     
     private struct Storyboard {
-        static let TableHeaderViewDefualtHeight: CGFloat = 136
+        static let TableHeaderViewDefualtHeight: CGFloat = 150
     }
 
     private enum Segue: String {

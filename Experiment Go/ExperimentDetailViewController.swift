@@ -31,13 +31,36 @@ class ExperimentDetailViewController: DetailViewController {
             detailItem = newValue
         }
     }
-    
 
-    @IBOutlet weak var likeBarButtonItem: UIBarButtonItem!
-    @IBOutlet weak var cancelBarButtonItem: UIBarButtonItem!
-    @IBOutlet weak var closeBarButtonItem: UIBarButtonItem!
-    @IBOutlet weak var saveBarButtonItem: UIBarButtonItem!
+    @IBOutlet var cancelBarButtonItem: UIBarButtonItem!
+    @IBOutlet var closeBarButtonItem: UIBarButtonItem!
+    @IBOutlet var saveBarButtonItem: UIBarButtonItem!
     
+    @IBOutlet var addNewReviewBarButtonItem: UIBarButtonItem!
+    @IBOutlet var likeBarButtonItem: SwitchBarButtonItem! {
+        didSet {
+            likeBarButtonItem.offStateTitle = "Like"
+            likeBarButtonItem.onStateTitle = "Liking"
+        }
+    }
+    @IBOutlet var deleteBarButtonItem: UIBarButtonItem!
+    
+    @IBOutlet var flexibleSpaceBarButtonItem: UIBarButtonItem!
+
+     var detailItemShowStyle: DetailItemShowStyle {
+        
+        let imAuthor = self.experiment!.whoPost == User.currentUser()
+        
+        if  imAuthor && self.experiment!.inserted {
+            return .AuthorInsert
+        } else if imAuthor && editing == false {
+            return .AuthorRead
+        } else if imAuthor && editing == true {
+            return .AuthorModify
+        } else {
+            return .PublicRead
+        }
+    }
     
     // MARK: - View Controller Lifecycle
     
@@ -49,72 +72,57 @@ class ExperimentDetailViewController: DetailViewController {
 
     // MARK: - User Actions
     
-    @IBAction func toggleLikeStates(sender: UIBarButtonItem) {
-        var success = false
-        if sender.title == "Like" {
-            // Do like
-            success = doLike()
-        } else if sender.title == "Liking" {
-            // Do UnLike
-            success = doUnLike()
-        }
-        
-        if success {
-            sender.title = (sender.title == "Like") ? "Liking" : "Like"
-        }
+
+    @IBAction func toggleLikeStates(sender: SwitchBarButtonItem) {
+        let success = (sender.on == false) ? doLike() : doUnLike()
+        if success { sender.on = !sender.on }
     }
     
     
     private func doLike() -> Bool {
-        let sectionUnique = SectionUnique.UsersLikeMe
-        guard let indexPath = addObject(User.currentUser(), forToManyRelationshipKey: sectionUnique.rawValue) else { return false }
-        tableView.beginUpdates()
-        if detailItem.mutableSetValueForKey(sectionUnique.rawValue).count == 1 {
-            // Empty Cell Change to Normal Cell
-            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else {
-            tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        }
-        tableView.endUpdates()
-        return true
+        return addObject(User.currentUser(), forToManyRelationshipKey: SectionUnique.UsersLikeMe.rawValue)
     }
 
 
     private func doUnLike() -> Bool  {
-        let sectionUnique = SectionUnique.UsersLikeMe
-        guard let indexPath = removeObject(User.currentUser(), forToManyRelationshipKey: sectionUnique.rawValue) else { return false }
-        tableView.beginUpdates()
-        if detailItem.mutableSetValueForKey(sectionUnique.rawValue).count == 0 {
-            // Normal Cell Change to Empty Cell
-            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else {
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        }
-        tableView.endUpdates()
-        return true
+        return removeObject(User.currentUser(), forToManyRelationshipKey: SectionUnique.UsersLikeMe.rawValue)
     }
+    
     // MARK: - View Configure
     
     override func configureBarButtons() {
-        if detailItem.inserted {
+        
+        switch detailItemShowStyle {
+        case .AuthorInsert:
             self.editing = true
             navigationItem.leftBarButtonItems = [cancelBarButtonItem]
             navigationItem.rightBarButtonItems = [saveBarButtonItem]
-            
-        } else {
+            toolbarItems = []
+            navigationController?.toolbarHidden = true
+
+        case .AuthorRead:
             navigationItem.leftBarButtonItems = [closeBarButtonItem]
             navigationItem.rightBarButtonItems = [editButtonItem()]
-            
+            toolbarItems = [addNewReviewBarButtonItem]
+        case .AuthorModify:
+            navigationItem.leftBarButtonItems = []
+            navigationItem.rightBarButtonItems = [editButtonItem()]
+            toolbarItems = [flexibleSpaceBarButtonItem, deleteBarButtonItem]
+        case .PublicRead:
+            navigationItem.leftBarButtonItems = [closeBarButtonItem]
+            navigationItem.rightBarButtonItems = []
+            toolbarItems = [addNewReviewBarButtonItem, flexibleSpaceBarButtonItem,likeBarButtonItem]
         }
-        if navigationController?.viewControllers.first != self {
-            navigationItem.leftBarButtonItem = nil
-        }
+        
+        // If self is in a navigation stack then change leftBarButton to navigation default back button.
+        // So call super's configureBarButtons.
+        super.configureBarButtons()
     }
-    
+
     override func updateUI() {
         super.updateUI()
-        let usersLikeMe = detailItem!.mutableSetValueForKey(SectionUnique.UsersLikeMe.rawValue)
-        likeBarButtonItem?.title = usersLikeMe.containsObject(User.currentUser()) ? "Liking" : "Like"
+        let usersLikeMeSet = detailItem!.mutableSetValueForKey(SectionUnique.UsersLikeMe.rawValue)
+        likeBarButtonItem.on = usersLikeMeSet.containsObject(User.currentUser())
     }
     
     // MARK: - Segues
@@ -149,9 +157,11 @@ class ExperimentDetailViewController: DetailViewController {
     
     override func identifiersForSectionInfos() -> [String] {
         if editing == false {
+            // Public read
             return SectionUnique.allValues
         } else {
-            return []
+            // Private write
+           return [SectionUnique.OverView.rawValue]
         }
     }
     
@@ -249,9 +259,7 @@ extension ExperimentDetailViewController {
     // MARK: - Unwind Segue
     @IBAction func cancelToExperimentDetail(segue: UIStoryboardSegue) {
         guard let dvc = segue.sourceViewController as? DetailViewController else { return }
-        if dvc.detailItem!.inserted {
-            NSManagedObjectContext.defaultContext().deleteObject(dvc.detailItem!)
-        }
+        NSManagedObjectContext.defaultContext().deleteObject(dvc.detailItem!)
     }
     
     @IBAction func saveToExperimentDetail(segue: UIStoryboardSegue) {
@@ -259,18 +267,9 @@ extension ExperimentDetailViewController {
             let review = rvc.review!
             review.body = rvc.bodyTextView.text
             let sectionUnique = SectionUnique.Reviews
-            guard let indexPath = addObject(review, forToManyRelationshipKey: sectionUnique.rawValue) else { return }
-            tableView.beginUpdates()
-            if detailItem.mutableSetValueForKey(sectionUnique.rawValue).count == 1 {
-                // Empty Cell Change to Normal Cell
-                tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-            } else {
-                tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-            }
-            tableView.endUpdates()
+            addObject(review, forToManyRelationshipKey: sectionUnique.rawValue)
+            NSManagedObjectContext.saveDefaultContext()
         }
-        
-        NSManagedObjectContext.saveDefaultContext()
     }
     
     @IBAction func closeToExperimentDetail(segue: UIStoryboardSegue) {

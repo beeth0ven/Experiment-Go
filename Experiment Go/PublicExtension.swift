@@ -56,15 +56,15 @@ extension NSDateFormatter {
         } else if absTimeIntervalSinceNow < OneHour {
             // eg. 10 Minutes
             let minutes = Int(absTimeIntervalSinceNow / OneMinute)
-            return "\(minutes) min"
+            return "\(minutes) minutes ago"
         } else if absTimeIntervalSinceNow < OneDay {
             // eg. 10 Hours
             let hours = Int(absTimeIntervalSinceNow / OneHour)
-            return "\(hours) hour"
+            return "\(hours) hours ago"
         } else {
             // eg. 10 Days
             let days = Int(absTimeIntervalSinceNow / OneDay)
-            return "\(days) day"
+            return "\(days) days ago"
 
         }
     }
@@ -124,4 +124,45 @@ extension UIColor {
         }
         self.init(red:red, green:green, blue:blue, alpha:alpha)
     }
+    
+    class func globalTintColor() -> UIColor {
+        return UIApplication.sharedApplication().keyWindow!.tintColor
+    }
 }
+
+extension UIImage {
+    class func onePixelImageFromColor(color: UIColor) -> UIImage {
+        UIGraphicsBeginImageContext(CGSizeMake(1, 1))
+        let context = UIGraphicsGetCurrentContext()
+        CGContextSetFillColorWithColor(context, color.CGColor)
+        CGContextFillEllipseInRect(context, CGRectMake(0, 0, 1, 1))
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
+    
+    class func resizableImageFromColor(color: UIColor, cornerRadius: CGFloat) -> UIImage {
+        let size = CGSizeMake(2 * cornerRadius, 2 * cornerRadius)
+        UIGraphicsBeginImageContext(size)
+        let context = UIGraphicsGetCurrentContext()
+        CGContextSetFillColorWithColor(context, color.CGColor)
+        CGContextFillEllipseInRect(context, CGRectMake(0, 0, size.width, size.height))
+        var image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        image = image.resizableImageWithCapInsets(UIEdgeInsets(top: cornerRadius, left: cornerRadius, bottom: cornerRadius, right: cornerRadius))
+        return image
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
