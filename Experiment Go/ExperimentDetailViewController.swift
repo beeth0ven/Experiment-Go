@@ -184,18 +184,18 @@ class ExperimentDetailViewController: DetailViewController {
         
     }
     
+
     
-    
-    override func cellKeysBySectionInfo(sectionInfo: SectionInfo) -> [String]? {
+    override func cellKeysBySectionIdentifier(identifier: String) -> [String]? {
         
-        let sectionUnique = SectionUnique(rawValue: sectionInfo.identifier)!
+        let sectionUnique = SectionUnique(rawValue: identifier)!
         
         guard case .OverView = sectionUnique  else { return nil }
         
         return [
             Experiment.Constants.TitleKey,
             Experiment.Constants.BodyKey,
-            RootObject.Constants.CreateDateKey
+            CloudManager.Constants.CreationDateKey
         ]
         
     }

@@ -18,7 +18,7 @@ class RootObjectTableViewCell: UITableViewCell {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
         dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
-        detailTextLabel?.text = detailItem?.createDate == nil ?  nil : dateFormatter.stringFromDate(detailItem!.createDate!)
+        detailTextLabel?.text = detailItem?.creationDate == nil ?  nil : dateFormatter.stringFromDate(detailItem!.creationDate!)
     }
     
 }

@@ -2,7 +2,7 @@
 //  RootObject+CoreDataProperties.swift
 //  Experiment Go
 //
-//  Created by luojie on 7/30/15.
+//  Created by luojie on 8/12/15.
 //  Copyright © 2015 LuoJie. All rights reserved.
 //
 //  Delete this file and regenerate it using "Create NSManagedObject Subclass…"
@@ -14,8 +14,11 @@ import CoreData
 
 extension RootObject {
 
-    @NSManaged var createDate: NSDate?
-    @NSManaged var id: String?
-    @NSManaged var modifyDate: NSDate?
+    @NSManaged var creationDate: NSDate?
+    @NSManaged var creatorUserRecordID: String?
+    @NSManaged var lastModifiedUserRecordID: String?
+    @NSManaged var modificationDate: NSDate?
+    @NSManaged var recordChangeTag: String?
+    @NSManaged var recordID: String?
 
 }

@@ -386,16 +386,8 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
         
     }
     
-    func cellKeysBySectionInfo(sectionInfo: SectionInfo) -> [String]? {
-        
-        switch sectionInfo.style {
-        case .Attribute:
-            return detailItem.entity.attributesByName.keys.array
-            
-        default:
-            return nil
-            
-        }
+    func cellKeysBySectionIdentifier(identifier: String) -> [String]? {
+        return detailItem.entity.attributesByName.keys.array
     }
     
     func cellReuseIdentifierFromItemKey(key: String) -> String? {
@@ -404,7 +396,7 @@ class DetailViewController: UIViewController, FetchedInfoControllerDataSource, U
         case "title", "body", "id":
             return Storyboard.TextCellReuseIdentifier
             
-        case "createDate", "modifyDate":
+        case "creationDate", "modifyDate":
             return Storyboard.DateCellReuseIdentifier
             
         case "imageData":

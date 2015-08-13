@@ -14,14 +14,15 @@
         <relationship name="whoReview" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="postedReviews" inverseEntity="User" syncable="YES"/>
     </entity>
     <entity name="RootObject" representedClassName=".RootObject" syncable="YES">
-        <attribute name="createDate" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="modifyDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="creationDate" optional="YES" attributeType="Date" indexed="YES" syncable="YES"/>
+        <attribute name="creatorUserRecordID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastModifiedUserRecordID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="modificationDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="recordChangeTag" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="recordID" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
     </entity>
     <entity name="User" representedClassName=".User" parentEntity="RootObject" syncable="YES">
-        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="profileImageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <relationship name="followers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="User" inverseName="followingUsers" inverseEntity="User" syncable="YES"/>
         <relationship name="followingUsers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="User" inverseName="followers" inverseEntity="User" syncable="YES"/>
@@ -32,7 +33,7 @@
     <elements>
         <element name="Experiment" positionX="90" positionY="200" width="128" height="133"/>
         <element name="Review" positionX="430" positionY="290" width="128" height="88"/>
-        <element name="RootObject" positionX="90" positionY="-162" width="128" height="88"/>
-        <element name="User" positionX="-261" positionY="171" width="128" height="178"/>
+        <element name="RootObject" positionX="90" positionY="-162" width="128" height="133"/>
+        <element name="User" positionX="-261" positionY="171" width="128" height="148"/>
     </elements>
 </model>

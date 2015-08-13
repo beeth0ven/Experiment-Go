@@ -12,7 +12,7 @@ import CoreData
 
 
 
-class UserDetailViewController: DetailViewController {
+class UserDetailViewController: DetailViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     private enum Segue: String {
         case ShowUserDetail
@@ -132,6 +132,42 @@ class UserDetailViewController: DetailViewController {
         return sectionUnique.name
     }
     
+    // MARK: - Table View Data Delegate 
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+        guard editing,
+        let cell = tableView.cellForRowAtIndexPath(indexPath) as? ObjectValueTableViewCell where
+        cell.objectValue?.key == User.Constants.ProfileImageDataKey
+            else { return }
+        let ipc = UIImagePickerController()
+        ipc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+        ipc.allowsEditing = true
+        ipc.delegate = self
+        presentViewController(ipc, animated: true, completion: nil)
+    }
+    
+    // MARK: - Image Picker Controller Delegate
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        user!.profileImage = info[UIImagePickerControllerEditedImage] as? UIImage ?? info[UIImagePickerControllerOriginalImage] as! UIImage
+        dismissViewControllerAnimated(true, completion: {
+            [unowned self] in
+            let sectionUnique = SectionUnique.OverView
+            let section: Int = self.identifiersForSectionInfos().indexOf(sectionUnique.rawValue)!
+            let row: Int = self.cellKeysBySectionIdentifier(sectionUnique.rawValue)!.indexOf(User.Constants.ProfileImageDataKey)!
+            let indexPath = NSIndexPath(forRow: row, inSection: section)
+            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            })
+
+    }
+    
+
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+
+    
     // MARK: - Fetched Info Controller Data Source
     
     override func identifiersForSectionInfos() -> [String] {
@@ -159,19 +195,18 @@ class UserDetailViewController: DetailViewController {
         
     }
     
+
     
-    
-    override func cellKeysBySectionInfo(sectionInfo: SectionInfo) -> [String]? {
+    override func cellKeysBySectionIdentifier(identifier: String) -> [String]?{
         
-        let sectionUnique = SectionUnique(rawValue: sectionInfo.identifier)!
+        let sectionUnique = SectionUnique(rawValue: identifier)!
         
         guard case .OverView = sectionUnique  else { return nil }
         
         return [
             User.Constants.ProfileImageDataKey,
             User.Constants.NameKey,
-            User.Constants.EmailKey,
-            RootObject.Constants.CreateDateKey
+            CloudManager.Constants.CreationDateKey
         ]
         
     }
@@ -184,10 +219,6 @@ class UserDetailViewController: DetailViewController {
             
         case User.Constants.NameKey:
             return Storyboard.TextCellReuseIdentifier
-            
-        case User.Constants.EmailKey:
-            return Storyboard.TextCellReuseIdentifier
-            
             
             
         case SectionUnique.PostedExperiments.rawValue:

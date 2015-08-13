@@ -21,7 +21,7 @@ protocol FetchedInfoControllerDataSource: class {
     func sectionInfoForIdentifier(identifier: String) -> SectionInfo
     
     // Provide keys for cellls in a section which's type is attribute.
-    func cellKeysBySectionInfo(sectionInfo: SectionInfo) -> [String]?
+    func cellKeysBySectionIdentifier(identifier: String) -> [String]?
 }
 
 
@@ -42,7 +42,7 @@ class FetchedInfoController {
             let sectionInfo = dataSource!.sectionInfoForIdentifier(identifer)
             switch sectionInfo.style {
             case .Attribute:
-                sectionInfo.cellKeys = dataSource!.cellKeysBySectionInfo(sectionInfo)
+                sectionInfo.cellKeys = dataSource!.cellKeysBySectionIdentifier(identifer)
             default: break
             }
             result.append(sectionInfo)

@@ -16,7 +16,6 @@ class User: RootObject {
 //        static let  UserNumber: Int = 1
         static let  EntityNameKey = "User"
         static let  NameKey = "name"
-        static let  EmailKey = "email"
         static let  ProfileImageDataKey = "profileImageData"
     }
     
@@ -84,7 +83,6 @@ class User: RootObject {
         if matches.count == 0 {
             user = RootObject.insertNewObjectForEntityForName(Constants.EntityNameKey) as! User
             user.name = userName
-            user.email = userInfo["email"] as? String
             let image = UIImage(named: userInfo["profileImageName"] as! String)!
             user.profileImageData = UIImageJPEGRepresentation(image, 1.0)
             

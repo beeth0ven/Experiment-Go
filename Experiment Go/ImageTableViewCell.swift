@@ -15,6 +15,7 @@ class ImageTableViewCell: ObjectValueTableViewCell {
         guard let objectValue = objectValue else { return }
         textLabel?.text = objectValue.key.capitalizedString
         imageView?.image = objectValue.image ?? UIImage.defultTestImage()
+
     }
     
     
@@ -26,6 +27,9 @@ class ImageTableViewCell: ObjectValueTableViewCell {
         imageView!.layer.cornerRadius = imageView!.bounds.size.height / 2
         imageView!.layer.masksToBounds = true
     }
+    
+
+    
 }
 
 extension UIImage {

@@ -32,16 +32,7 @@ class TextFieldTableViewCell: ObjectValueTableViewCell {
         textField.text = objectValue.value as? String 
     }
     
-    private func superTableViewIsEditing() -> Bool {
-        var view: UIView? = self
-        repeat {
-            view = view!.superview
-            if view == nil { break }
-            if view is UITableView { break }
-        } while true
-        
-        return view == nil ? false : (view as! UITableView).editing
-    }
+
     
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -56,6 +47,19 @@ class TextFieldTableViewCell: ObjectValueTableViewCell {
         textField.enabled = superTableViewIsEditing()
     }
 
+}
+
+extension ObjectValueTableViewCell {
+    func superTableViewIsEditing() -> Bool {
+        var view: UIView? = self
+        repeat {
+            view = view!.superview
+            if view == nil { break }
+            if view is UITableView { break }
+        } while true
+        
+        return view == nil ? false : (view as! UITableView).editing
+    }
 }
 
 extension TextFieldTableViewCell: UITextFieldDelegate {

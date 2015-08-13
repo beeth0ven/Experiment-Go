@@ -32,16 +32,16 @@ class ReviewTableViewCell: RootObjectTableViewCell {
     
     @IBOutlet weak var authorProfileImageView: UIImageView!
     @IBOutlet weak var bodyLabel: UILabel!
-    @IBOutlet weak var createDateLabel: UILabel!
+    @IBOutlet weak var creationDateLabel: UILabel!
     
     override func updateUI() {
         authorProfileImage = UIImage.defultTestImage()
         bodyLabel.text = ""
-        createDateLabel.text = ""
+        creationDateLabel.text = ""
         guard review != nil else { return }
         authorProfileImage = review!.whoReview!.profileImage
         bodyLabel.text = review!.body
-        createDateLabel.text = NSDateFormatter.smartStringFormDate(review!.createDate!)
+        creationDateLabel.text = NSDateFormatter.smartStringFormDate(review!.creationDate!)
     }
     
     
