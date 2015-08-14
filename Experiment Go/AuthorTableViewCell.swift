@@ -36,7 +36,7 @@ class AuthorTableViewCell: RootObjectTableViewCell {
         profileImage = UIImage.defultTestImage()
         nameLabel.text = ""
         guard user != nil else { return }
-        nameLabel.text = user!.name
+        nameLabel.text = user!.displayName
         guard let image = user!.profileImage else { return }
         profileImage = image
     }

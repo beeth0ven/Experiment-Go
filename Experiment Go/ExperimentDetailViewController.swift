@@ -33,7 +33,6 @@ class ExperimentDetailViewController: DetailViewController {
     }
 
     @IBOutlet var cancelBarButtonItem: UIBarButtonItem!
-    @IBOutlet var closeBarButtonItem: UIBarButtonItem!
     @IBOutlet var saveBarButtonItem: UIBarButtonItem!
     
     @IBOutlet var addNewReviewBarButtonItem: UIBarButtonItem!
@@ -74,18 +73,18 @@ class ExperimentDetailViewController: DetailViewController {
     
 
     @IBAction func toggleLikeStates(sender: SwitchBarButtonItem) {
-        let success = (sender.on == false) ? doLike() : doUnLike()
-        if success { sender.on = !sender.on }
+        (sender.on == false) ? doLike() : doUnLike()
+        sender.on = !sender.on
     }
     
     
-    private func doLike() -> Bool {
-        return addObject(User.currentUser(), forToManyRelationshipKey: SectionUnique.UsersLikeMe.rawValue)
+    private func doLike() {
+//        detailItem!.mutableSetValueForKey(SectionUnique.UsersLikeMe.rawValue).addObject(User.currentUser())
     }
 
 
-    private func doUnLike() -> Bool  {
-        return removeObject(User.currentUser(), forToManyRelationshipKey: SectionUnique.UsersLikeMe.rawValue)
+    private func doUnLike() {
+//        detailItem!.mutableSetValueForKey(SectionUnique.UsersLikeMe.rawValue).removeObject(User.currentUser())
     }
     
     // MARK: - View Configure
@@ -122,7 +121,7 @@ class ExperimentDetailViewController: DetailViewController {
     override func updateUI() {
         super.updateUI()
         let usersLikeMeSet = detailItem!.mutableSetValueForKey(SectionUnique.UsersLikeMe.rawValue)
-        likeBarButtonItem.on = usersLikeMeSet.containsObject(User.currentUser())
+//        likeBarButtonItem.on = usersLikeMeSet.containsObject(User.currentUser())
     }
     
     // MARK: - Segues
@@ -146,16 +145,9 @@ class ExperimentDetailViewController: DetailViewController {
     
     // MARK: - Table View Data Source
 
+    // MARK: - Table View Data Structure
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sectionInfo = fetchedInfoController.sections[section]
-        let sectionUnique = SectionUnique(rawValue: sectionInfo.identifier)!
-        return sectionUnique.name
-    }
-    
-    // MARK: - Fetched Info Controller Data Source
-    
-    override func identifiersForSectionInfos() -> [String] {
+    override func identifiersForSections() -> [String] {
         if editing == false {
             // Public read
             return SectionUnique.allValues
@@ -164,27 +156,6 @@ class ExperimentDetailViewController: DetailViewController {
            return [SectionUnique.OverView.rawValue]
         }
     }
-    
-    override func sectionInfoForIdentifier(identifier: String) -> SectionInfo {
-        let style: SectionInfo.Style!
-        let editingStyles: [SectionInfo.EditingStyle] = []
-        let sectionUnique = SectionUnique(rawValue: identifier)!
-        switch sectionUnique {
-        case .OverView:
-            style = .Attribute
-        case .WhoPost:
-            style = .ToOneRelationship(identifier)
-        case .Reviews:
-            style = .ToManyRelationship(identifier , > )
-        case .UsersLikeMe:
-            style = .ToManyRelationship(identifier , > )
-        }
-        
-        return SectionInfo(identifier: identifier, style: style, editingStyles: editingStyles)
-        
-    }
-    
-
     
     override func cellKeysBySectionIdentifier(identifier: String) -> [String]? {
         
@@ -266,13 +237,13 @@ extension ExperimentDetailViewController {
         if let rvc = segue.sourceViewController as? ReviewViewController {
             let review = rvc.review!
             review.body = rvc.bodyTextView.text
-            let sectionUnique = SectionUnique.Reviews
-            addObject(review, forToManyRelationshipKey: sectionUnique.rawValue)
+            review.experiment = experiment
             NSManagedObjectContext.saveDefaultContext()
         }
     }
     
     @IBAction func closeToExperimentDetail(segue: UIStoryboardSegue) {
+        
     }
     
 }

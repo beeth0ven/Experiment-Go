@@ -13,6 +13,8 @@ import UIKit
 
 protocol CloudSupport: class {
     
+    static func objectWithRecordID(recordID: String, entityName: String) -> RootObject? 
+
     func saveNewObjectFromRecord(record: CKRecord)
     func saveNewRecordToCloud(completionHandler: (CKRecord?, NSError?) -> Void)
     func readRecordFormCloud(completionHandler: (CKRecord?, NSError?) -> Void)

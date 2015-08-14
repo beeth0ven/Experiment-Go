@@ -35,8 +35,8 @@ class MenuTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.clearsSelectionOnViewWillAppear = false
-        self.title = User.currentUser().name
-        profileImagView.image = User.currentUser().profileImage ?? UIImage.defultTestImage()
+        self.title = User.currentUser()?.displayName
+        profileImagView.image = User.currentUser()?.profileImage ?? UIImage.defultTestImage()
         hideBarSeparator()
     }
     

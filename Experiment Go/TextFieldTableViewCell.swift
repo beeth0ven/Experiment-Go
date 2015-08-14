@@ -24,9 +24,10 @@ class TextFieldTableViewCell: ObjectValueTableViewCell {
     }
     
     override func updateUI() {
+        guard textField.isFirstResponder() == false else { return }
         titleLabel.text = ""
         textField.text = ""
-        textField.enabled = false
+        textField.enabled = superTableViewIsEditing()
         guard let objectValue = objectValue else { return }
         titleLabel.text = objectValue.key.capitalizedString
         textField.text = objectValue.value as? String 

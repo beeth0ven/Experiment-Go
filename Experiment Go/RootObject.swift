@@ -24,13 +24,6 @@ class RootObject: NSManagedObject, Comparable {
         recordID = NSUUID().UUIDString
     }
     
-    func arrayForRelationshipKey(key: String, isOrderedBefore: IsManagedObjectOrderedBefore) -> [RootObject] {
-        let managedObjectSet = self.mutableSetValueForKey(key)
-        let managedObjects = managedObjectSet.allObjects as! [RootObject]
-        return managedObjects.sort(isOrderedBefore)
-    }
-    
-    
     func descriptionForKeyPath(keyPath: String) -> String {
         return (valueForKeyPath(keyPath) as? CustomStringConvertible)?.description ?? ""
     }
@@ -102,9 +95,30 @@ class ObjectValue {
 
 extension RootObject: CloudSupport{
     
+    class func objectWithRecordID(recordID: String, entityName: String) -> RootObject? {
+        let fetchRequest = NSFetchRequest(entityName: entityName)
+        fetchRequest.predicate = NSPredicate(format: "recordID = %@", recordID)
+        
+        var matches: [AnyObject]
+        do {
+            try matches = NSManagedObjectContext.defaultContext().executeFetchRequest(fetchRequest)
+        } catch {
+            abort()
+        }
+        
+        if matches.count == 1 {
+             return matches.first as? RootObject
+        } else if matches.count == 0 {
+            return nil
+        } else {
+            // error
+            abort()
+        }
+    }
+    
     func saveNewObjectFromRecord(record: CKRecord) {
         let id = record.recordID.recordName
-        setValue(id, forKey: "id")
+        setValue(id, forKey: CloudManager.Constants.RecordIDKey)
         configFromRecord(record)
     }
     
@@ -158,6 +172,8 @@ extension RootObject: CloudSupport{
     }
     
     func configFromRecord(record: CKRecord) {
+        
+        
 //        timeStamp = record.valueForKey("timeStamp") as? NSDate
 //        name = record.valueForKey("name") as? String
     }

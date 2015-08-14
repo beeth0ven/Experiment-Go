@@ -2,7 +2,7 @@
 //  User+CoreDataProperties.swift
 //  Experiment Go
 //
-//  Created by luojie on 8/12/15.
+//  Created by luojie on 8/14/15.
 //  Copyright © 2015 LuoJie. All rights reserved.
 //
 //  Delete this file and regenerate it using "Create NSManagedObject Subclass…"
@@ -14,8 +14,9 @@ import CoreData
 
 extension User {
 
-    @NSManaged var name: String?
+    @NSManaged var displayName: String?
     @NSManaged var profileImageData: NSData?
+    @NSManaged var profileImageURL: String?
     @NSManaged var followers: NSSet?
     @NSManaged var followingUsers: NSSet?
     @NSManaged var likedExperiments: NSSet?

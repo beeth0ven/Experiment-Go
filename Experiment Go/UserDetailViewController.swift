@@ -32,7 +32,6 @@ class UserDetailViewController: DetailViewController, UIImagePickerControllerDel
         }
     }
     
-    @IBOutlet var closeBarButtonItem: UIBarButtonItem!
     
     @IBOutlet weak var recommendBarButtonItem: SwitchBarButtonItem!
     @IBOutlet var followBarButtonItem: SwitchBarButtonItem! {
@@ -70,18 +69,18 @@ class UserDetailViewController: DetailViewController, UIImagePickerControllerDel
     
     
     @IBAction func toggleFollowStates(sender: SwitchBarButtonItem) {
-        let success = (sender.on == false) ? doFollow() : doUnFollow()
-        if success { sender.on = !sender.on }
+         (sender.on == false) ? doFollow() : doUnFollow()
+         sender.on = !sender.on
     }
     
     
-    private func doFollow() -> Bool {
-        return addObject(User.currentUser(), forToManyRelationshipKey: SectionUnique.Followers.rawValue)
+    private func doFollow() {
+//        detailItem!.mutableSetValueForKey(SectionUnique.Followers.rawValue).addObject(User.currentUser())
     }
     
     
-    private func doUnFollow() -> Bool  {
-        return removeObject(User.currentUser(), forToManyRelationshipKey: SectionUnique.Followers.rawValue)
+    private func doUnFollow() {
+//        detailItem!.mutableSetValueForKey(SectionUnique.Followers.rawValue).removeObject(User.currentUser())
     }
     
     // MARK: - View Configure
@@ -113,7 +112,7 @@ class UserDetailViewController: DetailViewController, UIImagePickerControllerDel
     override func updateUI() {
         super.updateUI()
         let followerSet = detailItem!.mutableSetValueForKey(SectionUnique.Followers.rawValue)
-        followBarButtonItem.on = followerSet.containsObject(User.currentUser())
+//        followBarButtonItem.on = followerSet.containsObject(User.currentUser())
     }
     // MARK: - Segues
     
@@ -126,37 +125,31 @@ class UserDetailViewController: DetailViewController, UIImagePickerControllerDel
     // MARK: - Table View Data Source
     
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sectionInfo = fetchedInfoController.sections[section]
-        let sectionUnique = SectionUnique(rawValue: sectionInfo.identifier)!
-        return sectionUnique.name
-    }
-    
     // MARK: - Table View Data Delegate 
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
-        guard editing,
-        let cell = tableView.cellForRowAtIndexPath(indexPath) as? ObjectValueTableViewCell where
-        cell.objectValue?.key == User.Constants.ProfileImageDataKey
-            else { return }
-        let ipc = UIImagePickerController()
-        ipc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        ipc.allowsEditing = true
-        ipc.delegate = self
-        presentViewController(ipc, animated: true, completion: nil)
-    }
-    
+//    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+//        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+//        guard editing,
+//        let cell = tableView.cellForRowAtIndexPath(indexPath) as? ObjectValueTableViewCell where
+//        cell.objectValue?.key == User.Constants.ProfileImageDataKey
+//            else { return }
+//        let ipc = UIImagePickerController()
+//        ipc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+//        ipc.allowsEditing = true
+//        ipc.delegate = self
+//        presentViewController(ipc, animated: true, completion: nil)
+//    }
+//    
     // MARK: - Image Picker Controller Delegate
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         user!.profileImage = info[UIImagePickerControllerEditedImage] as? UIImage ?? info[UIImagePickerControllerOriginalImage] as! UIImage
         dismissViewControllerAnimated(true, completion: {
-            [unowned self] in
-            let sectionUnique = SectionUnique.OverView
-            let section: Int = self.identifiersForSectionInfos().indexOf(sectionUnique.rawValue)!
-            let row: Int = self.cellKeysBySectionIdentifier(sectionUnique.rawValue)!.indexOf(User.Constants.ProfileImageDataKey)!
-            let indexPath = NSIndexPath(forRow: row, inSection: section)
-            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+//            [unowned self] in
+//            let sectionUnique = SectionUnique.OverView
+//            let section: Int = self.identifiersForSectionInfos().indexOf(sectionUnique.rawValue)!
+//            let row: Int = self.cellKeysBySectionIdentifier(sectionUnique.rawValue)!.indexOf(User.Constants.ProfileImageDataKey)!
+//            let indexPath = NSIndexPath(forRow: row, inSection: section)
+//            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             })
 
     }
@@ -170,32 +163,10 @@ class UserDetailViewController: DetailViewController, UIImagePickerControllerDel
     
     // MARK: - Fetched Info Controller Data Source
     
-    override func identifiersForSectionInfos() -> [String] {
+    override func identifiersForSections() -> [String] {
         return SectionUnique.allValues
     }
     
-    override func sectionInfoForIdentifier(identifier: String) -> SectionInfo {
-        let style: SectionInfo.Style!
-        let editingStyles: [SectionInfo.EditingStyle] = []
-        let sectionUnique = SectionUnique(rawValue: identifier)!
-        switch sectionUnique {
-        case .OverView:
-            style = .Attribute
-        case .PostedExperiments:
-            style = .ToManyRelationship(identifier , > )
-        case .LikedExperiments:
-            style = .ToManyRelationship(identifier , > )
-        case .Followers:
-            style = .ToManyRelationship(identifier , > )
-        case .FollowingUsers:
-            style = .ToManyRelationship(identifier , > )
-        }
-        
-        return SectionInfo(identifier: identifier, style: style, editingStyles: editingStyles)
-        
-    }
-    
-
     
     override func cellKeysBySectionIdentifier(identifier: String) -> [String]?{
         

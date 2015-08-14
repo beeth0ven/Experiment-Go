@@ -18,11 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         // Init all users for the first time.
-        if NSUserDefaults.standardUserDefaults().boolForKey("AppDelegate.HasRunedBefore") == false {
-            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "AppDelegate.HasRunedBefore")
-            User.initAllUsers()
-            NSManagedObjectContext.saveDefaultContext()
-        }
+//        if NSUserDefaults.standardUserDefaults().boolForKey("AppDelegate.HasRunedBefore") == false {
+//            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "AppDelegate.HasRunedBefore")
+//            User.initAllUsers()
+//            NSManagedObjectContext.saveDefaultContext()
+//        }
         
         // Override point for customization after application launch.
         let splitViewController = self.window!.rootViewController as! UISplitViewController
@@ -37,8 +37,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         return true
     }
 
-    lazy var currentUser: User = {
-        return User.randomUser()
+    lazy var currentUser: User? = {
+        self.updateCurrentUser()
+        guard let userRecordID = self.currentUserRecordID else { return nil }
+        guard let user = RootObject.objectWithRecordID(userRecordID, entityName: "User") as? User else { return nil }
+        return user
     }()
 
 
@@ -170,4 +173,97 @@ extension NSManagedObjectContext {
     
 
 }
+
+extension AppDelegate {
+    // MARK: - Cloud support
+    
+    private struct Constants {
+        static let CurrentUserRecordIDKey = "AppDelegate.CurrentUserRecordIDKey"
+    }
+
+    
+    var currentUserRecordID: String? {
+        get {
+            return NSUserDefaults.standardUserDefaults().valueForKey(Constants.CurrentUserRecordIDKey) as? String
+        }
+        
+        set {
+            guard currentUserRecordID != newValue else { return }
+            NSUserDefaults.standardUserDefaults().setValue(newValue, forKey: Constants.CurrentUserRecordIDKey)
+            syncUser()
+        }
+    }
+    
+    private func syncUser() {
+        guard let userRecordID  = currentUserRecordID else { return currentUser = nil }
+        if let newUser = RootObject.objectWithRecordID(userRecordID, entityName: "User") as? User {
+            // First fetch user from local.
+            return currentUser = newUser
+        } else {
+            // Then fetch user from cloud.
+            NSManagedObjectContext.cloudPublicContext().fetchRecordWithID(CKRecordID(recordName: userRecordID))
+                { (record, error) -> Void in
+                    guard  error == nil else { abort() }
+                    let user = RootObject.insertNewObjectForEntityForName("User") as! User
+                    user.saveNewObjectFromRecord(record!)
+                    self.currentUser = user
+            }
+            
+        }
+    }
+    
+    private func updateCurrentUser() {
+        requestDiscoverabilityPermission { (granted) -> () in
+            guard granted else { abort() }
+            self.fetchUserID()
+            
+        }
+    }
+    
+    
+    private func requestDiscoverabilityPermission(completionHandler: (Bool) -> ()) {
+        
+        CKContainer.defaultContainer().requestApplicationPermission(.PermissionUserDiscoverability) { (applicationPermissionStatus, error) -> Void in
+            guard  error == nil else { abort() }
+            dispatch_async(dispatch_get_main_queue()) { completionHandler( applicationPermissionStatus == .Granted ) }
+        }
+    }
+    
+    private func fetchUserID() {
+        CKContainer.defaultContainer().fetchUserRecordIDWithCompletionHandler { (recordID, error) -> Void in
+            guard  error == nil else { abort() }
+            self.currentUserRecordID = recordID!.recordName
+            print("recordID: \(recordID!.recordName)")
+            print("zoneID: \(recordID!.zoneID.zoneName)  \(recordID!.zoneID.ownerName)")
+        }
+    }
+    
+}
+
+extension User {
+    
+    class func currentUser() -> User? {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.currentUser
+    }
+    
+    
+    
+    class func randomUser() -> User {
+        let context = NSManagedObjectContext.defaultContext()
+        let request = NSFetchRequest(entityName: Constants.EntityNameKey)
+        request.sortDescriptors = [NSSortDescriptor(key: RootObject.Constants.DefaultSortKey, ascending: true)]
+        
+        var matches: [AnyObject]
+        do {
+            try matches = context.executeFetchRequest(request)
+        } catch {
+            abort()
+        }
+        
+        let index = Int(arc4random_uniform(UInt32(matches.count)))
+        return matches[index] as! User
+    }
+}
+
 

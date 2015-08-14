@@ -40,11 +40,11 @@
                         <viewControllerLayoutGuide type="bottom" id="GAO-Cl-Wes"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="svH-Pt-448">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="44" width="600" height="512"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="FGR-UP-yLX">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="512"/>
                                 <animations/>
                                 <color key="backgroundColor" red="1" green="1" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
@@ -507,7 +507,7 @@
                             </barButtonItem>
                             <barButtonItem title="Close" style="done" id="Wh4-SY-dDE">
                                 <connections>
-                                    <segue destination="DfV-s1-EEv" kind="unwind" unwindAction="closeToMaster:" id="HtQ-8W-Pwa"/>
+                                    <action selector="close:" destination="JEX-9P-axG" id="gAV-0W-ngy"/>
                                 </connections>
                             </barButtonItem>
                         </leftBarButtonItems>
@@ -521,7 +521,7 @@
                     <connections>
                         <outlet property="addNewReviewBarButtonItem" destination="T44-Pb-f9m" id="Rr6-M8-u1X"/>
                         <outlet property="cancelBarButtonItem" destination="LQd-tM-Fng" id="aG9-Ra-S4X"/>
-                        <outlet property="closeBarButtonItem" destination="Wh4-SY-dDE" id="HvH-TS-VtA"/>
+                        <outlet property="closeBarButtonItem" destination="Wh4-SY-dDE" id="hcy-vb-YGq"/>
                         <outlet property="deleteBarButtonItem" destination="zlG-is-gUa" id="Wn7-th-Tz0"/>
                         <outlet property="flexibleSpaceBarButtonItem" destination="OL5-M0-Tae" id="EWo-Bc-0Tc"/>
                         <outlet property="likeBarButtonItem" destination="s0W-Ze-dtK" id="Sv5-VD-ejh"/>
@@ -539,7 +539,7 @@
             <objects>
                 <tableViewController id="Sq8-mz-vdg" customClass="ReviewViewController" customModule="Experiment_Go" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="iCL-dv-KlO">
-                        <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                        <rect key="frame" x="0.0" y="44" width="600" height="556"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -1002,11 +1002,11 @@
                         <viewControllerLayoutGuide type="bottom" id="r5w-MP-veu"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="XOF-ul-B4b">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="FT1-xM-x7F">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                                 <animations/>
                                 <color key="backgroundColor" red="1" green="1" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
@@ -1289,7 +1289,7 @@
                     <navigationItem key="navigationItem" title="Detail" id="IY7-Tc-oMS">
                         <barButtonItem key="leftBarButtonItem" title="Close" id="XxN-b7-YBA">
                             <connections>
-                                <action selector="cancel:" destination="Lfa-JC-7Yf" id="nVM-sc-woo"/>
+                                <action selector="close:" destination="Lfa-JC-7Yf" id="LVo-V9-zIW"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="ZVu-PP-Ad7">
@@ -1298,7 +1298,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <connections>
+                        <outlet property="closeBarButtonItem" destination="XxN-b7-YBA" id="cgk-1W-xe6"/>
                         <outlet property="tableView" destination="FT1-xM-x7F" id="oVw-jG-KMq"/>
                     </connections>
                 </viewController>
@@ -1315,11 +1317,11 @@
                         <viewControllerLayoutGuide type="bottom" id="elv-WF-zlO"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="3Rr-4t-1PD">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="44" width="600" height="512"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="iso-eK-kEP">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="512"/>
                                 <animations/>
                                 <color key="backgroundColor" red="1" green="1" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
@@ -1758,12 +1760,12 @@
                     <navigationItem key="navigationItem" title="User" id="ryw-qF-zEg">
                         <barButtonItem key="leftBarButtonItem" title="Close" style="done" id="gNh-1a-KPd">
                             <connections>
-                                <segue destination="ZnF-wS-pjz" kind="unwind" unwindAction="closeToMenu:" id="Ylk-XA-xeh"/>
+                                <action selector="close:" destination="2AW-Iq-AeF" id="RLC-lJ-eVt"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="closeBarButtonItem" destination="gNh-1a-KPd" id="jUK-dr-PLB"/>
+                        <outlet property="closeBarButtonItem" destination="gNh-1a-KPd" id="Fri-8T-DX8"/>
                         <outlet property="flexibleSpaceBarButtonItem" destination="aX5-Qo-sZU" id="HYm-xc-HpP"/>
                         <outlet property="followBarButtonItem" destination="Sqt-Ii-IE0" id="ROf-E9-tlz"/>
                         <outlet property="recommendBarButtonItem" destination="sMx-Vi-XgW" id="f1O-2J-G1P"/>
@@ -1771,7 +1773,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I9i-9C-a1e" sceneMemberID="firstResponder"/>
-                <exit id="ZnF-wS-pjz" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2923" y="-630"/>
         </scene>
@@ -1857,9 +1858,9 @@
         <image name="BlackCat" width="243" height="244"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="VLF-L7-gi0"/>
         <segue reference="0ni-sz-rPy"/>
-        <segue reference="GvP-XW-jsT"/>
+        <segue reference="Rlp-qq-iPI"/>
+        <segue reference="VLF-L7-gi0"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.9212072491645813" green="0.84832113981246948" blue="0.62377804517745972" alpha="1" colorSpace="calibratedRGB"/>
 </document>
