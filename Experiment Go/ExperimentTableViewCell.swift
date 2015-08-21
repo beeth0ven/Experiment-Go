@@ -8,19 +8,8 @@
 
 import UIKit
 
-class ExperimentTableViewCell: RootObjectTableViewCell {
+class ExperimentTableViewCell: UITableViewCell {
 
-    
-    var experiment: Experiment? {
-        get {
-            return detailItem as? Experiment
-        }
-        
-        set {
-            detailItem = newValue
-        }
-    }
-    
     var authorProfileImage: UIImage? {
         get {
             return authorProfileImageView.image
@@ -30,22 +19,19 @@ class ExperimentTableViewCell: RootObjectTableViewCell {
         }
     }
     
-    @IBOutlet weak var authorProfileImageView: UIImageView!
+    @IBOutlet weak var authorProfileImageView: UIImageView! {
+        didSet {
+//            // Add border
+//            authorProfileImageView.layer.borderColor = DefaultStyleController.Color.Sand.CGColor
+//            authorProfileImageView.layer.borderWidth = authorProfileImageView.bounds.size.height / 16
+//            // Add corner radius
+//            authorProfileImageView.layer.cornerRadius = authorProfileImageView.bounds.size.height / 2
+//            authorProfileImageView.layer.masksToBounds = true
+        }
+        
+    }
 //    @IBOutlet weak var authorNameLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var creationDateLabel: UILabel!
-    
-
-    override func updateUI() {
-        authorProfileImage = UIImage.defultTestImage()
-//        authorNameLabel.text = ""
-        titleLabel.text = ""
-        creationDateLabel.text = ""
-        guard experiment != nil else { return }
-        authorProfileImage = experiment!.whoPost!.profileImage
-//        authorNameLabel.text = experiment!.whoPost!.name
-        titleLabel.text = experiment!.title
-        creationDateLabel.text = NSDateFormatter.smartStringFormDate(experiment!.creationDate!)
-    }
 
 }

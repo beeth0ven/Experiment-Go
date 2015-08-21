@@ -7,33 +7,84 @@
 //
 
 
-import UIKit
-import CoreData
+import CloudKit
 
 
 
-class ExperimentDetailViewController: DetailViewController {
+class ExperimentDetailViewController: UIViewController {
     
     private enum SegueID: String {
         case ShowUserDetail
         case AddNewReview
     }
-
+    
+    private struct Constants {
+        static let AttributeSectionKey = "Attribute"
+    }
+    
+    struct Storyboard {
+        static let TableViewEstimatedRowHeight: CGFloat = 44
+        static let EmptyStyleCellReuseIdentifier = "EmptyStyleCell"
+        static let LoadingStyleCellReuseIdentifier = "LoadingStyleCell"
+        static let InsertStyleCellReuseIdentifier = "InsertStyleCell"
+        static let NumberCellReuseIdentifier = "NumberCell"
+        static let BoolCellReuseIdentifier = "BoolCell"
+        static let TextCellReuseIdentifier = "TextCell"
+        static let DateCellReuseIdentifier = "DateCell"
+        static let ImageCellReuseIdentifier = "ImageCell"
+        static let DetailItemCellReuseIdentifier = "DetailItemCell"
+        static let UserCellReuseIdentifier = "UserCell"
+        static let ReviewCellReuseIdentifier = "ReviewCell"
+    }
+    
     
     // MARK: - Properties
 
-    var experiment: Experiment? {
-        get {
-            return detailItem as? Experiment
+    var experiment: CKRecord?
+    
+    func author(completionHandler: (CKRecord) -> ()) {
+        // Fetch from cache first.
+        guard let authorID = experiment?.valueForKey(RecordKey.CreatorUserRecordID) as? CKRecordID else { return }
+        var author = userCache.objectForKey(authorID.recordName) as? CKRecord
+        guard author == nil else { completionHandler(author!) ; return print("fetched author from cache.") }
+
+        // Fetch from cloud second.
+        
+        let fetchedAuthorBlock: (CKRecord?, NSError?) -> Void = {
+            [unowned self] (record, error) in
+            guard error == nil else { print(error?.localizedDescription) ; return }
+            author = record!
+            self.userCache.setObject(author!, forKey: authorID.recordName)
+            print("fetched author from cloud.")
+            dispatch_async(dispatch_get_main_queue()) { completionHandler(author!) }
         }
         
-        set {
-            detailItem = newValue
+        guard authorID.recordName != CKOwnerDefaultName else {
+            let fetchCurrentUserRecordOperation = CKFetchRecordsOperation.fetchCurrentUserRecordOperation()
+            fetchCurrentUserRecordOperation.perRecordCompletionBlock = { fetchedAuthorBlock($0, $2) }
+            publicCloudDatabase.addOperation(fetchCurrentUserRecordOperation)
+            return print("fetched author who is current user from cloud.")
+        }
+        
+        publicCloudDatabase.fetchRecordWithID(authorID, completionHandler: fetchedAuthorBlock)
+        
+    }
+    
+    
+    var userCache: NSCache {
+        return AppDelegate.Cache.Manager.userCache
+    }
+    
+    @IBOutlet weak var tableView: UITableView! {
+        didSet {
+            tableView.estimatedRowHeight = Storyboard.TableViewEstimatedRowHeight
+            tableView.rowHeight = UITableViewAutomaticDimension
         }
     }
 
     @IBOutlet var cancelBarButtonItem: UIBarButtonItem!
-    @IBOutlet var saveBarButtonItem: UIBarButtonItem!
+    @IBOutlet var closeBarButtonItem: UIBarButtonItem!
+    @IBOutlet var postBarButtonItem: UIBarButtonItem!
     
     @IBOutlet var addNewReviewBarButtonItem: UIBarButtonItem!
     @IBOutlet var likeBarButtonItem: SwitchBarButtonItem! {
@@ -46,149 +97,173 @@ class ExperimentDetailViewController: DetailViewController {
     
     @IBOutlet var flexibleSpaceBarButtonItem: UIBarButtonItem!
 
-     var detailItemShowStyle: DetailItemShowStyle {
-        
-        let imAuthor = self.experiment!.whoPost == User.currentUser()
-        
-        if  imAuthor && self.experiment!.inserted {
-            return .AuthorInsert
-        } else if imAuthor && editing == false {
-            return .AuthorRead
-        } else if imAuthor && editing == true {
-            return .AuthorModify
-        } else {
-            return .PublicRead
-        }
-    }
-    
     // MARK: - View Controller Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         hideBarSeparator()
-    }
-    
-
-    // MARK: - User Actions
-    
-
-    @IBAction func toggleLikeStates(sender: SwitchBarButtonItem) {
-        (sender.on == false) ? doLike() : doUnLike()
-        sender.on = !sender.on
-    }
-    
-    
-    private func doLike() {
-//        detailItem!.mutableSetValueForKey(SectionUnique.UsersLikeMe.rawValue).addObject(User.currentUser())
-    }
-
-
-    private func doUnLike() {
-//        detailItem!.mutableSetValueForKey(SectionUnique.UsersLikeMe.rawValue).removeObject(User.currentUser())
+        configureBarButtons()
     }
     
     // MARK: - View Configure
     
-    override func configureBarButtons() {
-        
-        switch detailItemShowStyle {
-        case .AuthorInsert:
-            self.editing = true
-            navigationItem.leftBarButtonItems = [cancelBarButtonItem]
-            navigationItem.rightBarButtonItems = [saveBarButtonItem]
-            toolbarItems = []
-            navigationController?.toolbarHidden = true
-
-        case .AuthorRead:
-            navigationItem.leftBarButtonItems = [closeBarButtonItem]
-            navigationItem.rightBarButtonItems = [editButtonItem()]
-            toolbarItems = [addNewReviewBarButtonItem]
-        case .AuthorModify:
-            navigationItem.leftBarButtonItems = []
-            navigationItem.rightBarButtonItems = [editButtonItem()]
-            toolbarItems = [flexibleSpaceBarButtonItem, deleteBarButtonItem]
-        case .PublicRead:
-            navigationItem.leftBarButtonItems = [closeBarButtonItem]
-            navigationItem.rightBarButtonItems = []
-            toolbarItems = [addNewReviewBarButtonItem, flexibleSpaceBarButtonItem,likeBarButtonItem]
-        }
-        
-        // If self is in a navigation stack then change leftBarButton to navigation default back button.
-        // So call super's configureBarButtons.
-        super.configureBarButtons()
-    }
-
-    override func updateUI() {
-        super.updateUI()
-        let usersLikeMeSet = detailItem!.mutableSetValueForKey(SectionUnique.UsersLikeMe.rawValue)
-//        likeBarButtonItem.on = usersLikeMeSet.containsObject(User.currentUser())
-    }
-    
-    // MARK: - Segues
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        guard segue.identifier != nil else { return }
-        guard let segueID = SegueID(rawValue: segue.identifier!) else { return }
-        switch segueID {
-        case .ShowUserDetail:
-            let controller = segue.destinationViewController as! DetailViewController
-            if let cell = sender as? RootObjectTableViewCell {
-                controller.detailItem = cell.detailItem!
-            }
-        case .AddNewReview:
-            let controller = (segue.destinationViewController as! UINavigationController).topViewController as! ReviewViewController
-            let review = RootObject.insertNewObjectForEntityForName(Review.Constants.EntityNameKey) as! Review
-            controller.review = review
-        }
+    func configureBarButtons() {
+        self.editing = true
+        navigationItem.leftBarButtonItems = [cancelBarButtonItem]
+        navigationItem.rightBarButtonItems = [postBarButtonItem]
+        toolbarItems = []
+        navigationController?.toolbarHidden = true
 
     }
+}
+
+extension ExperimentDetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - Table View Data Source
-
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return  sections.count
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let sectionContent = sections[section].content
+        switch sectionContent {
+        case .Attribute(keys: let keys):
+            return keys.count
+            
+        case .ToOneRelationship(key: _):
+            return 1
+            
+        case .ToManyRelationship(key: let key):
+            guard let references = experiment?.valueForKey(key) as? [CKReference] else { return 0 }
+            return references.count != 0 ? references.count : 1
+        }
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cellReuseIdentifier = cellReuseIdentifierAtIndexPath(indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier, forIndexPath: indexPath)
+        self.configureCell(cell, atIndexPath: indexPath)
+        return cell
+    }
+    
+    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
+        let sectionContent = sections[indexPath.section].content
+        switch sectionContent {
+        case .Attribute(keys: let keys):
+            configureCell(cell, forKey: keys[indexPath.row])
+            
+        case .ToOneRelationship(key: let key):
+            configureCell(cell, forToOneRelationshiprKey: key)
+            
+        case .ToManyRelationship(key: _):
+            return
+        }
+        
+        
+//        guard let experimentCell = cell as? ExperimentTableViewCell else { abort() }
+//        let experiment = self.experiments[indexPath.row]
+    }
+    
+    private func configureCell(cell: UITableViewCell, forKey key: String) {
+        switch key {
+        case ExperimentKey.Title, ExperimentKey.Body:
+            guard let textFieldTableViewCell = cell as? TextFieldTableViewCell else { abort()  }
+            textFieldTableViewCell.titleLabel.text = key.capitalizedString
+            textFieldTableViewCell.textField.text = experiment?.valueForKey(key) as? String
+            
+        case RecordKey.CreationDate:
+            guard let dateTableViewCell = cell as? DateTableViewCell else { abort()  }
+            dateTableViewCell.textLabel?.text = key.capitalizedString
+            let date = experiment?.valueForKey(key) as? NSDate ?? NSDate()
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
+            dateFormatter.timeStyle = .ShortStyle
+            dateTableViewCell.detailTextLabel?.text = dateFormatter.stringFromDate(date)
+            
+        default:
+            abort()
+        }
+    }
+    
+    private func configureCell(cell: UITableViewCell, forToOneRelationshiprKey key: String) {
+        switch key {
+        case ExperimentKey.WhoPost:
+            guard let authorCell = cell as? AuthorTableViewCell  else { abort()  }
+            author { (author) in
+                authorCell.nameLabel.text = author.valueForKey(UserKey.DisplayName) as? String
+                guard let imageData = (author.valueForKey(UserKey.ProfileImageAsset) as? CKAsset)?.data else { return }
+                authorCell.profileImage = UIImage(data: imageData)
+            }
+            
+        default:
+            abort()
+        }
+    }
+    
+    
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        guard let sectionUnique = SectionUnique(rawValue: sections[section].identifier) else { return nil }
+        return sectionUnique.name
+    }
+    
     // MARK: - Table View Data Structure
     
-    override func identifiersForSections() -> [String] {
-        if editing == false {
-            // Public read
-            return SectionUnique.allValues
-        } else {
-            // Private write
-           return [SectionUnique.OverView.rawValue]
-        }
-    }
     
-    override func cellKeysBySectionIdentifier(identifier: String) -> [String]? {
-        
-        let sectionUnique = SectionUnique(rawValue: identifier)!
-        
-        guard case .OverView = sectionUnique  else { return nil }
-        
-        return [
-            Experiment.Constants.TitleKey,
-            Experiment.Constants.BodyKey,
-            CloudManager.Constants.CreationDateKey
+    var sections: [SectionInfo] {
+        // Sections 1: OverView
+        var result = [SectionInfo]()
+        let keys =  [
+            ExperimentKey.Title,
+            ExperimentKey.Body,
+            RecordKey.CreationDate
         ]
+        result.append(SectionInfo(identifier: SectionUnique.OverView.rawValue, content: .Attribute(keys: keys)))
         
+        // Sections 2: Author
+        var identifier = SectionUnique.WhoPost.rawValue
+        result.append(SectionInfo(identifier:identifier, content: .ToOneRelationship(key: identifier)))
+        
+//        // Sections 3: Reviews
+//        identifier = SectionUnique.Reviews.rawValue
+//        result.append(SectionInfo(identifier:identifier, content: .ToManyRelationship(key: identifier)))
+//        
+//        // Sections 3: UsersLikeMe
+//        identifier = SectionUnique.UsersLikeMe.rawValue
+//        result.append(SectionInfo(identifier:identifier, content: .ToManyRelationship(key: identifier)))
+        
+        return result
     }
     
     
-    override func cellReuseIdentifierFromItemKey(key: String) -> String? {
-        switch key {
-        case SectionUnique.WhoPost.rawValue:
+    private func cellReuseIdentifierAtIndexPath(indexPath: NSIndexPath) -> String {
+        let sectionInfo = sections[indexPath.section]
+        guard let sectionUnique = SectionUnique(rawValue: sectionInfo.identifier) else { abort() }
+        switch sectionUnique {
+        case .OverView:
+            guard case SectionInfo.SectionContent.Attribute(keys: let keys) = sectionInfo.content else { abort() }
+            return cellReuseIdentifierForKey(keys[indexPath.row])
+        case .WhoPost:
             return Storyboard.UserCellReuseIdentifier
-            
-        case SectionUnique.Reviews.rawValue:
+        case .Reviews:
             return Storyboard.ReviewCellReuseIdentifier
-
-        case SectionUnique.UsersLikeMe.rawValue:
+        case .UsersLikeMe:
             return Storyboard.UserCellReuseIdentifier
-            
-        default: return super.cellReuseIdentifierFromItemKey(key)
         }
     }
     
-    // MARK: - Section Construct
-
+    private func cellReuseIdentifierForKey(key: String) -> String {
+        switch key {
+        case ExperimentKey.Title, ExperimentKey.Body:
+            return Storyboard.TextCellReuseIdentifier
+            
+        case RecordKey.CreationDate:
+            return Storyboard.DateCellReuseIdentifier
+            
+        default:
+            abort()
+        }
+    }
+    
     private enum SectionUnique: String {
         case OverView = "overView"
         case WhoPost = "whoPost"
@@ -218,33 +293,16 @@ class ExperimentDetailViewController: DetailViewController {
         }
     }
     
-}
+    struct SectionInfo {
+        var identifier: String
+        var content: SectionContent
 
-extension DetailViewController.Storyboard {
-    static let UserCellReuseIdentifier = "UserCell"
-    static let ReviewCellReuseIdentifier = "ReviewCell"
-}
-
-
-extension ExperimentDetailViewController {
-    // MARK: - Unwind Segue
-    @IBAction func cancelToExperimentDetail(segue: UIStoryboardSegue) {
-        guard let dvc = segue.sourceViewController as? DetailViewController else { return }
-        NSManagedObjectContext.defaultContext().deleteObject(dvc.detailItem!)
-    }
-    
-    @IBAction func saveToExperimentDetail(segue: UIStoryboardSegue) {
-        if let rvc = segue.sourceViewController as? ReviewViewController {
-            let review = rvc.review!
-            review.body = rvc.bodyTextView.text
-            review.experiment = experiment
-            NSManagedObjectContext.saveDefaultContext()
+        enum SectionContent {
+            case Attribute(keys:[String])
+            case ToOneRelationship(key:String)
+            case ToManyRelationship(key:String)
         }
-    }
-    
-    @IBAction func closeToExperimentDetail(segue: UIStoryboardSegue) {
         
     }
-    
-}
 
+}

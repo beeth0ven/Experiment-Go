@@ -6,229 +6,208 @@
 //  Copyright © 2015 LuoJie. All rights reserved.
 //
 
-import UIKit
-import CoreData
+import CloudKit
 
-class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
-    
-    
+
+class MasterViewController: UITableViewController {
     struct Storyboard {
         static let TableViewEstimatedRowHeight: CGFloat = 87
         static let ExperimentCellReuseIdentifier = "ExperimentCell"
         static let ShowExperimentDetailSegueIdentifier = "showDetail"
     }
     
-    var fetchedEntityName: String? {
-        get {
-            let entity = self.fetchedResultsController.fetchRequest.entity!
-            return entity.name
-        }
-    }
+    var masterCloudManager = MasterCloudManager()
+    
+    // MARK: - View Controller Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.estimatedRowHeight = Storyboard.TableViewEstimatedRowHeight
         tableView.rowHeight = UITableViewAutomaticDimension
-        // Do any additional setup after loading the view, typically from a nib.
+        tableView.tableFooterView = UIView()
+        refresh()
+        startObserveNotification()
+    }
+    
+    deinit {
+        stopObserveNotification()
+    }
+ 
+    // MARK: - Update UI
+    
+    func refresh() {
+        refreshControl?.beginRefreshing()
+        refresh(refreshControl)
+    }
+    
+    @IBAction func refresh(sender: UIRefreshControl?) {
         
-        let addButton = UIBarButtonItem(title: "New", style: .Plain, target: self, action: "insertNewObject:")
-        self.navigationItem.rightBarButtonItem = addButton
+        masterCloudManager.refreshData({
+            (experiments) in
+            self.tableView.insertSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
+            self.refreshControl?.endRefreshing()
+            self.fetchUsersFrom(experiments)
+
+            }, handleError: defaultHandleError)
         
-        hideBarSeparator()
+        let indexSet = NSIndexSet(indexesInRange: NSMakeRange(0, tableView.numberOfSections))
+        tableView.deleteSections(indexSet, withRowAnimation: .Fade)
+    }
+    
+    private func fetchUsersFrom(experiments: [CKRecord]) {
         
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
-        super.viewWillAppear(animated)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    func insertNewObject(sender: AnyObject) {
-        performSegueWithIdentifier(Storyboard.ShowExperimentDetailSegueIdentifier, sender: sender)
-    }
-    
-    // MARK: - Segues
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == Storyboard.ShowExperimentDetailSegueIdentifier {
-            let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
-            controller.title = fetchedEntityName!
-            if sender is UITableViewCell {
-                if let indexPath = self.tableView.indexPathForSelectedRow {
-                    let detailItem = self.fetchedResultsController.objectAtIndexPath(indexPath) as! RootObject
-                    controller.detailItem = detailItem
-                    
+        masterCloudManager.fetchUsersFrom(experiments, completionBlock: {
+            (userRecords) in
+            let userRecordIDs: [CKRecordID] = userRecords.map { $0.recordID }
+            for (section, experiments) in self.masterCloudManager.experiments.enumerate() {
+                for (row, experiment) in experiments.enumerate() {
+                    let userRecordID = experiment.valueForKey(RecordKey.CreatorUserRecordID) as! CKRecordID
+                    if userRecordIDs.contains(userRecordID) {
+                        let indexPath = NSIndexPath(forRow: row, inSection: section)
+                        guard let visibleCell = self.tableView.cellForRowAtIndexPath(indexPath) else { return }
+                        self.configureCell(visibleCell, atIndexPath: indexPath)
+                    }
                 }
-            } else if sender is UIBarButtonItem {
-                let detailItem = RootObject.insertNewObjectForEntityForName(Experiment.Constants.EntityNameKey)
-                controller.detailItem = detailItem
+            }
+        }, handleError: defaultHandleError)
+    }
+    
+
+    
+    @objc func updateUserRelatedUI() {
+        for (section, experiments) in self.masterCloudManager.experiments.enumerate() {
+            for (row, experiment) in experiments.enumerate() {
+                let userRecordID = experiment.valueForKey(RecordKey.CreatorUserRecordID) as! CKRecordID
+                if userRecordID.recordName == CKOwnerDefaultName {
+                    let indexPath = NSIndexPath(forRow: row, inSection: section)
+                    guard let visibleCell = self.tableView.cellForRowAtIndexPath(indexPath) else { return }
+                    self.configureCell(visibleCell, atIndexPath: indexPath)
+                }
             }
             
         }
     }
     
-    // MARK: - Table View
+    let defaultHandleError: ((NSError) -> Void) = { (error) in
+        print(error.localizedDescription) ; abort()
+    }
+    
+    // MARK: - Key Value Observe
+
+    func startObserveNotification() {
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "updateUserRelatedUI",
+            name: CloudManager.Notification.CurrentUserDidChange,
+            object: nil)
+    }
+    
+    func stopObserveNotification() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    
+    
+    
+    // MARK: - Table view data source
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return self.fetchedResultsController.sections?.count ?? 0
+        return masterCloudManager.experiments.count
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section]
-        return sectionInfo.numberOfObjects
-        
+        return masterCloudManager.experiments[section].count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(Storyboard.ExperimentCellReuseIdentifier, forIndexPath: indexPath) as! ExperimentTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(Storyboard.ExperimentCellReuseIdentifier, forIndexPath: indexPath)
         self.configureCell(cell, atIndexPath: indexPath)
         return cell
     }
     
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            let context = self.fetchedResultsController.managedObjectContext
-            context.deleteObject(self.fetchedResultsController.objectAtIndexPath(indexPath))
-            
-            do {
-                try context.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                //print("Unresolved error \(error), \(error.userInfo)")
-                abort()
-            }
-        }
-    }
-    
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
-        let experiment = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Experiment
-        (cell as? ExperimentTableViewCell)?.experiment = experiment
+        guard let experimentCell = cell as? ExperimentTableViewCell else { abort() }
+        let experiment = masterCloudManager.experiments[indexPath.section][indexPath.row]
+        experimentCell.authorProfileImage = nil
+        experimentCell.titleLabel.text = experiment.valueForKey(ExperimentKey.Title) as? String
+        experimentCell.creationDateLabel.text = NSDateFormatter.smartStringFormDate(experiment.valueForKey(RecordKey.CreationDate) as! NSDate)
+        guard let user =  masterCloudManager.userForExperiment(experiment) else { return }
+        guard let imageData = (user.valueForKey(UserKey.ProfileImageAsset) as? CKAsset)?.data else { return }
+        experimentCell.authorProfileImage = UIImage(data: imageData)
+        
     }
     
-//    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        return self.fetchedEntityName
-//    }
+    // MARK: - Table view delegate
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        guard let cell = tableView.cellForRowAtIndexPath(indexPath) else { return }
-        performSegueWithIdentifier(Storyboard.ShowExperimentDetailSegueIdentifier, sender: cell)
+        performSegueWithIdentifier(SegueID.ShowExperiment.rawValue, sender: tableView.cellForRowAtIndexPath(indexPath))
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     
-    // MARK: - Fetched results controller
     
-    var fetchedResultsController: NSFetchedResultsController {
-        if _fetchedResultsController != nil {
-            return _fetchedResultsController!
+    // MARK: - Segue
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        guard let identifier = segue.identifier else { return }
+        guard let segueID = SegueID(rawValue: identifier) else { return }
+        switch segueID {
+        case .AddExperiment:
+            guard let edvc = segue.destinationViewController.contentViewController as? ExperimentDetailViewController else { return }
+            let experiment = CKRecord(recordType: ExperimentKey.RecordType)
+            experiment[ExperimentKey.Title] = "Hallo 🐶 Kitty?"
+            edvc.experiment = experiment
+            
+        case .ShowExperiment:
+            guard
+                let cell = sender as? UITableViewCell,
+                let edvc = segue.destinationViewController.contentViewController as? ExperimentDetailViewController
+                else { return }
+            
+            let indexPath = tableView.indexPathForCell(cell)!
+            let experiment = masterCloudManager.experiments[indexPath.section][indexPath.row]
+            edvc.experiment = experiment
         }
-        
-        let fetchRequest = NSFetchRequest()
-        // Edit the entity name as appropriate.
-        let context = NSManagedObjectContext.defaultContext()
-        let entity = NSEntityDescription.entityForName(Experiment.Constants.EntityNameKey, inManagedObjectContext: context)
-        fetchRequest.entity = entity
-        
-        // Set the batch size to a suitable number.
-        fetchRequest.fetchBatchSize = 20
-        
-        // Edit the sort key as appropriate.
-        let sortDescriptor = NSSortDescriptor(key: RootObject.Constants.DefaultSortKey, ascending: false)
-        
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        // Edit the section name key path and cache name if appropriate.
-        // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: "Master")
-        aFetchedResultsController.delegate = self
-        _fetchedResultsController = aFetchedResultsController
-        
-        do {
-            try _fetchedResultsController!.performFetch()
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            //print("Unresolved error \(error), \(error.userInfo)")
-            abort()
-        }
-        
-        return _fetchedResultsController!
-    }
-    var _fetchedResultsController: NSFetchedResultsController? = nil
-    
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
-        self.tableView.beginUpdates()
-    }
-    
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
-        switch type {
-        case .Insert:
-            self.tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        case .Delete:
-            self.tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        default:
-            return
-        }
-    }
-    
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: NSManagedObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        if type.rawValue == 0 { return }
-        switch type {
-        case .Insert:
-            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-        case .Delete:
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-        case .Update:
-            self.configureCell(tableView.cellForRowAtIndexPath(indexPath!)!, atIndexPath: indexPath!)
-        case .Move:
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-        }
-    }
-    
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        self.tableView.endUpdates()
     }
 
+    
+    
+    private enum SegueID: String {
+        case AddExperiment
+        case ShowExperiment
+    }
 }
 
 extension MasterViewController {
-    // MARK: - Unwind Segue
-    @IBAction func cancelToMaster(segue: UIStoryboardSegue) {
-        guard let dvc = segue.sourceViewController as? DetailViewController else { return }
-        if dvc.detailItem!.inserted {
-            NSManagedObjectContext.defaultContext().deleteObject(dvc.detailItem!)
+    // MARK: - Unwind Segue 
+    @IBAction func addExperimentDidCancel(segue: UIStoryboardSegue) {
+        
+    }
+
+    @IBAction func addExperimentDidPost(segue: UIStoryboardSegue) {
+        guard let edvc = segue.sourceViewController as? ExperimentDetailViewController else { abort() }
+        dismissViewControllerAnimated(true) {
+            self.refreshControl?.beginRefreshing()
+            self.tableView.scrollRectToVisible(CGRectMake(0, 0, 1, 1), animated: true)
+            self.publicCloudDatabase.saveRecord(edvc.experiment!) { (experiment, error) -> Void in
+                guard error == nil else { print(error!.localizedDescription) ; abort() }
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.masterCloudManager.experiments.insert([experiment!], atIndex: 0)
+                    self.tableView.insertSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
+                    self.refreshControl?.endRefreshing()
+                }
+            }
+
         }
-        dismissViewControllerAnimated(true, completion: nil)
     }
     
-    @IBAction func closeToMaster(segue: UIStoryboardSegue) {
-        dismissViewControllerAnimated(true, completion: nil)
+
+}
+
+extension CKQueryOperation {
+    convenience init(recordType: String) {
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: recordType, predicate: predicate)
+        query.sortDescriptors = [NSSortDescriptor(key: RecordKey.CreationDate, ascending: false)]
+        self.init(query: query)
     }
-    
-    @IBAction func saveToMaster(segue: UIStoryboardSegue) {
-        NSManagedObjectContext.saveDefaultContext()
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    
-    @IBAction func deleteToMaster(segue: UIStoryboardSegue) {
-        guard let dvc = segue.sourceViewController as? DetailViewController else { return }
-        NSManagedObjectContext.defaultContext().deleteObject(dvc.detailItem!)
-        NSManagedObjectContext.saveDefaultContext()
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    
 }
 
 

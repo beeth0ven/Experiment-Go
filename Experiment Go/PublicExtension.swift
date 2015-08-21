@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import CloudKit
 
 
 public func ==(date0: NSDate, date1: NSDate) -> Bool { return date0.compare(date1) == NSComparisonResult.OrderedSame }
@@ -15,7 +16,26 @@ public func <(date0: NSDate, date1: NSDate) -> Bool { return date0.compare(date1
 
 extension NSDate: Comparable {}
 
-
+extension CKAsset {
+    convenience init(data: NSData) {
+        // write the image out to a cache file
+        let cachesDirectory = NSFileManager.defaultManager().URLsForDirectory(.CachesDirectory, inDomains: .UserDomainMask).first!
+        let temporaryName = NSUUID().UUIDString
+        let localURL = cachesDirectory.URLByAppendingPathComponent(temporaryName)
+        data.writeToURL(localURL, atomically: true)
+        self.init(fileURL: localURL)
+    }
+    
+    var data: NSData? {
+        var result = defaultCache.objectForKey(fileURL.pathExtension!) as? NSData
+        guard result == nil else { return result! }
+        result = NSData(contentsOfURL: fileURL)
+        if result != nil { defaultCache.setObject(result!, forKey: fileURL.pathExtension!)  }
+        return result
+    }
+    
+    
+}
 
 extension String: CustomStringConvertible {
     public var description: String {
@@ -25,11 +45,19 @@ extension String: CustomStringConvertible {
 
 extension UIViewController {
     func hideBarSeparator() {
-        let image = UIImage(named: "TransparentPixel")!
+        let image = UIImage.onePixelImageFromColor(UIColor.clearColor())
         navigationController?.navigationBar.shadowImage = image
         navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
         navigationController?.toolbar.setShadowImage(image, forToolbarPosition: .Any)
         navigationController?.toolbar.setBackgroundImage(image, forToolbarPosition: .Any, barMetrics: .Default)
+    }
+    
+    var contentViewController: UIViewController {
+        if let nav = self as? UINavigationController {
+            return nav.topViewController!
+        } else {
+            return self
+        }
     }
 }
 

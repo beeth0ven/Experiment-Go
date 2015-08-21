@@ -8,32 +8,26 @@
 
 import UIKit
 
-class TextFieldTableViewCell: ObjectValueTableViewCell {
+class TextFieldTableViewCell: UITableViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var textField: UITextField! {
         didSet {
             textField.enabled = false
-            textField.delegate = self
-            oberveTextField()
+//            textField.delegate = self
+//            oberveTextField()
         }
     }
     
     deinit {
-        stopOberveTextField()
+//        stopOberveTextField()
     }
     
-    override func updateUI() {
-        guard textField.isFirstResponder() == false else { return }
+    override func prepareForReuse() {
+        super.prepareForReuse()
         titleLabel.text = ""
         textField.text = ""
-        textField.enabled = superTableViewIsEditing()
-        guard let objectValue = objectValue else { return }
-        titleLabel.text = objectValue.key.capitalizedString
-        textField.text = objectValue.value as? String 
     }
-    
-
     
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -50,7 +44,7 @@ class TextFieldTableViewCell: ObjectValueTableViewCell {
 
 }
 
-extension ObjectValueTableViewCell {
+extension UITableViewCell {
     func superTableViewIsEditing() -> Bool {
         var view: UIView? = self
         repeat {
@@ -63,31 +57,31 @@ extension ObjectValueTableViewCell {
     }
 }
 
-extension TextFieldTableViewCell: UITextFieldDelegate {
-    
-    // MARK: - Text Field Delegate
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    
-    @objc private func handleTextFieldTextDidChange(notification: NSNotification) {
-        guard let textField = notification.object as? UITextField else { return }
-        objectValue?.value = textField.text
-    }
-    
-    private func oberveTextField() {
-        let center = NSNotificationCenter.defaultCenter()
-        center.addObserver(self,
-            selector: "handleTextFieldTextDidChange:",
-            name: UITextFieldTextDidChangeNotification,
-            object: textField
-        )
-    }
-    
-    private func stopOberveTextField() {
-        let center = NSNotificationCenter.defaultCenter()
-        center.removeObserver(self)
-    }
-    
-}
+//extension TextFieldTableViewCell: UITextFieldDelegate {
+//    
+//    // MARK: - Text Field Delegate
+//    func textFieldShouldReturn(textField: UITextField) -> Bool {
+//        textField.resignFirstResponder()
+//        return true
+//    }
+//    
+//    @objc private func handleTextFieldTextDidChange(notification: NSNotification) {
+//        guard let textField = notification.object as? UITextField else { return }
+//        objectValue?.value = textField.text
+//    }
+//    
+//    private func oberveTextField() {
+//        let center = NSNotificationCenter.defaultCenter()
+//        center.addObserver(self,
+//            selector: "handleTextFieldTextDidChange:",
+//            name: UITextFieldTextDidChangeNotification,
+//            object: textField
+//        )
+//    }
+//    
+//    private func stopOberveTextField() {
+//        let center = NSNotificationCenter.defaultCenter()
+//        center.removeObserver(self)
+//    }
+//    
+//}

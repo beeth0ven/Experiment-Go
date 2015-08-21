@@ -8,17 +8,11 @@
 
 import UIKit
 
-class DateTableViewCell: ObjectValueTableViewCell {
-    
-    override func updateUI() {
+class DateTableViewCell: UITableViewCell {
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
         textLabel?.text = ""
         detailTextLabel?.text = ""
-        guard let objectValue = objectValue else { return }
-        textLabel?.text = objectValue.key.capitalizedString
-        guard let date = objectValue.value as? NSDate else { return }
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
-        dateFormatter.timeStyle = .ShortStyle
-        detailTextLabel?.text = dateFormatter.stringFromDate(date)
     }
 }

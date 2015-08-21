@@ -8,17 +8,7 @@
 
 import UIKit
 
-class AuthorTableViewCell: RootObjectTableViewCell {
-    
-    var user: User? {
-        get {
-            return detailItem as? User
-        }
-        
-        set {
-            detailItem = newValue
-        }
-    }
+class AuthorTableViewCell: UITableViewCell {
     
     var profileImage: UIImage? {
         get {
@@ -32,13 +22,10 @@ class AuthorTableViewCell: RootObjectTableViewCell {
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     
-    override func updateUI() {
-        profileImage = UIImage.defultTestImage()
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        profileImage = nil
         nameLabel.text = ""
-        guard user != nil else { return }
-        nameLabel.text = user!.displayName
-        guard let image = user!.profileImage else { return }
-        profileImage = image
-    }
 
+    }
 }
