@@ -15,9 +15,8 @@ class MenuTableViewController: UITableViewController {
         static let TableHeaderViewDefualtHeight: CGFloat = 150
     }
 
-    private enum Segue: String {
-        case ShowUserDetail = "showUserDetail"
-    }
+
+    
     
    
     
@@ -92,9 +91,9 @@ class MenuTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
             if cell.textLabel?.text == "Profile" {
-                performSegueWithIdentifier("showUserDetail", sender: cell)
+                performSegueWithIdentifier(SegueID.ShowUserDetail.rawValue, sender: cell)
             } else {
-                performSegueWithIdentifier("showMaster", sender: cell)
+                performSegueWithIdentifier(SegueID.ShowMaster.rawValue, sender: cell)
             }
         }
     }
@@ -106,26 +105,35 @@ class MenuTableViewController: UITableViewController {
     }
     
     
-    // MARK: - Segues
-//    
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if segue.identifier == "showMaster" {
-//            if let controller = (segue.destinationViewController as! UINavigationController).topViewController as? MasterViewController {
-//                if let cell = sender as? UITableViewCell {
-//                    if  let text = cell.textLabel?.text {
-//                        controller.title = text
-//                        
-//                        controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
-//                        controller.navigationItem.leftItemsSupplementBackButton = true
-//                        self.splitViewController?.toggleMasterView()
-//                    }
-//                }
-//            }
-//        } else if segue.identifier == Segue.ShowUserDetail.rawValue {
-////            let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
-////                controller.detailItem = User.currentUser()
-//        }
-//    }
+    // MARK: - Segue
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        guard let identifier = segue.identifier else { return }
+        guard let segueID = SegueID(rawValue: identifier) else { return }
+        switch segueID {
+        case .ShowMaster:
+            guard let controller = segue.destinationViewController.contentViewController as? MasterViewController else { return }
+            guard let cell = sender as? UITableViewCell else { return }
+            guard let  text = cell.textLabel?.text else { return }
+            controller.title = text
+            controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+            controller.navigationItem.leftItemsSupplementBackButton = true
+            self.splitViewController?.toggleMasterView()
+
+            
+        case .ShowUserDetail:
+            break
+//            guard let cell = sender as? UITableViewCell else { return }
+//            guard let edvc = segue.destinationViewController.contentViewController as? ExperimentDetailViewController else { return }
+//            let experiment = experiments[tableView.indexPathForCell(cell)!.row]
+//            edvc.experiment = experiment
+            
+        }
+    }
+    
+    private enum SegueID: String {
+        case ShowMaster
+        case ShowUserDetail
+    }
     
 //    @IBAction func closeToMenu(segue: UIStoryboardSegue) {
 //        dismissViewControllerAnimated(true, completion: nil)

@@ -10,42 +10,10 @@ import Foundation
 import CloudKit
 import UIKit
 
-protocol CKRecordConvertible: class {
-    var recordID: String? { get set }
-    var creationDate: NSDate? { get set }
-    var creatorUserRecordID: String? { get set }
-    var modificationDate: NSDate? { get set }
-    var lastModifiedUserRecordID: String? { get set }
-    var recordChangeTag: String? { get set }
-}
-
-
-struct UserKey {
-    static let RecordType = "User"
-    static let ProfileImageAsset = "profileImageAsset"
-    static let DisplayName = "displayName"
-}
-
-struct ExperimentKey {
-    static let RecordType = "Experiment"
-    static let Title = "title"
-    static let Body = "body"
-    static let WhoPost = "whoPost"
-}
-
-struct RecordKey {
-    static let RecordID = "recordID"
-    static let CreationDate = "creationDate"
-    static let CreatorUserRecordID = "creatorUserRecordID"
-    static let ModificationDate = "modificationDate"
-    static let LastModifiedUserRecordID = "lastModifiedUserRecordID"
-    static let RecordChangeTag = "recordChangeTag"
-}
 
 class CloudManager {
     struct Notification {
         static let CurrentUserDidChange = "CloudManager.Notification.CurrentUserDidChange"
-
     }
     
     // MARK: - Cloud Kit Stack
@@ -68,7 +36,7 @@ class CloudManager {
         }
     }
     
-    var userCache: NSCache {
+    var userCache: NSMutableDictionary {
         return AppDelegate.Cache.Manager.userCache
     }
     
@@ -107,5 +75,36 @@ class CloudManager {
 
 }
 
+protocol CKRecordConvertible: class {
+    var recordID: String? { get set }
+    var creationDate: NSDate? { get set }
+    var creatorUserRecordID: String? { get set }
+    var modificationDate: NSDate? { get set }
+    var lastModifiedUserRecordID: String? { get set }
+    var recordChangeTag: String? { get set }
+}
+
+
+struct UserKey {
+    static let RecordType = "User"
+    static let ProfileImageAsset = "profileImageAsset"
+    static let DisplayName = "displayName"
+}
+
+struct ExperimentKey {
+    static let RecordType = "Experiment"
+    static let Title = "title"
+    static let Body = "body"
+    static let WhoPost = "whoPost"
+}
+
+struct RecordKey {
+    static let RecordID = "recordID"
+    static let CreationDate = "creationDate"
+    static let CreatorUserRecordID = "creatorUserRecordID"
+    static let ModificationDate = "modificationDate"
+    static let LastModifiedUserRecordID = "lastModifiedUserRecordID"
+    static let RecordChangeTag = "recordChangeTag"
+}
 
 

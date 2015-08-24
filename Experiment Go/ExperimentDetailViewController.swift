@@ -44,17 +44,18 @@ class ExperimentDetailViewController: UIViewController {
     
     func author(completionHandler: (CKRecord) -> ()) {
         // Fetch from cache first.
-        guard let authorID = experiment?.valueForKey(RecordKey.CreatorUserRecordID) as? CKRecordID else { return }
+        guard let authorID = experiment?.valueForKey(RecordKey.CreatorUserRecordID) as? CKRecordID else { return dispatch_async(dispatch_get_main_queue()) { completionHandler(self.currentUser!) } }
         var author = userCache.objectForKey(authorID.recordName) as? CKRecord
         guard author == nil else { completionHandler(author!) ; return print("fetched author from cache.") }
 
         // Fetch from cloud second.
         
         let fetchedAuthorBlock: (CKRecord?, NSError?) -> Void = {
-            [unowned self] (record, error) in
+            [weak self] (record, error) in
             guard error == nil else { print(error?.localizedDescription) ; return }
+            guard let weakSelf = self else { return }
             author = record!
-            self.userCache.setObject(author!, forKey: authorID.recordName)
+            weakSelf.userCache.setObject(author!, forKey: authorID.recordName)
             print("fetched author from cloud.")
             dispatch_async(dispatch_get_main_queue()) { completionHandler(author!) }
         }
@@ -71,7 +72,7 @@ class ExperimentDetailViewController: UIViewController {
     }
     
     
-    var userCache: NSCache {
+    var userCache: NSMutableDictionary {
         return AppDelegate.Cache.Manager.userCache
     }
     

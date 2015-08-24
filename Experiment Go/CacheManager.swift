@@ -13,8 +13,10 @@ import UIKit
 class CacheManager {
     
     var defaultCache = NSCache()
-    var userCache = NSCache()
-    var experimentCache = NSCache()
+    
+    var userCache: NSMutableDictionary =  NSMutableDictionary() 
+    
+//    var experimentCache = NSCache()
 
 
 }
