@@ -12,45 +12,41 @@ import UIKit
 
 
 class CloudManager {
-    struct Notification {
-        static let CurrentUserDidChange = "CloudManager.Notification.CurrentUserDidChange"
-    }
-    
     // MARK: - Cloud Kit Stack
+    // MARK: - Update Current User
     
     var publicCloudDatabase: CKDatabase {
         return CKContainer.defaultContainer().publicCloudDatabase
     }
     
-    init() {
-        self.updateCurrentUser()
+    private var currentUser: CKRecord? {
+        return AppDelegate.Cache.Manager.currentUser()
     }
     
-    var currentUser: CKRecord? {
-        didSet {
-            if oldValue != currentUser {
-                if oldValue != nil { userCache.removeObjectForKey(oldValue!.recordID.recordName) }
-                if currentUser != nil { userCache.setObject(currentUser!, forKey: CKOwnerDefaultName) ; print("cache currentUser: \(currentUser!.recordID.recordName)")}
-                NSNotificationCenter.defaultCenter().postNotificationName(Notification.CurrentUserDidChange, object: nil)
+    func updateCurrentUser(completionHandler: (CKRecord) -> Void) {
+        requestDiscoverabilityPermission { (granted) in
+            guard granted else { abort() }
+            self.fetchCurrentUser() { (user) in
+                AppDelegate.Cache.Manager.cacheCurrentUser(user)
+                completionHandler(user)
             }
         }
     }
     
-    var userCache: NSMutableDictionary {
-        return AppDelegate.Cache.Manager.userCache
-    }
+    private var isLoadingLikeState = false
     
-    
-    private func updateCurrentUser() {
-        requestDiscoverabilityPermission { (granted) in
-            guard granted else { abort() }
-            self.fetchCurrentUser() { (user) in
-                self.currentUser = user
-//                let recordID = self.currentUser!.valueForKey(RecordKey.RecordID) as! CKRecordID
-//                print("currentUser name: \(recordID.recordName))")
-//                print("currentUser zoneName: \(recordID.zoneID.zoneName))")
-
-            }
+    func amILikingThisExperiment(experiment: CKRecord, completionHandler: (Bool) -> ()) {
+        guard isLoadingLikeState == false else { print("Another query is in a progress to load like state.") ; return }
+        isLoadingLikeState = true
+        let keyPredicate = NSPredicate(format: "%K = %@", FanLinkKey.ToExperiment, experiment)
+        let authorPredicate = NSPredicate(format: "%K = %@", RecordKey.CreatorUserRecordID, currentUser!.recordID)
+        let predicate = NSCompoundPredicate(type: .AndPredicateType, subpredicates: [keyPredicate,authorPredicate])
+        let query = CKQuery(recordType: FanLinkKey.RecordType, predicate: predicate)
+        publicCloudDatabase.performQuery(query, inZoneWithID: nil) { (records, error)  in
+            self.isLoadingLikeState = false
+            guard error == nil else { return }
+            let liking = records!.count > 0
+            dispatch_async(dispatch_get_main_queue()) { completionHandler(liking) }
         }
     }
     
@@ -60,7 +56,7 @@ class CloudManager {
             dispatch_async(dispatch_get_main_queue()) { completionHandler( applicationPermissionStatus == .Granted ) }
         }
     }
-
+    
     private func fetchCurrentUser(completionHandler: (CKRecord) -> Void) {
         let fetchCurrentUserRecordOperation = CKFetchRecordsOperation.fetchCurrentUserRecordOperation()
         fetchCurrentUserRecordOperation.perRecordCompletionBlock = {
@@ -71,19 +67,19 @@ class CloudManager {
         
         publicCloudDatabase.addOperation(fetchCurrentUserRecordOperation)
     }
-    
 
 }
 
-protocol CKRecordConvertible: class {
-    var recordID: String? { get set }
-    var creationDate: NSDate? { get set }
-    var creatorUserRecordID: String? { get set }
-    var modificationDate: NSDate? { get set }
-    var lastModifiedUserRecordID: String? { get set }
-    var recordChangeTag: String? { get set }
-}
+// MARK: - Cloud Kit Record Key
 
+struct RecordKey {
+    static let RecordID = "recordID"
+    static let CreationDate = "creationDate"
+    static let CreatorUserRecordID = "creatorUserRecordID"
+    static let ModificationDate = "modificationDate"
+    static let LastModifiedUserRecordID = "lastModifiedUserRecordID"
+    static let RecordChangeTag = "recordChangeTag"
+}
 
 struct UserKey {
     static let RecordType = "User"
@@ -95,16 +91,19 @@ struct ExperimentKey {
     static let RecordType = "Experiment"
     static let Title = "title"
     static let Body = "body"
-    static let WhoPost = "whoPost"
+    static let Reviews = "reviews"
+    static let Fans = "fans"
 }
 
-struct RecordKey {
-    static let RecordID = "recordID"
-    static let CreationDate = "creationDate"
-    static let CreatorUserRecordID = "creatorUserRecordID"
-    static let ModificationDate = "modificationDate"
-    static let LastModifiedUserRecordID = "lastModifiedUserRecordID"
-    static let RecordChangeTag = "recordChangeTag"
+struct ReviewKey {
+    static let RecordType = "Review"
+    static let Body = "body"
+    static let ReviewTo = "reviewTo"
+
 }
 
+struct FanLinkKey {
+    static let RecordType = "FanLink"
+    static let ToExperiment = "toExperiment"
+}
 

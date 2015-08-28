@@ -8,34 +8,31 @@
 
 /* Begin PBXBuildFile section */
 		4511B2851B4FB7CF0046DF76 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B2841B4FB7CF0046DF76 /* AppDelegate.swift */; };
-		4511B28A1B4FB7CF0046DF76 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B2891B4FB7CF0046DF76 /* MasterViewController.swift */; };
-		4511B28C1B4FB7CF0046DF76 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B28B1B4FB7CF0046DF76 /* DetailViewController.swift */; };
+		4511B28A1B4FB7CF0046DF76 /* ExperimentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B2891B4FB7CF0046DF76 /* ExperimentsTableViewController.swift */; };
 		4511B28F1B4FB7CF0046DF76 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4511B28D1B4FB7CF0046DF76 /* Main.storyboard */; };
 		4511B2941B4FB7CF0046DF76 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4511B2921B4FB7CF0046DF76 /* LaunchScreen.xib */; };
 		4511B2A01B4FB7CF0046DF76 /* Experiment_GoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B29F1B4FB7CF0046DF76 /* Experiment_GoTests.swift */; };
 		4511B2AC1B4FBA320046DF76 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4511B2AB1B4FBA320046DF76 /* Images.xcassets */; };
-		45130DD91B68D6B500F7F34D /* DateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45130DD81B68D6B500F7F34D /* DateTableViewCell.swift */; };
-		45130DDB1B68D92900F7F34D /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45130DDA1B68D92900F7F34D /* ImageTableViewCell.swift */; };
-		45629EFA1B578B22000F41E6 /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45629EF91B578B22000F41E6 /* TextFieldTableViewCell.swift */; };
 		45629F951B5BC386000F41E6 /* ChameleonFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45629F941B5BC386000F41E6 /* ChameleonFramework.framework */; };
 		4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */; };
 		45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */; };
 		458713BB1B859751004808A3 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458713BA1B859751004808A3 /* CacheManager.swift */; };
+		4591E1B11B8EE00200620377 /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4591E1B01B8EE00200620377 /* CloudManager.swift */; };
+		4591E1B31B8F007700620377 /* ReviewsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4591E1B21B8F007700620377 /* ReviewsTableViewController.swift */; };
 		45983D0F1B71CB1000ABCF38 /* SwitchBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45983D0E1B71CB1000ABCF38 /* SwitchBarButtonItem.swift */; };
 		45983D141B73430B00ABCF38 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45983D131B73430B00ABCF38 /* CloudKit.framework */; };
 		4599C90D1B6F469B0040461F /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4599C90C1B6F469B0040461F /* ReviewViewController.swift */; };
 		45A2A2401B89E9E6004BEF45 /* FetchedRecordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2A23F1B89E9E6004BEF45 /* FetchedRecordController.swift */; };
 		45A2A2421B8AE224004BEF45 /* CloudKitTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */; };
+		45A2A2441B8D7EF5004BEF45 /* RecordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2A2431B8D7EF5004BEF45 /* RecordTableViewCell.swift */; };
 		45AAB0A21B6E117200595467 /* ReviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */; };
 		45BC4E8D1B69C4A300A9963F /* ExperimentDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E8C1B69C4A300A9963F /* ExperimentDetailViewController.swift */; };
-		45BC4E931B6A145F00A9963F /* AuthorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E921B6A145F00A9963F /* AuthorTableViewCell.swift */; };
+		45BC4E931B6A145F00A9963F /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E921B6A145F00A9963F /* UserTableViewCell.swift */; };
 		45BC4E951B6A24CE00A9963F /* User Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45BC4E941B6A24CE00A9963F /* User Info.plist */; };
 		45BC4E971B6B45B200A9963F /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E961B6B45B200A9963F /* UserDetailViewController.swift */; };
 		45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */; };
 		45BC4E9E1B6DCDB800A9963F /* DefaultStyleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E9D1B6DCDB800A9963F /* DefaultStyleController.swift */; };
-		45BE16D01B6766C600D6383A /* ObjectValueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE16CF1B6766C600D6383A /* ObjectValueTableViewCell.swift */; };
-		45BE16D21B6767B900D6383A /* RootObjectTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE16D11B6767B900D6383A /* RootObjectTableViewCell.swift */; };
-		45DA76C71B79F9B300F2A309 /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DA76C61B79F9B300F2A309 /* CloudManager.swift */; };
+		45D422A41B90663E00DC5AF1 /* FansTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D422A31B90663E00DC5AF1 /* FansTableViewController.swift */; };
 		45FC5F771B6DD7080045F178 /* MenuItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */; };
 		AF79662E4748E3048A76116B /* Pods_Experiment_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2877209060858C580BC83B66 /* Pods_Experiment_Go.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -56,8 +53,7 @@
 		4511B27F1B4FB7CF0046DF76 /* Experiment Go.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Experiment Go.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4511B2831B4FB7CF0046DF76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4511B2841B4FB7CF0046DF76 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4511B2891B4FB7CF0046DF76 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		4511B28B1B4FB7CF0046DF76 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		4511B2891B4FB7CF0046DF76 /* ExperimentsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentsTableViewController.swift; sourceTree = "<group>"; };
 		4511B28E1B4FB7CF0046DF76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4511B2931B4FB7CF0046DF76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		4511B2991B4FB7CF0046DF76 /* Experiment GoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Experiment GoTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,13 +61,12 @@
 		4511B29F1B4FB7CF0046DF76 /* Experiment_GoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Experiment_GoTests.swift; sourceTree = "<group>"; };
 		4511B2AB1B4FBA320046DF76 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4511B2B01B4FBACA0046DF76 /* Experiment Go-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Experiment Go-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
-		45130DD81B68D6B500F7F34D /* DateTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateTableViewCell.swift; sourceTree = "<group>"; };
-		45130DDA1B68D92900F7F34D /* ImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
-		45629EF91B578B22000F41E6 /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
 		45629F941B5BC386000F41E6 /* ChameleonFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChameleonFramework.framework; path = "Pods/../build/Debug-iphoneos/Pods-Experiment Go/ChameleonFramework.framework"; sourceTree = "<group>"; };
 		4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicExtension.swift; sourceTree = "<group>"; };
 		458713BA1B859751004808A3 /* CacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
+		4591E1B01B8EE00200620377 /* CloudManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudManager.swift; sourceTree = "<group>"; };
+		4591E1B21B8F007700620377 /* ReviewsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewsTableViewController.swift; sourceTree = "<group>"; };
 		45983D0E1B71CB1000ABCF38 /* SwitchBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchBarButtonItem.swift; sourceTree = "<group>"; };
 		45983D121B7342E200ABCF38 /* Experiment Go.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Experiment Go.entitlements"; sourceTree = "<group>"; };
 		45983D131B73430B00ABCF38 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -79,16 +74,15 @@
 		459C3DB7BFCEAA28C645268E /* Pods-Experiment Go.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Experiment Go.release.xcconfig"; path = "Pods/Target Support Files/Pods-Experiment Go/Pods-Experiment Go.release.xcconfig"; sourceTree = "<group>"; };
 		45A2A23F1B89E9E6004BEF45 /* FetchedRecordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedRecordController.swift; sourceTree = "<group>"; };
 		45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitTableViewController.swift; sourceTree = "<group>"; };
+		45A2A2431B8D7EF5004BEF45 /* RecordTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordTableViewCell.swift; sourceTree = "<group>"; };
 		45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewTableViewCell.swift; sourceTree = "<group>"; };
 		45BC4E8C1B69C4A300A9963F /* ExperimentDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentDetailViewController.swift; sourceTree = "<group>"; };
-		45BC4E921B6A145F00A9963F /* AuthorTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorTableViewCell.swift; sourceTree = "<group>"; };
+		45BC4E921B6A145F00A9963F /* UserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		45BC4E941B6A24CE00A9963F /* User Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "User Info.plist"; sourceTree = "<group>"; };
 		45BC4E961B6B45B200A9963F /* UserDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
 		45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentTableViewCell.swift; sourceTree = "<group>"; };
 		45BC4E9D1B6DCDB800A9963F /* DefaultStyleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultStyleController.swift; sourceTree = "<group>"; };
-		45BE16CF1B6766C600D6383A /* ObjectValueTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectValueTableViewCell.swift; sourceTree = "<group>"; };
-		45BE16D11B6767B900D6383A /* RootObjectTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootObjectTableViewCell.swift; sourceTree = "<group>"; };
-		45DA76C61B79F9B300F2A309 /* CloudManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudManager.swift; sourceTree = "<group>"; };
+		45D422A31B90663E00DC5AF1 /* FansTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FansTableViewController.swift; sourceTree = "<group>"; };
 		45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItemTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -192,8 +186,7 @@
 				4511B28D1B4FB7CF0046DF76 /* Main.storyboard */,
 				45983D0E1B71CB1000ABCF38 /* SwitchBarButtonItem.swift */,
 				45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */,
-				45BC4E9B1B6B5CFD00A9963F /* RootObjectTableViewCell */,
-				45BC4E9A1B6B5CA500A9963F /* ObjectValueTableViewCell */,
+				45BC4E9B1B6B5CFD00A9963F /* RecordTableViewCell */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -203,10 +196,9 @@
 			children = (
 				4511B2841B4FB7CF0046DF76 /* AppDelegate.swift */,
 				4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */,
-				4511B2891B4FB7CF0046DF76 /* MasterViewController.swift */,
-				45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */,
-				4599C90C1B6F469B0040461F /* ReviewViewController.swift */,
+				45A2A2451B8D907E004BEF45 /* CloudKitTableViewController */,
 				45BC4E9C1B6B5D1300A9963F /* DetailViewController */,
+				45A2A2461B8D9095004BEF45 /* EditeViewController */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -214,40 +206,47 @@
 		4511B2AF1B4FBA950046DF76 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				45DA76C61B79F9B300F2A309 /* CloudManager.swift */,
+				4591E1B01B8EE00200620377 /* CloudManager.swift */,
 				458713BA1B859751004808A3 /* CacheManager.swift */,
 				45A2A23F1B89E9E6004BEF45 /* FetchedRecordController.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
 		};
-		45BC4E9A1B6B5CA500A9963F /* ObjectValueTableViewCell */ = {
+		45A2A2451B8D907E004BEF45 /* CloudKitTableViewController */ = {
 			isa = PBXGroup;
 			children = (
-				45130DDA1B68D92900F7F34D /* ImageTableViewCell.swift */,
-				45130DD81B68D6B500F7F34D /* DateTableViewCell.swift */,
-				45629EF91B578B22000F41E6 /* TextFieldTableViewCell.swift */,
-				45BE16CF1B6766C600D6383A /* ObjectValueTableViewCell.swift */,
+				45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */,
+				4511B2891B4FB7CF0046DF76 /* ExperimentsTableViewController.swift */,
+				4591E1B21B8F007700620377 /* ReviewsTableViewController.swift */,
+				45D422A31B90663E00DC5AF1 /* FansTableViewController.swift */,
 			);
-			name = ObjectValueTableViewCell;
+			name = CloudKitTableViewController;
 			sourceTree = "<group>";
 		};
-		45BC4E9B1B6B5CFD00A9963F /* RootObjectTableViewCell */ = {
+		45A2A2461B8D9095004BEF45 /* EditeViewController */ = {
 			isa = PBXGroup;
 			children = (
+			);
+			name = EditeViewController;
+			sourceTree = "<group>";
+		};
+		45BC4E9B1B6B5CFD00A9963F /* RecordTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				45A2A2431B8D7EF5004BEF45 /* RecordTableViewCell.swift */,
 				45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */,
 				45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */,
-				45BC4E921B6A145F00A9963F /* AuthorTableViewCell.swift */,
-				45BE16D11B6767B900D6383A /* RootObjectTableViewCell.swift */,
+				45BC4E921B6A145F00A9963F /* UserTableViewCell.swift */,
 			);
-			name = RootObjectTableViewCell;
+			name = RecordTableViewCell;
 			sourceTree = "<group>";
 		};
 		45BC4E9C1B6B5D1300A9963F /* DetailViewController */ = {
 			isa = PBXGroup;
 			children = (
-				4511B28B1B4FB7CF0046DF76 /* DetailViewController.swift */,
 				45BC4E8C1B69C4A300A9963F /* ExperimentDetailViewController.swift */,
+				4599C90C1B6F469B0040461F /* ReviewViewController.swift */,
 				45BC4E961B6B45B200A9963F /* UserDetailViewController.swift */,
 			);
 			name = DetailViewController;
@@ -422,25 +421,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45130DDB1B68D92900F7F34D /* ImageTableViewCell.swift in Sources */,
-				45BC4E931B6A145F00A9963F /* AuthorTableViewCell.swift in Sources */,
+				45BC4E931B6A145F00A9963F /* UserTableViewCell.swift in Sources */,
 				4599C90D1B6F469B0040461F /* ReviewViewController.swift in Sources */,
 				45BC4E971B6B45B200A9963F /* UserDetailViewController.swift in Sources */,
 				45FC5F771B6DD7080045F178 /* MenuItemTableViewCell.swift in Sources */,
 				45AAB0A21B6E117200595467 /* ReviewTableViewCell.swift in Sources */,
-				45BE16D21B6767B900D6383A /* RootObjectTableViewCell.swift in Sources */,
 				45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */,
 				4511B2851B4FB7CF0046DF76 /* AppDelegate.swift in Sources */,
 				4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */,
-				4511B28A1B4FB7CF0046DF76 /* MasterViewController.swift in Sources */,
+				4511B28A1B4FB7CF0046DF76 /* ExperimentsTableViewController.swift in Sources */,
+				4591E1B11B8EE00200620377 /* CloudManager.swift in Sources */,
+				4591E1B31B8F007700620377 /* ReviewsTableViewController.swift in Sources */,
 				45A2A2401B89E9E6004BEF45 /* FetchedRecordController.swift in Sources */,
-				45DA76C71B79F9B300F2A309 /* CloudManager.swift in Sources */,
 				45A2A2421B8AE224004BEF45 /* CloudKitTableViewController.swift in Sources */,
-				45629EFA1B578B22000F41E6 /* TextFieldTableViewCell.swift in Sources */,
+				45A2A2441B8D7EF5004BEF45 /* RecordTableViewCell.swift in Sources */,
 				458713BB1B859751004808A3 /* CacheManager.swift in Sources */,
-				45BE16D01B6766C600D6383A /* ObjectValueTableViewCell.swift in Sources */,
-				4511B28C1B4FB7CF0046DF76 /* DetailViewController.swift in Sources */,
-				45130DD91B68D6B500F7F34D /* DateTableViewCell.swift in Sources */,
+				45D422A41B90663E00DC5AF1 /* FansTableViewController.swift in Sources */,
 				45983D0F1B71CB1000ABCF38 /* SwitchBarButtonItem.swift in Sources */,
 				45BC4E9E1B6DCDB800A9963F /* DefaultStyleController.swift in Sources */,
 				45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */,

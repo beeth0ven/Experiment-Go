@@ -9,13 +9,28 @@
 
 import Foundation
 import CloudKit
+import CoreData
 
+
+@objc protocol FetchedRecordControllerDelegate: class {
+    
+    optional func controllerWillChangeContent(controller: FetchedRecordController)
+    
+    optional func controller(controller: FetchedRecordController,
+        didChangeObject anObject: AnyObject,
+        atIndexPath indexPath: NSIndexPath?,
+        forChangeType type: NSFetchedResultsChangeType,
+        newIndexPath: NSIndexPath?)
+    
+    optional func controller(controller: FetchedRecordController,
+        didChangeSections sections: NSIndexSet,
+        forChangeType type: NSFetchedResultsChangeType)
+    
+    optional func controllerDidChangeContent(controller: FetchedRecordController)
+
+}
 
 class FetchedRecordController: NSObject {
-    
-//    private struct Constants {
-//        static let  DefaultRecordsPerPage = 5
-//    }
     
     var fetchedQuery: CKQuery
     var recordsPerPage: Int
@@ -24,7 +39,9 @@ class FetchedRecordController: NSObject {
     var fetchedRecords = [[CKRecord]]()
     var currentPageRecords = [CKRecord]()
     private var currentQueryCursor: CKQueryCursor?
-
+    
+    weak var delegate: FetchedRecordControllerDelegate?
+    
     
     init(fetchedQuery: CKQuery, recordsPerPage: Int, includeCreatorUser: Bool) {
         self.fetchedQuery = fetchedQuery
@@ -70,9 +87,15 @@ class FetchedRecordController: NSObject {
         guard shoudRefreshData else { return }
         loadingPage = true
         
+        let sectionsRange = NSRange(location: 0, length: fetchedRecords.count)
+
         fetchedRecords = [[CKRecord]]()
         currentPageRecords = [CKRecord]()
         currentQueryCursor = nil
+        
+        self.delegate?.controllerWillChangeContent?(self)
+        self.delegate?.controller?(self, didChangeSections: NSIndexSet(indexesInRange: sectionsRange) , forChangeType: .Delete)
+        self.delegate?.controllerDidChangeContent?(self)
         
         let queryOperation =  CKQueryOperation(query: fetchedQuery)
         queryOperation.resultsLimit = recordsPerPage
@@ -80,7 +103,7 @@ class FetchedRecordController: NSObject {
         queryOperation.recordFetchedBlock = recordFetchedBlock
         queryOperation.queryCompletionBlock = recordsFetchedBlockFrom(completionBlock, handleError: handleError)
         
-        publicCloudDatabase.addOperation(queryOperation)
+        AppDelegate.Cloud.Manager.publicCloudDatabase.addOperation(queryOperation)
         
     }
     
@@ -102,7 +125,7 @@ class FetchedRecordController: NSObject {
         queryOperation.resultsLimit = recordsPerPage
         queryOperation.recordFetchedBlock = recordFetchedBlock
         queryOperation.queryCompletionBlock = recordsFetchedBlockFrom(completionBlock, handleError: handleError)
-        publicCloudDatabase.addOperation(queryOperation)
+        AppDelegate.Cloud.Manager.publicCloudDatabase.addOperation(queryOperation)
     }
     
     
@@ -129,19 +152,40 @@ class FetchedRecordController: NSObject {
                     guard error == nil else { handleError?(error!) ; return }
                     self.currentQueryCursor = cursor
                     guard self.includeCreatorUser == false else { self.fetchUsersFromRecords(self.currentPageRecords, completionBlock: completionBlock, handleError: handleError)  ; return }
-                    self.lastQueryCursor = self.currentQueryCursor
-                    self.fetchedRecords.append(self.currentPageRecords)
-                    completionBlock?(self.currentPageRecords)
+                   self.callBackBlock()
                 }
             }
             return recordsFetchedBlock
     }
     
+    lazy var callBackBlock: ()->() = {
+        [weak self] in
+        guard let weakSelf = self else { return }
+        dispatch_async(dispatch_get_main_queue()) {
+            weakSelf.lastQueryCursor = weakSelf.currentQueryCursor
+            weakSelf.delegate?.controllerWillChangeContent?(weakSelf)
+            weakSelf.fetchedRecords.append(weakSelf.currentPageRecords)
+            weakSelf.delegate?.controller?(weakSelf, didChangeSections: NSIndexSet(index: weakSelf.fetchedRecords.endIndex - 1) , forChangeType: .Insert)
+            weakSelf.delegate?.controllerDidChangeContent?(weakSelf)
+        }
+
+    }
     
     func fetchUsersFromRecords(records: [CKRecord],completionBlock: (([CKRecord]) -> Void)? ,handleError: ((NSError) -> Void)? = nil) {
-        var userRecordIDs = Array(Set(records.map { $0.valueForKey(RecordKey.CreatorUserRecordID) as! CKRecordID }))
-        userRecordIDs = userRecordIDs.filter { $0.recordName != CKOwnerDefaultName }
-        guard userRecordIDs.count > 0 else { completionBlock?(records) ; return  }
+        var userRecordIDs = Array(Set(records.map { $0.creatorUserRecordID! }))
+        let knownUserRecordNames = AppDelegate.Cache.Manager.knownUserRecordNames
+        userRecordIDs = userRecordIDs.filter {
+            if $0.recordName == CKOwnerDefaultName { return false }
+            if knownUserRecordNames.contains( $0.recordName) { return false }
+            return true
+        }
+        print("records count: \(records.count)")
+        print("Users count: \(userRecordIDs.count)")
+        guard userRecordIDs.count > 0 else {
+            self.callBackBlock()
+            return
+        }
+        
         self.loadingPage = true
         
         let fetchUsersOperation = CKFetchRecordsOperation(recordIDs: userRecordIDs)
@@ -149,8 +193,7 @@ class FetchedRecordController: NSObject {
         fetchUsersOperation.perRecordCompletionBlock = {
             (user, userRecordID, error) in
             guard error == nil else { return print(error!.localizedDescription)  }
-            let userCache = AppDelegate.Cache.Manager.userCache
-            userCache.setObject(user!, forKey: userRecordID!.recordName)
+            AppDelegate.Cache.Manager.cacheUser(user!)
         }
         
         fetchUsersOperation.fetchRecordsCompletionBlock = {
@@ -164,36 +207,23 @@ class FetchedRecordController: NSObject {
                 return
             }
             
-            dispatch_async(dispatch_get_main_queue()) {
-                self.lastQueryCursor = self.currentQueryCursor
-                self.fetchedRecords.append(self.currentPageRecords)
-                completionBlock?(records)
-            }
+            self.callBackBlock()
             
         }
         
-        publicCloudDatabase.addOperation(fetchUsersOperation)
+        AppDelegate.Cloud.Manager.publicCloudDatabase.addOperation(fetchUsersOperation)
     }
     
 
     
 }
+
+
 
 extension CKRecord {
     var createdBy: CKRecord? {
-        let userRecordID = self[RecordKey.CreatorUserRecordID] as! CKRecordID
-        let userCache = AppDelegate.Cache.Manager.userCache
-        return userCache.objectForKey(userRecordID.recordName) as? CKRecord
-    }
-
-}
-
-extension CKQueryOperation {
-    convenience init(recordType: String) {
-        let predicate = NSPredicate(value: true)
-        let query = CKQuery(recordType: recordType, predicate: predicate)
-        query.sortDescriptors = [NSSortDescriptor(key: RecordKey.CreationDate, ascending: false)]
-        self.init(query: query)
+        return AppDelegate.Cache.Manager.userForUserRecordID(creatorUserRecordID!)
     }
 }
+
 

@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import CloudKit
 
-class ExperimentTableViewCell: UITableViewCell {
+class ExperimentTableViewCell: RecordTableViewCell {
 
     var authorProfileImage: UIImage? {
         get {
@@ -19,19 +20,26 @@ class ExperimentTableViewCell: UITableViewCell {
         }
     }
     
-    @IBOutlet weak var authorProfileImageView: UIImageView! {
-        didSet {
-//            // Add border
-//            authorProfileImageView.layer.borderColor = DefaultStyleController.Color.Sand.CGColor
-//            authorProfileImageView.layer.borderWidth = authorProfileImageView.bounds.size.height / 16
-//            // Add corner radius
-//            authorProfileImageView.layer.cornerRadius = authorProfileImageView.bounds.size.height / 2
-//            authorProfileImageView.layer.masksToBounds = true
-        }
-        
+    var profileImageURL: NSURL? {
+        return (record?.createdBy?[UserKey.ProfileImageAsset] as? CKAsset)?.fileURL
     }
-//    @IBOutlet weak var authorNameLabel: UILabel!
+    
+    @IBOutlet weak var authorProfileImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var creationDateLabel: UILabel!
 
+    override func updateUI() {
+        authorProfileImage = nil
+
+        let experiment = record!
+        titleLabel.text = experiment[ExperimentKey.Title] as? String
+        creationDateLabel.text = NSDateFormatter.smartStringFormDate(experiment.creationDate!)
+        
+        guard let url = profileImageURL else { return }
+        
+        UIImage.fetchImageForURL(url) { (image) in
+            guard url == self.profileImageURL else { return }
+            self.authorProfileImage = image
+        }
+    }
 }

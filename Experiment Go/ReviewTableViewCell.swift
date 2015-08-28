@@ -1,48 +1,55 @@
-////
-////  ReviewTableViewCell.swift
-////  Experiment Go
-////
-////  Created by luojie on 8/2/15.
-////  Copyright © 2015 LuoJie. All rights reserved.
-////
 //
-//import UIKit
+//  ReviewTableViewCell.swift
+//  Experiment Go
 //
-//class ReviewTableViewCell: RootObjectTableViewCell {
-//    
-//    
-//    var review: Review? {
-//        get {
-//            return detailItem as? Review
-//        }
-//        
-//        set {
-//            detailItem = newValue
-//        }
-//    }
-//    
-//    var authorProfileImage: UIImage? {
-//        get {
-//            return authorProfileImageView.image
-//        }
-//        set {
-//            authorProfileImageView.image = newValue
-//        }
-//    }
-//    
-//    @IBOutlet weak var authorProfileImageView: UIImageView!
-//    @IBOutlet weak var bodyLabel: UILabel!
-//    @IBOutlet weak var creationDateLabel: UILabel!
-//    
-//    override func updateUI() {
-//        authorProfileImage = UIImage.defultTestImage()
-//        bodyLabel.text = ""
-//        creationDateLabel.text = ""
-//        guard review != nil else { return }
-//        authorProfileImage = review!.whoReview!.profileImage
-//        bodyLabel.text = review!.body
-//        creationDateLabel.text = NSDateFormatter.smartStringFormDate(review!.creationDate!)
-//    }
-//    
-//    
-//}
+//  Created by luojie on 8/2/15.
+//  Copyright © 2015 LuoJie. All rights reserved.
+//
+
+import UIKit
+import CloudKit
+
+class ReviewTableViewCell: RecordTableViewCell {
+    
+
+    @IBOutlet weak var authorProfileImageView: UIImageView!
+    @IBOutlet weak var authorLabel: UILabel!
+    @IBOutlet weak var bodyabel: UILabel!
+    @IBOutlet weak var creationDateLabel: UILabel!
+    
+    override func updateUI() {
+        
+        authorProfileImage = nil
+        
+        let review = record!
+        let reviewBy = review.createdBy!
+        
+        bodyabel.text = review[ReviewKey.Body] as? String
+        authorLabel.text = reviewBy[UserKey.DisplayName] as? String
+        creationDateLabel.text = review.smartStringForCreationDate
+        
+        guard let url = profileImageURL else { return }
+        
+        UIImage.fetchImageForURL(url) { (image) in
+            guard url == self.profileImageURL else { return }
+            self.authorProfileImage = image
+        }
+        
+    }
+    
+
+    
+    var authorProfileImage: UIImage? {
+        get {
+            return authorProfileImageView.image
+        }
+        set {
+            authorProfileImageView.image = newValue
+        }
+    }
+    
+    var profileImageURL: NSURL? {
+        return (record?.createdBy?[UserKey.ProfileImageAsset] as? CKAsset)?.fileURL
+    }
+    
+}

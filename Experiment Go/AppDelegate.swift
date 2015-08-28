@@ -13,7 +13,6 @@ import CloudKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
     
-    
     struct Cloud {
         static let Manager = CloudManager()
     }
@@ -51,17 +50,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 }
 
 extension NSObject {
-    var currentUser: CKRecord? {
-        return AppDelegate.Cloud.Manager.currentUser
-    }
-    
-    var defaultCache: NSCache {
-        return AppDelegate.Cache.Manager.defaultCache
-    }
-    
-    var publicCloudDatabase: CKDatabase {
-        return CKContainer.defaultContainer().publicCloudDatabase
-    }
     
 
 }

@@ -16,6 +16,34 @@ public func <(date0: NSDate, date1: NSDate) -> Bool { return date0.compare(date1
 
 extension NSDate: Comparable {}
 
+extension CGRect {
+    static let BarButtonItemDefaultRect = CGRectMake(0, 0, 44, 44)
+
+}
+
+extension UIImage {
+    class func fetchImageForURL(url: NSURL, completion:((UIImage?)->())) {
+        if let imageData = AppDelegate.Cache.Manager.assetDataForURL(url) {
+            completion(UIImage(data: imageData))
+        } else {
+            let qos = QOS_CLASS_USER_INITIATED
+            dispatch_async(dispatch_get_global_queue(qos, 0)) {
+                var image: UIImage?
+                let imageData = NSData(contentsOfURL: url)
+                if imageData != nil {
+                    AppDelegate.Cache.Manager.cacheAssetData(imageData!, forURL: url)
+                    image = UIImage(data: imageData!)
+                }
+                dispatch_async(dispatch_get_main_queue()) {
+                    completion(image)
+                }
+            }
+        }
+        
+        
+    }
+}
+
 extension CKAsset {
     convenience init(data: NSData) {
         // write the image out to a cache file
@@ -25,16 +53,6 @@ extension CKAsset {
         data.writeToURL(localURL, atomically: true)
         self.init(fileURL: localURL)
     }
-    
-    var data: NSData? {
-        var result = defaultCache.objectForKey(fileURL.pathExtension!) as? NSData
-        guard result == nil else { return result! }
-        result = NSData(contentsOfURL: fileURL)
-        if result != nil { defaultCache.setObject(result!, forKey: fileURL.pathExtension!)  }
-        return result
-    }
-    
-    
 }
 
 extension String: CustomStringConvertible {
@@ -43,15 +61,24 @@ extension String: CustomStringConvertible {
     }
 }
 
+extension UINavigationController {
+    func showOrHideToolBarIfNeeded() {
+        // Show or hide depends on if toolbarItems is empty
+        let show = self.visibleViewController?.toolbarItems?.count > 0
+        setToolbarHidden(!show, animated: true)
+    }
+}
+
 extension UIViewController {
-    func hideBarSeparator() {
-        let image = UIImage.onePixelImageFromColor(UIColor.clearColor())
+    func setBarSeparatorHidden(hidden: Bool) {
+        let image: UIImage? = hidden ? UIImage.onePixelImageFromColor(UIColor.clearColor()) : nil
         navigationController?.navigationBar.shadowImage = image
         navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
         navigationController?.toolbar.setShadowImage(image, forToolbarPosition: .Any)
         navigationController?.toolbar.setBackgroundImage(image, forToolbarPosition: .Any, barMetrics: .Default)
+        navigationController?.hidesBarsOnSwipe = hidden
     }
-    
+
     var contentViewController: UIViewController {
         if let nav = self as? UINavigationController {
             return nav.topViewController!
@@ -96,6 +123,7 @@ extension NSDateFormatter {
 
         }
     }
+    
 }
 
 extension UITableViewCell {
