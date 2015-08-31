@@ -69,6 +69,7 @@ class MenuTableViewController: UITableViewController {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
             if cell.textLabel?.text == "Profile" {
                 performSegueWithIdentifier(SegueID.ShowUserDetail.rawValue, sender: cell)
+                tableView.deselectRowAtIndexPath(indexPath, animated: true)
             } else {
                 performSegueWithIdentifier(SegueID.ShowExperiments.rawValue, sender: cell)
             }
@@ -85,9 +86,7 @@ class MenuTableViewController: UITableViewController {
 
     
     private func updateCurrentUser() {
-        AppDelegate.Cloud.Manager.updateCurrentUser() {
-            (_) in
-            self.updateUI() }
+        AppDelegate.Cloud.Manager.updateCurrentUser() { (_) in self.updateUI() }
     }
     
     
@@ -97,7 +96,7 @@ class MenuTableViewController: UITableViewController {
         guard let segueID = SegueID(rawValue: identifier) else { return }
         switch segueID {
         case .ShowExperiments:
-            guard let controller = segue.destinationViewController.contentViewController as? ExperimentsTableViewController else { return }
+            guard let controller = segue.destinationViewController.contentViewController as? RecordsTableViewController else { return }
             guard let cell = sender as? UITableViewCell else { return }
             guard let  text = cell.textLabel?.text else { return }
             controller.title = text
@@ -107,12 +106,8 @@ class MenuTableViewController: UITableViewController {
 
             
         case .ShowUserDetail:
-            break
-//            guard let cell = sender as? UITableViewCell else { return }
-//            guard let edvc = segue.destinationViewController.contentViewController as? ExperimentDetailViewController else { return }
-//            let experiment = experiments[tableView.indexPathForCell(cell)!.row]
-//            edvc.experiment = experiment
-            
+            guard let udvc = segue.destinationViewController.contentViewController as? UserDetailViewController else { return }
+            udvc.user = AppDelegate.Cache.Manager.currentUser()
         }
     }
     

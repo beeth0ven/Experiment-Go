@@ -1,246 +1,198 @@
-////
-////  UserDetailViewController.swift
-////  Experiment Go
-////
-////  Created by luojie on 7/31/15.
-////  Copyright © 2015 LuoJie. All rights reserved.
-////
 //
+//  UserDetailViewController.swift
+//  Experiment Go
 //
-//import UIKit
-//import CoreData
+//  Created by luojie on 7/31/15.
+//  Copyright © 2015 LuoJie. All rights reserved.
 //
-//
-//
-//class UserDetailViewController: DetailViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-//    
-//    private enum Segue: String {
-//        case ShowUserDetail
-//        case ShowExperimentDetail
-//        
-//    }
-//    
-//    // MARK: - Properties
-//    
-//    var user: User? {
-//        get {
-//            return detailItem as? User
-//        }
-//        
-//        set {
-//            detailItem = newValue
-//        }
-//    }
-//    
-//    
-//    @IBOutlet weak var recommendBarButtonItem: SwitchBarButtonItem!
-//    @IBOutlet var followBarButtonItem: SwitchBarButtonItem! {
-//        didSet {
-//            followBarButtonItem.offStateTitle = "Follow"
-//            followBarButtonItem.onStateTitle = "Following"
-//        }
-//    }
-//    
-//    @IBOutlet var flexibleSpaceBarButtonItem: UIBarButtonItem!
-//    
-//    var detailItemShowStyle: DetailItemShowStyle {
-//        
-//        let imTheUser = user == User.currentUser()
-//        let isRootViewController = navigationController?.viewControllers.first == self
-//        guard isRootViewController else { return .PublicRead }
-//
-//        if imTheUser && editing == false {
-//            return .AuthorRead
-//        } else if imTheUser && editing == true {
-//            return .AuthorModify
-//        } else {
-//            return .PublicRead
-//        }
-//    }
-//    
-//    // MARK: - View Controller Lifecycle
-//    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        hideBarSeparator()
-//    }
-//    
-//    // MARK: - User Actions
-//    
-//    
-//    @IBAction func toggleFollowStates(sender: SwitchBarButtonItem) {
-//         (sender.on == false) ? doFollow() : doUnFollow()
-//         sender.on = !sender.on
-//    }
-//    
-//    
-//    private func doFollow() {
-////        detailItem!.mutableSetValueForKey(SectionUnique.Followers.rawValue).addObject(User.currentUser())
-//    }
-//    
-//    
-//    private func doUnFollow() {
-////        detailItem!.mutableSetValueForKey(SectionUnique.Followers.rawValue).removeObject(User.currentUser())
-//    }
-//    
-//    // MARK: - View Configure
-//    
-//    override func configureBarButtons() {
-//        
-//        switch detailItemShowStyle {
-//        case .AuthorRead:
-//            navigationItem.leftBarButtonItems = [closeBarButtonItem]
-//            navigationItem.rightBarButtonItems = [editButtonItem()]
-//            toolbarItems = [recommendBarButtonItem]
-//        case .AuthorModify:
-//            navigationItem.leftBarButtonItems = []
-//            navigationItem.rightBarButtonItems = [editButtonItem()]
-//            toolbarItems = [recommendBarButtonItem]
-//        case .PublicRead:
-//            navigationItem.leftBarButtonItems = [closeBarButtonItem]
-//            navigationItem.rightBarButtonItems = []
-//            guard user != User.currentUser() else { toolbarItems = [recommendBarButtonItem] ; break }
-//            toolbarItems = [recommendBarButtonItem, flexibleSpaceBarButtonItem, followBarButtonItem]
-//        default: break
-//        }
-//        
-//        // If self is in a navigation stack then change leftBarButton to navigation default back button.
-//        // Call super's configureBarButtons will finish the task.
-//        super.configureBarButtons()
-//    }
-//    
-//    override func updateUI() {
-//        super.updateUI()
-//        let followerSet = detailItem!.mutableSetValueForKey(SectionUnique.Followers.rawValue)
-////        followBarButtonItem.on = followerSet.containsObject(User.currentUser())
-//    }
-//    // MARK: - Segues
-//    
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        guard let controller = segue.destinationViewController as? DetailViewController else { return }
-//        guard let cell = sender as? RootObjectTableViewCell else { return }
-//        controller.detailItem = cell.detailItem!
-//    }
-//    
-//    // MARK: - Table View Data Source
-//    
-//    
-//    // MARK: - Table View Data Delegate 
-//    
-////    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-////        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
-////        guard editing,
-////        let cell = tableView.cellForRowAtIndexPath(indexPath) as? ObjectValueTableViewCell where
-////        cell.objectValue?.key == User.Constants.ProfileImageDataKey
-////            else { return }
-////        let ipc = UIImagePickerController()
-////        ipc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-////        ipc.allowsEditing = true
-////        ipc.delegate = self
-////        presentViewController(ipc, animated: true, completion: nil)
-////    }
-////    
-//    // MARK: - Image Picker Controller Delegate
-//    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-//        user!.profileImage = info[UIImagePickerControllerEditedImage] as? UIImage ?? info[UIImagePickerControllerOriginalImage] as! UIImage
-//        dismissViewControllerAnimated(true, completion: {
-////            [unowned self] in
-////            let sectionUnique = SectionUnique.OverView
-////            let section: Int = self.identifiersForSectionInfos().indexOf(sectionUnique.rawValue)!
-////            let row: Int = self.cellKeysBySectionIdentifier(sectionUnique.rawValue)!.indexOf(User.Constants.ProfileImageDataKey)!
-////            let indexPath = NSIndexPath(forRow: row, inSection: section)
-////            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-//            })
-//
-//    }
-//    
-//
-//    
-//    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-//        dismissViewControllerAnimated(true, completion: nil)
-//    }
-//
-//    
-//    // MARK: - Fetched Info Controller Data Source
-//    
-//    override func identifiersForSections() -> [String] {
-//        return SectionUnique.allValues
-//    }
-//    
-//    
-//    override func cellKeysBySectionIdentifier(identifier: String) -> [String]?{
-//        
-//        let sectionUnique = SectionUnique(rawValue: identifier)!
-//        
-//        guard case .OverView = sectionUnique  else { return nil }
-//        
-//        return [
-//            User.Constants.ProfileImageDataKey,
-//            User.Constants.NameKey,
-//            Constants.CreationDateKey
-//        ]
-//        
-//    }
-//    
-//    
-//    override func cellReuseIdentifierFromItemKey(key: String) -> String? {
-//        switch key {
-//        case User.Constants.ProfileImageDataKey:
-//            return Storyboard.ImageCellReuseIdentifier
-//            
-//        case User.Constants.NameKey:
-//            return Storyboard.TextCellReuseIdentifier
-//            
-//            
-//        case SectionUnique.PostedExperiments.rawValue:
-//            return MasterViewController.Storyboard.ExperimentCellReuseIdentifier
-//            
-//        case SectionUnique.LikedExperiments.rawValue:
-//            return MasterViewController.Storyboard.ExperimentCellReuseIdentifier
-//            
-//            
-//        case SectionUnique.Followers.rawValue:
-//            return Storyboard.UserCellReuseIdentifier
-//            
-//        case SectionUnique.FollowingUsers.rawValue:
-//            return Storyboard.UserCellReuseIdentifier
-//            
-//        default: return super.cellReuseIdentifierFromItemKey(key)
-//        }
-//    }
-//    
-//    // MARK: - Section Construct
-//    
-//    private enum SectionUnique: String {
-//        case OverView = "overView"
-//        case PostedExperiments = "postedExperiments"
-//        case LikedExperiments = "likedExperiments"
-//        case Followers = "followers"
-//        case FollowingUsers = "followingUsers"
-//        
-//        static var allValues: [String] {
-//            return [
-//                SectionUnique.OverView.rawValue,
-//                SectionUnique.PostedExperiments.rawValue,
-//                SectionUnique.LikedExperiments.rawValue,
-//                SectionUnique.Followers.rawValue,
-//                SectionUnique.FollowingUsers.rawValue,
-//            ]
-//        }
-//        
-//        var name: String? {
-//            switch self {
-//            case .OverView:
-//                return nil
-//            case .PostedExperiments:
-//                return "Posted Experiments"
-//            case .LikedExperiments:
-//                return "Liked Experiments"
-//            case .Followers:
-//                return "Followers"
-//            case .FollowingUsers:
-//                return "Following"
+
+
+import UIKit
+import CloudKit
+
+
+
+class UserDetailViewController: RecordDetailViewController {
+
+    // MARK: - Properties
+    
+    var user: CKRecord? {
+        get { return record }
+        set { record = newValue ; title = newValue?[UserKey.DisplayName] as? String }
+    }
+    
+    @IBOutlet var followBarButtonItem: SwitchBarButtonItem! {
+        didSet {
+            followBarButtonItem.offStateTitle = "Follow"
+            followBarButtonItem.onStateTitle = "Following"
+        }
+    }
+    
+    
+    override func configureBarButtons() {
+        super.configureBarButtons()
+        switch editeState {
+        case .New:
+            break
+            
+        case .Read:
+            if closeBarButtonItem != nil { navigationItem.leftBarButtonItems = [closeBarButtonItem!] }
+            if imCreator {
+                navigationItem.rightBarButtonItems = [editButtonItem()]
+                toolbarItems = nil
+            } else {
+                navigationItem.rightBarButtonItems = nil
+//                toolbarItems = [activityBarButtonItem]
+//                AppDelegate.Cloud.Manager.amILikingThisExperiment(experiment!) {
+//                    (liking)  in
+//                    self.likeBarButtonItem.on = liking
+//                    self.setToolbarItems([self.likeBarButtonItem], animated: true)
+//                }
+            }
+            
+        case .Write:
+            navigationItem.leftBarButtonItems = nil
+            navigationItem.rightBarButtonItems = [editButtonItem()]
+        }
+        
+    }
+    
+    
+    // MARK: - Table View Data Struct
+    
+    private enum RowInfo: ReusableCellInfo {
+        case Basic(String)
+        case SubTitle(String, String?)
+        case Image(NSURL)
+        
+        var cellReuseIdentifier: String {
+            switch self {
+            case .Basic(_):
+                return "BasicCell"
+            case .SubTitle(_):
+                return "SubTitleCell"
+            case .Image(_):
+                return "ImageCell"
+            }
+        }
+        
+        var segueIdentifier: String? {
+            guard case .Basic(let text) = self else { return nil }
+            switch text {
+            case "Posted Experiments":
+                return SegueID.ShowPostedExperiments.rawValue
+            case "Liked Experiments":
+                return SegueID.ShowLikedExperiments.rawValue
+            default: return nil
+            }
+        }
+    }
+    
+    override func setupSections() -> [SectionInfo] {
+        var result = [SectionInfo]()
+        // Sections 1: OverView
+        let imageRow: RowInfo = .Image((user![UserKey.ProfileImageAsset] as! CKAsset).fileURL)
+        let descriptionRow: RowInfo = .SubTitle(UserKey.Description.capitalizedString,user?[UserKey.Description] as? String)
+        let overViewSectionInfo = SectionInfo(title: "OverView", rows: [imageRow, descriptionRow])
+        result.append(overViewSectionInfo)
+        
+        // Sections 2: Experiments
+        if editing == false {
+            let postedExperimentsRow: RowInfo = .Basic("Posted Experiments")
+            let likedExperimentRow: RowInfo = .Basic("Liked Experiments")
+            let experimentsSectionInfo = SectionInfo(title: "Experiments", rows: [postedExperimentsRow, likedExperimentRow])
+            result.append(experimentsSectionInfo)
+        }
+        
+        // Sections 3: Relationship
+        if editing == false {
+            let follwingRow: RowInfo = .Basic("Following")
+            let followerRow: RowInfo = .Basic("Follower")
+            let relationshipSectionInfo = SectionInfo(title: "Relationship", rows: [follwingRow, followerRow])
+            result.append(relationshipSectionInfo)
+        }
+        return result
+    }
+    
+    override func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
+        super.configureCell(cell, atIndexPath: indexPath)
+        let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
+        switch rowInfo {
+        case .Basic(let text):
+            cell.textLabel!.text = text
+        case .SubTitle(let text, let detailText):
+            cell.textLabel!.text = text
+            cell.detailTextLabel!.text = detailText ?? "Not Set."
+        case .Image(let url):
+            guard let imageCell = cell as? ImageTableViewCell else { return }
+            imageCell.profileImageURL = url
+        }
+    }
+    
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return nil
+    }
+    
+    
+    // MARK: - Segue
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        guard let identifier = segue.identifier else { return }
+        guard let segueID = SegueID(rawValue: identifier) else { return }
+        switch segueID {
+        case .ShowPostedExperiments:
+            guard let rtvc = segue.destinationViewController.contentViewController as? RecordsTableViewController else { return }
+            rtvc.queryPredicate = NSPredicate(format: "%K = %@", RecordKey.CreatorUserRecordID, user!.recordID)
+            rtvc.navigationItem.rightBarButtonItem = nil
+            rtvc.navigationItem.leftBarButtonItem = nil
+            rtvc.showRecordModelly = false
+        case .ShowLikedExperiments:
+//            guard let ftvc = segue.destinationViewController.contentViewController as? FansTableViewController else { return }
+//            ftvc.likedExperiment = experiment
+            break
+        }
+    }
+    
+    private enum SegueID: String {
+        case ShowPostedExperiments
+        case ShowLikedExperiments
+    }
+
+}
+
+extension UserDetailViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
+    
+    @IBAction func changeProfileImage(sender: UIButton) {
+        let ipc = UIImagePickerController()
+        ipc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+        ipc.allowsEditing = true
+        ipc.delegate = self
+        presentViewController(ipc, animated: true, completion: nil)
+    }
+    
+    
+    // MARK: - Image Picker Controller Delegate
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+//        let image = info[UIImagePickerControllerEditedImage] as? UIImage ?? info[UIImagePickerControllerOriginalImage] as! UIImage
+//        let imageData = UIImageJPEGRepresentation(image, 0.2)!
+//        let profileImageAsset = CKAsset(data: imageData)
+//        let currentUser = AppDelegate.Cache.Manager.currentUser()!
+//        currentUser[UserKey.ProfileImageAsset] = profileImageAsset
+//        self.profileImagButtonActivity?.startAnimating()
+//        AppDelegate.Cloud.Manager.publicCloudDatabase.saveRecord(currentUser) { (_, error) in
+//            guard error == nil else { print(error!.localizedDescription) ; abort() }
+//            dispatch_async(dispatch_get_main_queue()) {
+//                self.updateUI()
 //            }
 //        }
-//    }
-//}
+//        self.dismissViewControllerAnimated(true) {
+//            UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: .Fade)
+//        }
+        
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        dismissViewControllerAnimated(true) {
+            UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: .Fade)
+        }
+    }
+}

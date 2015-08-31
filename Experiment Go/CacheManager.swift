@@ -58,7 +58,7 @@ class CacheManager {
         } catch {
             abort()
         }
-        print("Fetch image from cache.")
+//        print("Fetch image from cache.")
         return NSData(contentsOfURL: cachedUrl)
     }
     

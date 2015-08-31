@@ -24,48 +24,35 @@ class CloudKitTableViewController: UITableViewController {
 
     // Optional to be setted from storyboard
     
-    @IBInspectable
     var sortKey: String = "creationDate"
     
-    @IBInspectable
     var sortAscending: Bool = false
     
-    @IBInspectable
-    var recordsPerPage: Int = 10
+//    @IBInspectable
+    var recordsPerPage: Int = 20
 
-    @IBInspectable
+//    @IBInspectable
     var includeCreatorUser: Bool = true
     
     @IBInspectable
     var estimatedRowHeight: CGFloat = 80
 
-    
-    // Optional to be override for subclass
-    
-    func queryPredicate() -> NSPredicate {
-        return NSPredicate(value: true)
-    }
+    var queryPredicate: NSPredicate = NSPredicate(value: true)
     
     
     // MARK: - View Controller Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.estimatedRowHeight = estimatedRowHeight
-        tableView.rowHeight = UITableViewAutomaticDimension
+        configureTableView()
         refresh()
         startObserveIfNeeded()
+        configureBarButtons()
     }
     
     deinit {
        stopObserveIfNeeded()
     }
    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        setBarSeparatorHidden(false)
-        navigationController?.showOrHideToolBarIfNeeded()
-    }
-    
     // MARK: - Key Value Observe
     
     var uno: NSObjectProtocol?
@@ -94,47 +81,60 @@ class CloudKitTableViewController: UITableViewController {
     }
     
     @IBAction func refresh(sender: UIRefreshControl?) {
-        guard fetchedRecordController.shoudRefreshData else { refreshControl?.endRefreshing() ; return  }
-        fetchedRecordController.refreshData(recordsFetchedBlock, handleError: defaultHandleError)
-        refreshControl?.beginRefreshing()
-        if refreshControl != nil { tableView.tableFooterView = UIView() }
-
-    }
-    
-    func loadNextPage() {
-        fetchedRecordController.fetchNextPage(recordsFetchedBlock)
+        refreshControl?.endRefreshing()
+        fetchedRecordsController.refreshData()
+        tableView.reloadData()
     }
     
     // MARK: - Update UI
-    @IBOutlet var loadPageActivityView: UIView!
 
+    
     func updateVisibleCells() {
         for cell in self.tableView.visibleCells {
             self.configureCell(cell, atIndexPath: self.tableView.indexPathForCell(cell)!)
         }
     }
     
-    // MARK: - Block
-    
-    lazy var recordsFetchedBlock: ([CKRecord]) -> Void = {
-        [weak self] (experiments) in
-        guard let weakSelf = self else { return }
+    func configureTableView() {
+        tableView.estimatedRowHeight = estimatedRowHeight
+        tableView.rowHeight = UITableViewAutomaticDimension
+//        tableView.tableFooterView = UIView()
     }
     
-    lazy var defaultHandleError: ((NSError) -> Void) = {
-        (error) in
-        print(error.localizedDescription)
-//        abort()
+    
+    @IBOutlet weak var tableFooterActivityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var tableFooterAppIconImageView: UIImageView!
+    @IBOutlet weak var tableFooterLabel: UILabel!
+    
+    var loadingState: LoadingState = .Loading {
+        didSet {
+            switch loadingState {
+            case .Finish:
+                tableFooterAppIconImageView.hidden = false
+                tableFooterActivityIndicatorView.hidden = true
+                tableFooterLabel.hidden = true
+            case .Loading:
+                tableFooterActivityIndicatorView.hidden = false
+                tableFooterAppIconImageView.hidden = true
+                tableFooterLabel.hidden = true
+            case .Failed:
+                tableFooterLabel.hidden = false
+                tableFooterAppIconImageView.hidden = true
+                tableFooterActivityIndicatorView.hidden = true
+            }
+        }
     }
+    
 
+    
     // MARK: - Table view data source
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return fetchedRecordController.fetchedRecords.count
+        return fetchedRecordsController.fetchedRecords.count
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return fetchedRecordController.fetchedRecords[section].count
+        return fetchedRecordsController.fetchedRecords[section].count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -144,7 +144,7 @@ class CloudKitTableViewController: UITableViewController {
     }
     
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
-        let record = fetchedRecordController.fetchedRecords[indexPath.section][indexPath.row]
+        let record = fetchedRecordsController.fetchedRecords[indexPath.section][indexPath.row]
         guard let recordCell = cell as? RecordTableViewCell else { return }
         recordCell.record = record
     }
@@ -154,12 +154,11 @@ class CloudKitTableViewController: UITableViewController {
     // MARK: - Scroll View
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        guard fetchedRecordController.moreComing else { return print("have fetched all result.") }
+        guard fetchedRecordsController.moreComing else { return }
         let tableBottomHeight = scrollView.contentOffset.y + scrollView.bounds.height
         let contentBottomHeight = scrollView.contentSize.height
         if contentBottomHeight - tableBottomHeight < scrollView.bounds.height/2 {
-//            print("delta height: \(contentBottomHeight - tableBottomHeight - scrollView.bounds.height/2)")
-            loadNextPage()
+            fetchedRecordsController.fetchNextPage()
         }
     }
 
@@ -172,32 +171,76 @@ class CloudKitTableViewController: UITableViewController {
     
     
     private func queryForTable() -> CKQuery {
-        let query = CKQuery(recordType: recordType, predicate: queryPredicate())
+        let query = CKQuery(recordType: recordType, predicate: queryPredicate)
         query.sortDescriptors = [NSSortDescriptor(key: sortKey, ascending: sortAscending)]
         return query
     }
     
-    var fetchedRecordController: FetchedRecordController {
-        if _fetchedRecordController != nil { return _fetchedRecordController! }
-        _fetchedRecordController = FetchedRecordController(
+    var fetchedRecordsController: FetchedRecordsController {
+        if _fetchedRecordsController != nil { return _fetchedRecordsController! }
+        _fetchedRecordsController = FetchedRecordsController(
             fetchedQuery: queryForTable(),
             recordsPerPage: recordsPerPage,
             includeCreatorUser: includeCreatorUser
         )
-        _fetchedRecordController!.delegate = self
-        return _fetchedRecordController!
+        _fetchedRecordsController!.delegate = self
+        return _fetchedRecordsController!
     }
     
-    var _fetchedRecordController: FetchedRecordController?
+    var _fetchedRecordsController: FetchedRecordsController?
+    
+    
+    enum LoadingState {
+        case Finish
+        case Loading
+        case Failed
+    }
 }
 
-extension CloudKitTableViewController: FetchedRecordControllerDelegate {
+extension CloudKitTableViewController: FetchedRecordsControllerDelegate {
     
-    func controllerWillChangeContent(controller: FetchedRecordController) {
+    // Refresh Data Delegate
+    func controllerWillRefreshData(controller: FetchedRecordsController) {
+        print("controller Will Refresh Data")
+        loadingState = .Loading
+//        tableView.tableFooterView = loadPageActivityView
+    }
+    
+    func controllerFailedToRefreshData(controller: FetchedRecordsController, error: NSError) {
+        print(error.localizedDescription) ; abort()
+    }
+    
+    func controllerDidRefreshData(controller: FetchedRecordsController) {
+        print("controller Did Refresh Data")
+        loadingState = .Finish
+//        tableView.tableFooterView = UIView()
+    }
+    
+    // Fetch Next Page Delegate
+    func controllerWillFetchNextPage(controller: FetchedRecordsController) {
+        print("controller Will Fetch Next Page")
+        loadingState = .Loading
+//        tableView.tableFooterView = loadPageActivityView
+    }
+    
+    func controllerFailedToFetchNextPage(controller: FetchedRecordsController, error: NSError) {
+        print(error.localizedDescription) ; abort()
+    }
+    
+    func controllerDidFetchNextPage(controller: FetchedRecordsController) {
+        print("controller Did Fetch Next Page")
+        loadingState = .Finish
+//        tableView.tableFooterView = UIView()
+    }
+    
+    // Content Change Delegate
+    func controllerWillChangeContent(controller: FetchedRecordsController) {
+        print("controller Will Change Content")
         tableView.beginUpdates()
     }
     
-    func controller(controller: FetchedRecordController, didChangeSections sections: NSIndexSet, forChangeType type: NSFetchedResultsChangeType) {
+    func controller(controller: FetchedRecordsController, didChangeSections sections: NSIndexSet, forChangeType type: NSFetchedResultsChangeType) {
+        print("controller Did Change Sections")
         switch type {
         case .Insert:
             tableView.insertSections(sections, withRowAnimation: .Fade)
@@ -207,11 +250,9 @@ extension CloudKitTableViewController: FetchedRecordControllerDelegate {
         }
     }
     
-    
-    func controllerDidChangeContent(controller: FetchedRecordController) {
+    func controllerDidChangeContent(controller: FetchedRecordsController) {
+        print("controller Did Change Content")
         tableView.endUpdates()
-        refreshControl?.endRefreshing()
-        tableView.tableFooterView = fetchedRecordController.moreComing ? loadPageActivityView : UIView()
     }
 }
 

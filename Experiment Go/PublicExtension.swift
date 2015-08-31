@@ -61,14 +61,6 @@ extension String: CustomStringConvertible {
     }
 }
 
-extension UINavigationController {
-    func showOrHideToolBarIfNeeded() {
-        // Show or hide depends on if toolbarItems is empty
-        let show = self.visibleViewController?.toolbarItems?.count > 0
-        setToolbarHidden(!show, animated: true)
-    }
-}
-
 extension UIViewController {
     func setBarSeparatorHidden(hidden: Bool) {
         let image: UIImage? = hidden ? UIImage.onePixelImageFromColor(UIColor.clearColor()) : nil
@@ -78,13 +70,49 @@ extension UIViewController {
         navigationController?.toolbar.setBackgroundImage(image, forToolbarPosition: .Any, barMetrics: .Default)
         navigationController?.hidesBarsOnSwipe = hidden
     }
-
+    
+    func showOrHideToolBarIfNeeded() {
+        // Show or hide depends on if toolbarItems is empty
+        let show = toolbarItems?.count > 0
+        navigationController?.setToolbarHidden(!show, animated: true)
+    }
+    
     var contentViewController: UIViewController {
         if let nav = self as? UINavigationController {
             return nav.topViewController!
         } else {
             return self
         }
+    }
+    
+    var flexibleSpaceBarButtonItem: UIBarButtonItem  {
+        return UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
+    }
+    
+    var activityBarButtonItem: UIBarButtonItem  {
+        let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+        activityIndicatorView.color = navigationController?.navigationBar.tintColor
+        activityIndicatorView.startAnimating()
+        let result = UIBarButtonItem(customView: activityIndicatorView)
+        result.customView!.frame = CGRect.BarButtonItemDefaultRect
+        return result
+    }
+    
+    
+    var closeBarButtonItem: UIBarButtonItem? {
+        guard presentingViewController != nil else { return nil }
+        let reselt = UIBarButtonItem(title: "Close", style: .Done, target: self, action: "close")
+        return reselt
+    }
+    
+    func close() {
+        presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func configureBarButtons() {
+        navigationItem.leftItemsSupplementBackButton  = true
+        if closeBarButtonItem != nil { navigationItem.leftBarButtonItems = [closeBarButtonItem!] }
+
     }
 }
 

@@ -85,6 +85,8 @@ struct UserKey {
     static let RecordType = "User"
     static let ProfileImageAsset = "profileImageAsset"
     static let DisplayName = "displayName"
+    static let Description = "description"
+    
 }
 
 struct ExperimentKey {

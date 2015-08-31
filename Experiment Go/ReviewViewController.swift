@@ -9,18 +9,25 @@
 import UIKit
 import CloudKit
 
-class ReviewViewController: UITableViewController {
+class ReviewViewController: RecordDetailViewController {
     
     
     // MARK: - Properties
-    
-    var review: CKRecord?
+
+    var review: CKRecord? {
+        get { return record }
+        set { record = newValue }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         updateUI()
-        setBarSeparatorHidden(true)
+    }
+    
+    override func configureBarButtons() {
+        super.configureBarButtons()
+        navigationItem.leftBarButtonItem?.title = "Cancel"
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -42,7 +49,6 @@ class ReviewViewController: UITableViewController {
 }
 
 extension ReviewViewController: UITextViewDelegate {
-    
     func textViewDidChange(textView: UITextView) {
         review![ReviewKey.Body] = textView.text
     }
