@@ -26,7 +26,7 @@ class ReviewViewController: RecordDetailViewController {
     }
     
     override func configureBarButtons() {
-        super.configureBarButtons()
+        navigationItem.leftBarButtonItem = closeBarButtonItem
         navigationItem.leftBarButtonItem?.title = "Cancel"
     }
     

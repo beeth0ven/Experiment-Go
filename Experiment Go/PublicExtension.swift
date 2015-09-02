@@ -63,12 +63,14 @@ extension String: CustomStringConvertible {
 
 extension UIViewController {
     func setBarSeparatorHidden(hidden: Bool) {
+//        print("navigationController title: \(navigationController?.title)")
         let image: UIImage? = hidden ? UIImage.onePixelImageFromColor(UIColor.clearColor()) : nil
         navigationController?.navigationBar.shadowImage = image
         navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
         navigationController?.toolbar.setShadowImage(image, forToolbarPosition: .Any)
         navigationController?.toolbar.setBackgroundImage(image, forToolbarPosition: .Any, barMetrics: .Default)
         navigationController?.hidesBarsOnSwipe = hidden
+        if hidden == false { navigationController?.setNavigationBarHidden(false, animated: true) }
     }
     
     func showOrHideToolBarIfNeeded() {
@@ -109,11 +111,15 @@ extension UIViewController {
         presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func configureBarButtons() {
+    func showCloseBarButtonItemIfNeeded() {
+//        print("navigationController count: \(navigationController?.viewControllers.count)")
         navigationItem.leftItemsSupplementBackButton  = true
-        if closeBarButtonItem != nil { navigationItem.leftBarButtonItems = [closeBarButtonItem!] }
-
+        guard closeBarButtonItem != nil else { return }
+        guard navigationController?.viewControllers.first == self ||
+        navigationController?.viewControllers.count > 4 else { return }
+        navigationItem.leftBarButtonItems = [closeBarButtonItem!]
     }
+    
 }
 
 extension UISplitViewController {

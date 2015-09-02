@@ -10,7 +10,6 @@ import CloudKit
 
 protocol ReusableCellInfo {
     var cellReuseIdentifier: String { get }
-    var segueIdentifier: String? { get }
 }
 
 @IBDesignable
@@ -31,7 +30,7 @@ class RecordDetailViewController: UIViewController,  UITableViewDataSource, UITa
         setBarSeparatorHidden(true)
         showOrHideToolBarIfNeeded()
     }
-    
+
     @IBAction func close(sender: UIBarButtonItem) {
         presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -63,6 +62,8 @@ class RecordDetailViewController: UIViewController,  UITableViewDataSource, UITa
 
     // MARK: - View Configure
     
+    func configureBarButtons() {
+    }
     
     @IBOutlet weak var tableView: UITableView! {
         didSet {
@@ -149,22 +150,19 @@ class RecordDetailViewController: UIViewController,  UITableViewDataSource, UITa
     }
     
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
-        let rowInfo = sections[indexPath.section].rows[indexPath.row]
-        cell.accessoryType = (rowInfo.segueIdentifier != nil) ? .DisclosureIndicator : .None
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sections[section].title
     }
     
-    // MARK: - Table View Delegate
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        let reusableCellInfo = sections[indexPath.section].rows[indexPath.row]
-        guard let segueIdentifier = reusableCellInfo.segueIdentifier else { return }
-        performSegueWithIdentifier(segueIdentifier, sender: nil)
-    }
+//    // MARK: - Table View Delegate
+//    
+//    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+//        let reusableCellInfo = sections[indexPath.section].rows[indexPath.row]
+//        guard let segueIdentifier = reusableCellInfo.segueIdentifier else { return }
+//        performSegueWithIdentifier(segueIdentifier, sender: tableView.cellForRowAtIndexPath(indexPath))
+//    }
     
     
     // MARK: - Table View Editing

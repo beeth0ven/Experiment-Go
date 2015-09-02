@@ -14,6 +14,8 @@
 		4511B2A01B4FB7CF0046DF76 /* Experiment_GoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B29F1B4FB7CF0046DF76 /* Experiment_GoTests.swift */; };
 		4511B2AC1B4FBA320046DF76 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4511B2AB1B4FBA320046DF76 /* Images.xcassets */; };
 		4537CB131B944765004378C3 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB121B944765004378C3 /* ImageTableViewCell.swift */; };
+		4537CB151B95680E004378C3 /* EditeTextTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */; };
+		4537CB191B959EF9004378C3 /* SubTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */; };
 		45629F951B5BC386000F41E6 /* ChameleonFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45629F941B5BC386000F41E6 /* ChameleonFramework.framework */; };
 		4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */; };
 		45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */; };
@@ -62,6 +64,8 @@
 		4511B2AB1B4FBA320046DF76 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4511B2B01B4FBACA0046DF76 /* Experiment Go-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Experiment Go-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		4537CB121B944765004378C3 /* ImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
+		4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditeTextTableViewController.swift; sourceTree = "<group>"; };
+		4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubTitleTableViewCell.swift; sourceTree = "<group>"; };
 		45629F941B5BC386000F41E6 /* ChameleonFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChameleonFramework.framework; path = "Pods/../build/Debug-iphoneos/Pods-Experiment Go/ChameleonFramework.framework"; sourceTree = "<group>"; };
 		4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicExtension.swift; sourceTree = "<group>"; };
@@ -186,6 +190,7 @@
 				4511B28D1B4FB7CF0046DF76 /* Main.storyboard */,
 				45983D0E1B71CB1000ABCF38 /* SwitchBarButtonItem.swift */,
 				45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */,
+				4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */,
 				4537CB121B944765004378C3 /* ImageTableViewCell.swift */,
 				45BC4E9B1B6B5CFD00A9963F /* RecordTableViewCell */,
 			);
@@ -199,7 +204,7 @@
 				4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */,
 				45A2A2451B8D907E004BEF45 /* CloudKitTableViewController */,
 				45BC4E9C1B6B5D1300A9963F /* RecordDetailViewController */,
-				45A2A2461B8D9095004BEF45 /* EditeViewController */,
+				45A2A2461B8D9095004BEF45 /* EditeTableViewController */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -223,11 +228,12 @@
 			name = CloudKitTableViewController;
 			sourceTree = "<group>";
 		};
-		45A2A2461B8D9095004BEF45 /* EditeViewController */ = {
+		45A2A2461B8D9095004BEF45 /* EditeTableViewController */ = {
 			isa = PBXGroup;
 			children = (
+				4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */,
 			);
-			name = EditeViewController;
+			name = EditeTableViewController;
 			sourceTree = "<group>";
 		};
 		45BC4E9B1B6B5CFD00A9963F /* RecordTableViewCell */ = {
@@ -422,6 +428,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				450CDA7B1B92D6490059C1A1 /* RecordDetailViewController.swift in Sources */,
+				4537CB191B959EF9004378C3 /* SubTitleTableViewCell.swift in Sources */,
 				4537CB131B944765004378C3 /* ImageTableViewCell.swift in Sources */,
 				45BC4E931B6A145F00A9963F /* UserTableViewCell.swift in Sources */,
 				4599C90D1B6F469B0040461F /* ReviewViewController.swift in Sources */,
@@ -440,6 +447,7 @@
 				45983D0F1B71CB1000ABCF38 /* SwitchBarButtonItem.swift in Sources */,
 				45BC4E9E1B6DCDB800A9963F /* DefaultStyleController.swift in Sources */,
 				45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */,
+				4537CB151B95680E004378C3 /* EditeTextTableViewController.swift in Sources */,
 				45BC4E8D1B69C4A300A9963F /* ExperimentDetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

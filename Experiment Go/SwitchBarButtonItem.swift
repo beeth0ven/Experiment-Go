@@ -8,10 +8,17 @@
 
 import UIKit
 
+@IBDesignable
+
 class SwitchBarButtonItem: UIBarButtonItem {
     var on = false { didSet { updateUI() } }
-    var onStateTitle = "On"
-    var offStateTitle = "Off"
+    
+    @IBInspectable
+    var onStateTitle: String = "On"
+    
+    @IBInspectable
+    var offStateTitle: String = "Off"
+    
     var color: UIColor = UIColor.globalTintColor()
   
     func updateUI() {

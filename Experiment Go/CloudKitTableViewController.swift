@@ -20,7 +20,13 @@ class CloudKitTableViewController: UITableViewController {
     var recordType: String = ExperimentKey.RecordType
     
     @IBInspectable
-    var cellReusableIdentifier: String = ""
+    var cellReusableIdentifier: String?
+    
+    @IBInspectable
+    var fetchType: String = FetchedRecordsController.FetchType.IncludeCreatorUser.rawValue
+    
+    @IBInspectable
+    var passCreatorUser: Bool = false
 
     // Optional to be setted from storyboard
     
@@ -46,7 +52,7 @@ class CloudKitTableViewController: UITableViewController {
         configureTableView()
         refresh()
         startObserveIfNeeded()
-        configureBarButtons()
+        showCloseBarButtonItemIfNeeded()
     }
     
     deinit {
@@ -138,7 +144,7 @@ class CloudKitTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellReusableIdentifier, forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellReusableIdentifier!, forIndexPath: indexPath)
         self.configureCell(cell, atIndexPath: indexPath)
         return cell
     }
@@ -169,20 +175,22 @@ class CloudKitTableViewController: UITableViewController {
         super.init(coder: aDecoder)
     }
     
-    
     private func queryForTable() -> CKQuery {
-        let query = CKQuery(recordType: recordType, predicate: queryPredicate)
+        guard let recordType = RecordType(rawValue: recordType) else { abort() }
+        let query = CKQuery(recordType: recordType.rawValue, predicate: queryPredicate)
         query.sortDescriptors = [NSSortDescriptor(key: sortKey, ascending: sortAscending)]
         return query
     }
     
     var fetchedRecordsController: FetchedRecordsController {
         if _fetchedRecordsController != nil { return _fetchedRecordsController! }
+        guard let fetchType  = FetchedRecordsController.FetchType(rawValue: fetchType) else { abort() }
         _fetchedRecordsController = FetchedRecordsController(
             fetchedQuery: queryForTable(),
             recordsPerPage: recordsPerPage,
-            includeCreatorUser: includeCreatorUser
-        )
+            passCreatorUser: passCreatorUser,
+            fetchType: fetchType)
+        
         _fetchedRecordsController!.delegate = self
         return _fetchedRecordsController!
     }

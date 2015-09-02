@@ -12,7 +12,6 @@ import UIKit
 
 
 class CloudManager {
-    // MARK: - Cloud Kit Stack
     // MARK: - Update Current User
     
     var publicCloudDatabase: CKDatabase {
@@ -33,23 +32,6 @@ class CloudManager {
         }
     }
     
-    private var isLoadingLikeState = false
-    
-    func amILikingThisExperiment(experiment: CKRecord, completionHandler: (Bool) -> ()) {
-        guard isLoadingLikeState == false else { print("Another query is in a progress to load like state.") ; return }
-        isLoadingLikeState = true
-        let keyPredicate = NSPredicate(format: "%K = %@", FanLinkKey.ToExperiment, experiment)
-        let authorPredicate = NSPredicate(format: "%K = %@", RecordKey.CreatorUserRecordID, currentUser!.recordID)
-        let predicate = NSCompoundPredicate(type: .AndPredicateType, subpredicates: [keyPredicate,authorPredicate])
-        let query = CKQuery(recordType: FanLinkKey.RecordType, predicate: predicate)
-        publicCloudDatabase.performQuery(query, inZoneWithID: nil) { (records, error)  in
-            self.isLoadingLikeState = false
-            guard error == nil else { return }
-            let liking = records!.count > 0
-            dispatch_async(dispatch_get_main_queue()) { completionHandler(liking) }
-        }
-    }
-    
     private func requestDiscoverabilityPermission(completionHandler: (Bool) -> ()) {
         CKContainer.defaultContainer().requestApplicationPermission(.PermissionUserDiscoverability) { (applicationPermissionStatus, error) -> Void in
             guard  error == nil else { print(error!.localizedDescription) ; abort() }
@@ -64,10 +46,94 @@ class CloudManager {
             guard  error == nil else { print(error!.localizedDescription) ; abort() }
             dispatch_async(dispatch_get_main_queue()) { completionHandler( user! ) }
         }
-        
         publicCloudDatabase.addOperation(fetchCurrentUserRecordOperation)
     }
+    
+    // MARK: - Cloud Key Value Store
+    
+    func amILikingThisExperiment(experiment: CKRecord) -> Bool {
+        return likedExperiments.contains(experiment.recordID.recordName)
+    }
+    
+    func likeExperiment(experiment: CKRecord, completionHandler: (NSError?) -> ()) {
+        let fanLink = CKRecord(fanLinktoExperiment: experiment)
+        publicCloudDatabase.saveRecord(fanLink) {
+            (fanLink, error) in
+            guard error == nil else { dispatch_async(dispatch_get_main_queue()) { completionHandler(error!) } ; return }
+            dispatch_async(dispatch_get_main_queue()) { completionHandler(nil) }
+            self.likedExperiments = self.likedExperiments + [experiment.recordID.recordName]
+        }
+    }
+    
+    
+    func unLikeExperiment(experiment: CKRecord, completionHandler: (NSError?) -> ()) {
+        let fanLinkRecordID = CKRecordID(fanLinktoExperiment: experiment)
+        AppDelegate.Cloud.Manager.publicCloudDatabase.deleteRecordWithID(fanLinkRecordID) {
+            (_, error) in
+            guard error == nil else { dispatch_async(dispatch_get_main_queue()) { completionHandler(error!) } ; return }
+            dispatch_async(dispatch_get_main_queue()) { completionHandler(nil) }
+            self.likedExperiments = self.likedExperiments.filter { $0 != experiment.recordID.recordName }
+        }
+    }
+    
+    private let kLikedExperiments = "CloudManager.likedExperiments"
 
+    private var likedExperiments: [String] {
+        
+        get {
+            return NSUbiquitousKeyValueStore.defaultStore().arrayForKey(kLikedExperiments) as? [String] ?? [String]()
+        }
+        
+        set {
+            NSUbiquitousKeyValueStore.defaultStore().setArray(newValue, forKey: kLikedExperiments)
+            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+        }
+        
+    }
+    
+    
+    func amIFollowingTheUser(user: CKRecord) -> Bool {
+        return followingUsers.contains(user.recordID.recordName)
+    }
+    
+    func followUser(user: CKRecord, completionHandler: (NSError?) -> ()) {
+        let followLink = CKRecord(followLinktoUser: user)
+        
+        publicCloudDatabase.saveRecord(followLink) {
+            (followLink, error) in
+            guard error == nil else { dispatch_async(dispatch_get_main_queue()) { completionHandler(error!) } ; return }
+            dispatch_async(dispatch_get_main_queue()) { completionHandler(nil) }
+            self.followingUsers = self.followingUsers + [user.recordID.recordName]
+        }
+        
+    }
+    
+    func unfollowUser(user: CKRecord, completionHandler: (NSError?) -> ()) {
+        let followLinkRecordID = CKRecordID(followLinktoUser: user)
+        AppDelegate.Cloud.Manager.publicCloudDatabase.deleteRecordWithID(followLinkRecordID) {
+            (_, error) in
+            guard error == nil else { dispatch_async(dispatch_get_main_queue()) { completionHandler(error!) } ; return }
+            dispatch_async(dispatch_get_main_queue()) { completionHandler(nil) }
+            self.followingUsers = self.followingUsers.filter { $0 != user.recordID.recordName }
+        }
+    }
+    
+    private let kFollowingUsers = "followingUsers"
+    
+    private var followingUsers: [String] {
+        
+        get {
+            return NSUbiquitousKeyValueStore.defaultStore().arrayForKey(kFollowingUsers) as? [String] ?? [String]()
+        }
+        
+        set {
+            NSUbiquitousKeyValueStore.defaultStore().setArray(newValue, forKey: kFollowingUsers)
+            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+        }
+        
+    }
+    
+    
 }
 
 // MARK: - Cloud Kit Record Key
@@ -85,7 +151,7 @@ struct UserKey {
     static let RecordType = "User"
     static let ProfileImageAsset = "profileImageAsset"
     static let DisplayName = "displayName"
-    static let Description = "description"
+    static let AboutMe = "aboutMe"
     
 }
 
@@ -104,8 +170,73 @@ struct ReviewKey {
 
 }
 
-struct FanLinkKey {
-    static let RecordType = "FanLink"
-    static let ToExperiment = "toExperiment"
+struct LinkKey {
+    static let RecordType = "Link"
+    static let LinkType = "linkType"
+    static let To = "to"
 }
+
+enum RecordType: String {
+    case Experiment
+    case Review
+    case Link
+    case User
+}
+
+enum LinkType: String {
+    case UserLikeExperiment
+    case UserFollowUser
+}
+
+extension CKRecord {
+    convenience init(fanLinktoExperiment experiment: CKRecord) {
+        let recordID = CKRecordID(fanLinktoExperiment: experiment)
+        self.init(linkType: LinkType.UserLikeExperiment, recordID: recordID)
+        self[LinkKey.To] = CKReference(record: experiment, action: .DeleteSelf)
+    }
+    
+    convenience init(followLinktoUser user: CKRecord) {
+        let recordID = CKRecordID(followLinktoUser: user)
+        self.init(linkType: LinkType.UserFollowUser, recordID: recordID)
+        self[LinkKey.To] = CKReference(record: user, action: .DeleteSelf)
+
+    }
+
+    convenience init(linkType: LinkType, recordID: CKRecordID) {
+        self.init(recordType: LinkKey.RecordType, recordID: recordID)
+        self[LinkKey.LinkType] = linkType.rawValue
+    }
+    
+    var smartStringForCreationDate: String {
+        let date = creationDate ?? NSDate()
+        return NSDateFormatter.smartStringFormDate(date)
+    }
+    
+    var stringForCreationDate: String {
+        let date = creationDate ?? NSDate()
+        return NSDateFormatter.localizedStringFromDate(date, dateStyle: .MediumStyle, timeStyle: .ShortStyle)
+    }
+}
+
+
+extension CKRecordID {
+    convenience init(fanLinktoExperiment experiment: CKRecord) {
+        let currentUser = AppDelegate.Cache.Manager.currentUser()!
+        let userRecordName = String(dropFirst(currentUser.recordID.recordName.characters))
+        let name = "\(userRecordName)-\(LinkType.UserLikeExperiment.rawValue)-\(experiment.recordID.recordName)"
+        self.init(recordName: name)
+        print(name)
+    }
+    
+    convenience init(followLinktoUser user: CKRecord) {
+        let currentUser = AppDelegate.Cache.Manager.currentUser()!
+        let currentUserRecordName = String(dropFirst(currentUser.recordID.recordName.characters))
+        let userRecordName = String(dropFirst(user.recordID.recordName.characters))
+        let name = "\(currentUserRecordName)-\(LinkType.UserFollowUser.rawValue)-\(userRecordName)"
+        self.init(recordName: name)
+        print(name)
+
+    }
+}
+
 

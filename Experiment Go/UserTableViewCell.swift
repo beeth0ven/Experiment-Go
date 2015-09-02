@@ -11,15 +11,7 @@ import CloudKit
 
 class UserTableViewCell: RecordTableViewCell {
     
-    var user: CKRecord? {
-        guard record != nil else { return nil }
-        switch record!.recordType {
-        case CKRecordTypeUserRecord:
-            return record!
-        default:
-            return record!.createdBy        }
-        
-    }
+    var user: CKRecord? { return record }
     
     var profileImage: UIImage? {
         get {

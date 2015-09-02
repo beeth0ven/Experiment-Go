@@ -16,9 +16,13 @@ class RecordsTableViewController: CloudKitTableViewController {
     
     @IBOutlet var addRecordBarButtonItem: UIBarButtonItem!
     
+    
+    @IBInspectable
+    var preferedBarSeparatorHidden: Bool = false
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        setBarSeparatorHidden(false)
+        setBarSeparatorHidden(preferedBarSeparatorHidden)
         showOrHideToolBarIfNeeded()
 
     }
@@ -31,17 +35,7 @@ class RecordsTableViewController: CloudKitTableViewController {
     
     
     // MARK: - Segue
-    @IBInspectable
-    var showRecordModelly: Bool = false
-    
-    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        if identifier == SegueID.ShowRecord.rawValue && showRecordModelly {
-            performSegueWithIdentifier(SegueID.ShowRecordModelly.rawValue, sender: sender)
-            return false
-        }
-        return true
-    }
-    
+
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         guard let identifier = segue.identifier else { return }
         guard let segueID = SegueID(rawValue: identifier) else { return }
@@ -59,21 +53,21 @@ class RecordsTableViewController: CloudKitTableViewController {
                 else { return }
             rdvc.record = cell.record
             
-        case .ShowRecordModelly:
-            guard
-                let cell = sender as? RecordTableViewCell,
-                let rdvc = segue.destinationViewController.contentViewController as? RecordDetailViewController
-                else { return }
-            rdvc.record = cell.record
             
         }
     }
     
     func addNewRecord() -> CKRecord {
         let result = CKRecord(recordType: recordType)
+        guard let recordType = RecordType(rawValue: recordType) else { abort() }
         switch recordType {
-        case ExperimentKey.RecordType:
+        case .Experiment:
             result[ExperimentKey.Title] = "翡翠👌 石头 过d。"
+        case .Review:
+            guard let nav = navigationController else { abort() }
+            guard let rdvc = nav.viewControllers[nav.viewControllers.indexOf(self)! - 1] as? RecordDetailViewController else { abort() }
+            result[ReviewKey.ReviewTo] = CKReference(record: rdvc.record!, action: .DeleteSelf)
+            
         default: break
         }
         return result
@@ -82,7 +76,6 @@ class RecordsTableViewController: CloudKitTableViewController {
     private enum SegueID: String {
         case AddRecord
         case ShowRecord
-        case ShowRecordModelly
     }
     
 }

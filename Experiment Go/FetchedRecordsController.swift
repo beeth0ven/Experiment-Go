@@ -50,31 +50,34 @@ class FetchedRecordsController: NSObject {
     
     var fetchedQuery: CKQuery
     var recordsPerPage: Int
-    var includeCreatorUser: Bool
+    
+    var passCreatorUser: Bool
+    
+    var fetchType: FetchType
+    
+    enum FetchType: String {
+        case Single
+        case IncludeCreatorUser
+        case LinkIncludeDestination
+        case LinkIncludeDestinationAndDestinationCreatorUser
+    }
     
     weak var delegate: FetchedRecordsControllerDelegate?
 
     var fetchedRecords = [[CKRecord]]()
 
-    init(fetchedQuery: CKQuery, recordsPerPage: Int, includeCreatorUser: Bool) {
+    init(fetchedQuery: CKQuery, recordsPerPage: Int, passCreatorUser: Bool, fetchType: FetchType) {
         self.fetchedQuery = fetchedQuery
         self.recordsPerPage = recordsPerPage
-        self.includeCreatorUser = includeCreatorUser
+        self.passCreatorUser = passCreatorUser
+        self.fetchType = fetchType
     }
     
     var moreComing: Bool {
         return nextPageToQuery != nil ? true : false
     }
     
-    private var loadingStates: RecordsFetchType?  {
-        didSet {
-            if loadingStates != nil {
-//                print("Loading Page.")
-            } else {
-//                print("Stop loading Page.")
-            }
-        }
-    }
+    private var loadingStates: RecordsFetchType?
     
     
     // MARK: - Refresh data from cloud
@@ -152,8 +155,16 @@ class FetchedRecordsController: NSObject {
         guard let weakSelf = self else { return }
         guard error == nil else { weakSelf.handleError(error!) ; return }
         weakSelf.currentQueryCursor = cursor
-        guard weakSelf.includeCreatorUser == false else { weakSelf.fetchUsersFromRecords(weakSelf.currentPageRecords)  ; return }
-        weakSelf.callBackBlock()
+        switch weakSelf.fetchType {
+        case .Single:
+            weakSelf.callBackBlock()
+        case .IncludeCreatorUser:
+             weakSelf.fetchUsersFromRecords(weakSelf.currentPageRecords)
+        case .LinkIncludeDestination:
+            weakSelf.fetchDestinationFromLinks(weakSelf.currentPageRecords)
+        case .LinkIncludeDestinationAndDestinationCreatorUser:
+            weakSelf.fetchDestinationFromLinks(weakSelf.currentPageRecords)
+        }
         
     }
     
@@ -176,7 +187,22 @@ class FetchedRecordsController: NSObject {
             guard self.loadingStates != nil else { abort() }
             self.lastQueryCursor = self.currentQueryCursor
             self.delegate?.controllerWillChangeContent?(self)
-            self.fetchedRecords.append(self.currentPageRecords)
+            switch self.fetchType {
+            case .Single:
+                self.fetchedRecords.append(self.currentPageRecords)
+            case .IncludeCreatorUser:
+                self.passCreatorUser == false ?
+                    self.fetchedRecords.append(self.currentPageRecords):
+                    self.fetchedRecords.append(self.currentPageRecords.map { $0.createdBy! })
+            case .LinkIncludeDestination:
+                self.fetchedRecords.append(self.currentPageRecords.map { self.currentFetchedDestinationRecords![$0.linkToRecordID!]! })
+                
+            case .LinkIncludeDestinationAndDestinationCreatorUser:
+                self.passCreatorUser == false ?
+                    self.fetchedRecords.append(self.currentPageRecords.map { self.currentFetchedDestinationRecords![$0.linkToRecordID!]! })  :
+                    self.fetchedRecords.append(self.currentPageRecords.map { self.currentFetchedDestinationRecords![$0.linkToRecordID!]!.createdBy! })
+            }
+            
             self.delegate?.controller?(self, didChangeSections: NSIndexSet(index: self.fetchedRecords.endIndex - 1) , forChangeType: .Insert)
             self.delegate?.controllerDidChangeContent?(self)
             
@@ -230,6 +256,34 @@ class FetchedRecordsController: NSObject {
         case FetchNextPage
     }
     
+    
+    // MARK: - Fetch linked record from cloud
+    
+    func fetchDestinationFromLinks(links: [CKRecord]) {
+        var linkRecordIDs = Array(Set(links.map { $0.linkToRecordID! }))
+        guard linkRecordIDs.count > 0 else { self.callBackBlock() ; return }
+        let fetchDestinationRecordsOperation = CKFetchRecordsOperation(recordIDs: linkRecordIDs)
+        fetchDestinationRecordsOperation.fetchRecordsCompletionBlock = destinationRecordsFetchedBlock
+        AppDelegate.Cloud.Manager.publicCloudDatabase.addOperation(fetchDestinationRecordsOperation)
+    }
+    
+    lazy var destinationRecordsFetchedBlock: ([CKRecordID : CKRecord]?, NSError?) -> Void = {
+        [weak self] (destinationRecordsByRecordID, error) in
+        guard let weakSelf = self else { return }
+        guard error == nil else {  weakSelf.handleError(error!) ; return }
+        weakSelf.currentFetchedDestinationRecords = destinationRecordsByRecordID
+        switch weakSelf.fetchType {
+        case .LinkIncludeDestination:
+            weakSelf.callBackBlock()
+        case .LinkIncludeDestinationAndDestinationCreatorUser:
+            weakSelf.fetchUsersFromRecords(weakSelf.currentPageRecords.map { destinationRecordsByRecordID![$0.linkToRecordID!]! })
+        default: abort()
+        }
+    }
+    
+    var currentFetchedDestinationRecords: [CKRecordID : CKRecord]?
+    
+
     // MARK: - Fetch users from cloud
     
     func addNewRecords(records: [CKRecord]) {
@@ -263,6 +317,12 @@ class FetchedRecordsController: NSObject {
 extension CKRecord {
     var createdBy: CKRecord? {
         return AppDelegate.Cache.Manager.userForUserRecordID(creatorUserRecordID!)
+    }
+    
+    var linkToRecordID: CKRecordID? {
+        guard recordType == LinkKey.RecordType else { return nil }
+        guard let ref = self[LinkKey.To] as? CKReference else { return nil }
+        return ref.recordID
     }
 }
 
