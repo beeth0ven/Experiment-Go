@@ -16,7 +16,7 @@ protocol ReusableCellInfo {
 
 class RecordDetailViewController: UIViewController,  UITableViewDataSource, UITableViewDelegate  {
     
-    var record: CKRecord?
+    var record: CKRecord? { didSet { title = record?.displayTitle } }
 
     // MARK: - View Controller Lifecycle
 
@@ -46,6 +46,7 @@ class RecordDetailViewController: UIViewController,  UITableViewDataSource, UITa
         guard recordInserted == false else { return }
         tableView.editing = editing
         
+        let tableFooterView = tableView.tableFooterView ; tableView.tableFooterView = nil // Transition become smooth.
         let options: UIViewAnimationOptions =  editing ? .TransitionCurlUp : .TransitionCurlDown
         UIView.transitionWithView(navigationController!.view,
             duration: 0.4,
@@ -57,6 +58,7 @@ class RecordDetailViewController: UIViewController,  UITableViewDataSource, UITa
             completion: { (_) in
                 self.configureBarButtons()
                 self.showOrHideToolBarIfNeeded()
+                self.tableView.tableFooterView = tableFooterView
         })
     }
 
@@ -97,7 +99,7 @@ class RecordDetailViewController: UIViewController,  UITableViewDataSource, UITa
     var imCreator: Bool {
         guard let record = record else { return false }
         guard let recordID = record.creatorUserRecordID else { return true }
-        guard let currentUserRecordID = AppDelegate.Cache.Manager.currentUser()?.recordID else { return false }
+        guard let currentUserRecordID = AppDelegate.Cloud.Manager.currentUser?.recordID else { return false }
         if recordID.recordName == CKOwnerDefaultName { return true }
         return recordID == currentUserRecordID
     }
@@ -156,14 +158,6 @@ class RecordDetailViewController: UIViewController,  UITableViewDataSource, UITa
         return sections[section].title
     }
     
-//    // MARK: - Table View Delegate
-//    
-//    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//        let reusableCellInfo = sections[indexPath.section].rows[indexPath.row]
-//        guard let segueIdentifier = reusableCellInfo.segueIdentifier else { return }
-//        performSegueWithIdentifier(segueIdentifier, sender: tableView.cellForRowAtIndexPath(indexPath))
-//    }
-    
     
     // MARK: - Table View Editing
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -171,6 +165,23 @@ class RecordDetailViewController: UIViewController,  UITableViewDataSource, UITa
     }
     
     
+}
+
+extension CKRecord {
+    var displayTitle: String? {
+        guard let type = RecordType(rawValue: recordType) else { abort() }
+        switch type {
+        case .Experiment:
+            return self[ExperimentKey.Title] as? String
+        case .Users:
+            return self[UsersKey.DisplayName] as? String
+        case .Review:
+            return ReviewKey.RecordType
+        default:
+            return nil
+            
+        }
+    }
 }
 
 extension CGFloat {

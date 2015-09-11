@@ -14,7 +14,7 @@ class MenuTableViewController: UITableViewController {
     private struct Storyboard {
         static let TableHeaderViewDefualtHeight: CGFloat = 150
     }
-  
+    
     @IBOutlet weak var tableHeaderContentViewHeightConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var profileImagButton: UIButton!  {
@@ -31,29 +31,49 @@ class MenuTableViewController: UITableViewController {
     
     @IBOutlet weak var profileImagButtonActivity: UIActivityIndicatorView!
     
+    var currentUser: CKRecord? { return AppDelegate.Cloud.Manager.currentUser }
 
     // MARK: - View Controller Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setBarSeparatorHidden(true)
-        updateCurrentUser()
+        startObserve()
+        updateUI()
+    }
+    
+    // MARK: - KVO
 
+    deinit {
+        stopObserve()
+    }
+    
+    var cuhco:  NSObjectProtocol?
+    
+    func startObserve() {
+        cuhco =
+            NSNotificationCenter.defaultCenter().addObserverForName(Notification.CurrentUserHasChange.rawValue,
+                object: nil,
+                queue: NSOperationQueue.mainQueue()) { (_) in self.updateUI() }
+    }
+    
+    func stopObserve() {
+        if cuhco != nil { NSNotificationCenter.defaultCenter().removeObserver(cuhco!) }
     }
 
     
     // MARK: - Update UI
     var profileImageURL: NSURL? {
-        return (AppDelegate.Cache.Manager.currentUser()?[UserKey.ProfileImageAsset] as? CKAsset)?.fileURL
+        return (AppDelegate.Cloud.Manager.currentUser?[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL
     }
+    
     
     func updateUI() {
         // Clear UI
         profileImagButton.setBackgroundImage(nil, forState: .Normal)
         
         // Reset UI
-        let currentUser = AppDelegate.Cache.Manager.currentUser()
-        self.title = currentUser?[UserKey.DisplayName] as? String
+        self.title = currentUser?[UsersKey.DisplayName] as? String ?? "Menu"
         
         guard let url = profileImageURL else { profileImagButtonActivity?.stopAnimating() ; return  }
         
@@ -65,29 +85,38 @@ class MenuTableViewController: UITableViewController {
 
     }
     
+    private var egSplitViewController: EGSplitViewController { return splitViewController as! EGSplitViewController }
+    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
             if cell.textLabel?.text == "Profile" {
                 performSegueWithIdentifier(SegueID.ShowUserDetail.rawValue, sender: cell)
                 tableView.deselectRowAtIndexPath(indexPath, animated: true)
             } else {
-                performSegueWithIdentifier(SegueID.ShowExperiments.rawValue, sender: cell)
+                egSplitViewController.showDetailViewControllerAtIndex(indexPath.row)
             }
         }
     }
-    
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         let height = Storyboard.TableHeaderViewDefualtHeight - scrollView.contentOffset.y
         tableHeaderContentViewHeightConstraint.constant = max(40, height)
     }
     
-    // MARK: - Update Current User
+    // MARK: - About App Button
 
-    
-    private func updateCurrentUser() {
-        AppDelegate.Cloud.Manager.updateCurrentUser() { (_) in self.updateUI() }
+    @IBOutlet weak var aboutAppButton: UIButton!    {
+        didSet {
+            // Add border
+            aboutAppButton.layer.borderColor = UIColor.whiteColor().CGColor
+            aboutAppButton.layer.borderWidth = aboutAppButton.bounds.size.height / 32
+            // Add corner radius
+            aboutAppButton.layer.cornerRadius = aboutAppButton.bounds.size.height / 2
+            aboutAppButton.layer.masksToBounds = true
+            
+        }
     }
+    
     
     
     // MARK: - Segue
@@ -95,24 +124,13 @@ class MenuTableViewController: UITableViewController {
         guard let identifier = segue.identifier else { return }
         guard let segueID = SegueID(rawValue: identifier) else { return }
         switch segueID {
-        case .ShowExperiments:
-            guard let controller = segue.destinationViewController.contentViewController as? RecordsTableViewController else { return }
-            guard let cell = sender as? UITableViewCell else { return }
-            guard let  text = cell.textLabel?.text else { return }
-            controller.title = text
-            controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
-            controller.navigationItem.leftItemsSupplementBackButton = true
-            self.splitViewController?.toggleMasterView()
-
-            
         case .ShowUserDetail:
             guard let udvc = segue.destinationViewController.contentViewController as? UserDetailViewController else { return }
-            udvc.user = AppDelegate.Cache.Manager.currentUser()
+            udvc.user = AppDelegate.Cloud.Manager.currentUser
         }
     }
     
     private enum SegueID: String {
-        case ShowExperiments
         case ShowUserDetail
     }
     
@@ -134,8 +152,8 @@ extension MenuTableViewController: UIImagePickerControllerDelegate, UINavigation
         let image = info[UIImagePickerControllerEditedImage] as? UIImage ?? info[UIImagePickerControllerOriginalImage] as! UIImage
         let imageData = UIImageJPEGRepresentation(image, 0.2)!
         let profileImageAsset = CKAsset(data: imageData)
-        let currentUser = AppDelegate.Cache.Manager.currentUser()!
-        currentUser[UserKey.ProfileImageAsset] = profileImageAsset
+        let currentUser = AppDelegate.Cloud.Manager.currentUser!
+        currentUser[UsersKey.ProfileImageAsset] = profileImageAsset
         self.profileImagButtonActivity?.startAnimating()
         AppDelegate.Cloud.Manager.publicCloudDatabase.saveRecord(currentUser) { (_, error) in
             guard error == nil else { print(error!.localizedDescription) ; abort() }

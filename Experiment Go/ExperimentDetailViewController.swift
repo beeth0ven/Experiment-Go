@@ -17,9 +17,7 @@ class ExperimentDetailViewController: RecordDetailViewController {
 
     var experiment: CKRecord? {
         get { return record }
-        set { record = newValue
-            title = newValue?[ExperimentKey.Title] as? String
-        }
+        set { record = newValue }
     }
     
 
@@ -43,7 +41,6 @@ class ExperimentDetailViewController: RecordDetailViewController {
         case .New:
             navigationItem.leftBarButtonItem = closeBarButtonItem
             navigationItem.leftBarButtonItem?.title = "Cancel"
-//            navigationController?.popoverPresentationController?.backgroundColor = DefaultStyleController.Color.GroupTableViewBackGround
             navigationItem.rightBarButtonItems = [saveBarButtonItem]
             toolbarItems = nil
             
@@ -54,7 +51,8 @@ class ExperimentDetailViewController: RecordDetailViewController {
                 toolbarItems = nil
             } else {
                 navigationItem.rightBarButtonItems = nil
-                self.likeBarButtonItem.on = AppDelegate.Cloud.Manager.amILikingThisExperiment(experiment!)
+                likeBarButtonItem.on = AppDelegate.Cloud.Manager.amILikingThisExperiment(experiment!)
+                toolbarItems = [likeBarButtonItem]
             }
             
         case .Write:
@@ -105,6 +103,7 @@ class ExperimentDetailViewController: RecordDetailViewController {
 
     private enum RowInfo: ReusableCellInfo {
         case Basic(key:String)
+        case SubTitle(key:String)
         case RightDetail(key:String)
         case User(key:String)
         
@@ -112,6 +111,8 @@ class ExperimentDetailViewController: RecordDetailViewController {
             switch self {
             case .Basic(_):
                 return "BasicCell"
+            case .SubTitle(_):
+                return "SubTitleCell"
             case .RightDetail(_):
                 return "RightDetailCell"
             case .User(_):
@@ -124,6 +125,8 @@ class ExperimentDetailViewController: RecordDetailViewController {
             switch self {
             case .Basic(let key):
                 return key
+            case .SubTitle(let key):
+                return key
             case .RightDetail(let key):
                 return key
             case .User(let key):
@@ -134,18 +137,19 @@ class ExperimentDetailViewController: RecordDetailViewController {
 
     }
     
-
+    
     override func setupSections() -> [SectionInfo] {
         var result = [SectionInfo]()
         // Sections 1: OverView
+        var overViewSectionRows = [ReusableCellInfo]()
         let titleRow: RowInfo = RowInfo.RightDetail(key: ExperimentKey.Title)
-        let bodyRow: RowInfo = .RightDetail(key: ExperimentKey.Body)
-        var rows: [ReusableCellInfo] = [titleRow, bodyRow]
+        overViewSectionRows.append(titleRow)
+        if shouldAddRowForKey(ExperimentKey.Tags) { overViewSectionRows.append(RowInfo.SubTitle(key: ExperimentKey.Tags)) }
         if editing == false {
             let creationDateRow: RowInfo = .RightDetail(key: RecordKey.CreationDate)
-            rows.append(creationDateRow)
+            overViewSectionRows.append(creationDateRow)
         }
-        let overViewSectionInfo = SectionInfo(title: "OverView", rows: rows)
+        let overViewSectionInfo = SectionInfo(title: "OverView", rows: overViewSectionRows)
         result.append(overViewSectionInfo)
         
         // Sections 2: Author
@@ -156,7 +160,31 @@ class ExperimentDetailViewController: RecordDetailViewController {
             
         }
         
-        // Sections 3: Related
+        // Sections 3: Body
+        var bodySectionRows = [ReusableCellInfo]()
+        if shouldAddRowForKey(ExperimentKey.Purpose) { bodySectionRows.append(RowInfo.SubTitle(key: ExperimentKey.Purpose)) }
+        if shouldAddRowForKey(ExperimentKey.Principle) { bodySectionRows.append(RowInfo.SubTitle(key: ExperimentKey.Principle)) }
+        if shouldAddRowForKey(ExperimentKey.Content) { bodySectionRows.append(RowInfo.SubTitle(key: ExperimentKey.Content)) }
+        if shouldAddRowForKey(ExperimentKey.Steps) { bodySectionRows.append(RowInfo.SubTitle(key: ExperimentKey.Steps)) }
+        if shouldAddRowForKey(ExperimentKey.Results) { bodySectionRows.append(RowInfo.SubTitle(key: ExperimentKey.Results)) }
+        if bodySectionRows.count > 0 { let bodySectionInfo = SectionInfo(title: "Body", rows: bodySectionRows) ; result.append(bodySectionInfo) }
+
+        // Sections 4: Conclusion
+        if shouldAddRowForKey(ExperimentKey.Conclusion) {
+            let conclusionRow : RowInfo = .SubTitle(key: ExperimentKey.Conclusion)
+            let conclusionSectionInfo = SectionInfo(title: "Conclusion", rows: [conclusionRow])
+            result.append(conclusionSectionInfo)
+        }
+
+        
+        // Sections 5: Foot Note
+        if shouldAddRowForKey(ExperimentKey.FootNote) {
+            let footNoteRow : RowInfo = .SubTitle(key: ExperimentKey.FootNote)
+            let footNoteSectionInfo = SectionInfo(title: "FootNote", rows: [footNoteRow])
+            result.append(footNoteSectionInfo)
+        }
+
+        // Sections 6: Related
         if editing == false {
             let reviewsRow: RowInfo = .Basic(key: "Reviews")
             let fansRow: RowInfo = .Basic(key: "Fans")
@@ -166,6 +194,7 @@ class ExperimentDetailViewController: RecordDetailViewController {
         return result
     }
     
+    private func shouldAddRowForKey(key: String) -> Bool { return editing  ? true : experiment?[key] != nil }
     
     override func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
         super.configureCell(cell, atIndexPath: indexPath)
@@ -173,6 +202,12 @@ class ExperimentDetailViewController: RecordDetailViewController {
         switch rowInfo {
         case .Basic(let key):
             cell.textLabel!.text = key
+        case .SubTitle(let key):
+            guard let subTitleCell = cell as? SubTitleTableViewCell else { return }
+            subTitleCell.titleLabel.text = labelTextByKey[key]
+            let text = (experiment?[key] as? CustomStringConvertible)?.description
+            subTitleCell.subTttleLabel.text = text ?? " "
+            subTitleCell.accessoryType = editing ? .DisclosureIndicator : .None
         case .RightDetail(let key):
             cell.textLabel!.text = labelTextByKey[key]
             let text = key == RecordKey.CreationDate ?
@@ -189,9 +224,22 @@ class ExperimentDetailViewController: RecordDetailViewController {
     private var labelTextByKey: [String: String] {
         return [
             ExperimentKey.Title:        ExperimentKey.Title.capitalizedString,
-            ExperimentKey.Body:         ExperimentKey.Body.capitalizedString,
-            RecordKey.CreationDate:     "Date"
+            ExperimentKey.Conclusion:   ExperimentKey.Conclusion.capitalizedString,
+            ExperimentKey.Content:      ExperimentKey.Content.capitalizedString,
+            ExperimentKey.Principle:    ExperimentKey.Principle.capitalizedString,
+            ExperimentKey.Purpose:      ExperimentKey.Purpose.capitalizedString,
+            ExperimentKey.Results:      ExperimentKey.Results.capitalizedString,
+            ExperimentKey.Steps:        ExperimentKey.Steps.capitalizedString,
+            ExperimentKey.Tags:         ExperimentKey.Tags.capitalizedString,
+            ExperimentKey.FootNote:     "Foot Note",
+            RecordKey.CreationDate:     "Date",
         ]
+    }
+    
+    
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let title = sections[section].title
+        return ["FootNote", "Conclusion"].contains(title) ?  nil : title
     }
     // MARK: - Table view delegate
 
@@ -207,6 +255,10 @@ class ExperimentDetailViewController: RecordDetailViewController {
         case .Basic(let key):
             return segueIDByKey[key]
             
+        case .SubTitle(let key):
+            guard editing else { return nil }
+            return segueIDByKey[key]
+            
         case .RightDetail(let key):
             guard editing else { return nil }
             return segueIDByKey[key]
@@ -217,16 +269,7 @@ class ExperimentDetailViewController: RecordDetailViewController {
         }
     }
     
-    private var segueIDByKey: [String: SegueID] {
-        return [
-            "Reviews":                  .ShowReviews,
-            "Fans":                     .ShowFans,
-            ExperimentKey.Title:        .EditeText,
-            ExperimentKey.Body:         .EditeText,
-        ]
-    }
-    
-    
+
     // MARK: - Segue
 
 
@@ -241,13 +284,11 @@ class ExperimentDetailViewController: RecordDetailViewController {
             
         case .ShowReviews:
             guard let rtvc = segue.destinationViewController.contentViewController as? RecordsTableViewController else { return }
-            rtvc.queryPredicate =  NSPredicate(format: "%K = %@", ReviewKey.ReviewTo, experiment!)
+            rtvc.queryPredicate = NSPredicate.predicateForReviewToExperiment(experiment!)
             
         case .ShowFans:
             guard let rtvc = segue.destinationViewController.contentViewController as? RecordsTableViewController else { return }
-            let toPredicate = NSPredicate(format: "%K = %@", LinkKey.To, experiment!)
-            let typePredicate = NSPredicate(format: "%K = %@", LinkKey.LinkType ,LinkType.UserLikeExperiment.rawValue)
-            rtvc.queryPredicate = NSCompoundPredicate(type: .AndPredicateType, subpredicates: [toPredicate, typePredicate])
+            rtvc.queryPredicate = NSPredicate.predicateForFanLinkToExperiment(experiment!)
             
         case .EditeText:
             guard let ettvc = segue.destinationViewController.contentViewController as? EditeTextTableViewController else { return }
@@ -257,11 +298,30 @@ class ExperimentDetailViewController: RecordDetailViewController {
             
             ettvc.doneBlock = {
                 self.experiment![rowInfo.key!] = ettvc.text;
-                self.configureCell(self.tableView.cellForRowAtIndexPath(indexPath)!, atIndexPath: indexPath)
+                if rowInfo.key! ==  ExperimentKey.Title { self.title = ettvc.text }
+                self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             }
             
         }
     }
+    
+    private var segueIDByKey: [String: SegueID] {
+        return [
+            "Reviews":                  .ShowReviews,
+            "Fans":                     .ShowFans,
+            ExperimentKey.Title:        .EditeText,
+            ExperimentKey.Conclusion:   .EditeText,
+            ExperimentKey.Content:      .EditeText,
+            ExperimentKey.Principle:    .EditeText,
+            ExperimentKey.Purpose:      .EditeText,
+            ExperimentKey.Results:      .EditeText,
+            ExperimentKey.Steps:        .EditeText,
+            ExperimentKey.Tags:         .EditeText,
+            ExperimentKey.FootNote:     .EditeText,
+    
+        ]
+    }
+    
     
     private enum SegueID: String {
         case ShowUserDetail

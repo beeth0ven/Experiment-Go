@@ -31,10 +31,14 @@
 		45AAB0A21B6E117200595467 /* ReviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */; };
 		45BC4E8D1B69C4A300A9963F /* ExperimentDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E8C1B69C4A300A9963F /* ExperimentDetailViewController.swift */; };
 		45BC4E931B6A145F00A9963F /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E921B6A145F00A9963F /* UserTableViewCell.swift */; };
-		45BC4E951B6A24CE00A9963F /* User Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45BC4E941B6A24CE00A9963F /* User Info.plist */; };
 		45BC4E971B6B45B200A9963F /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E961B6B45B200A9963F /* UserDetailViewController.swift */; };
 		45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */; };
 		45BC4E9E1B6DCDB800A9963F /* DefaultStyleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E9D1B6DCDB800A9963F /* DefaultStyleController.swift */; };
+		45C2FC2F1BA01BC4003B190C /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C2FC2E1BA01BC4003B190C /* NotificationTableViewCell.swift */; };
+		45CBDF231B9BF9730060AB14 /* EGSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CBDF221B9BF9730060AB14 /* EGSplitViewController.swift */; };
+		45CBDF251B9C16410060AB14 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CBDF241B9C16410060AB14 /* StoreKit.framework */; };
+		45CBDF271B9C17B90060AB14 /* NotificationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CBDF261B9C17B90060AB14 /* NotificationTableViewController.swift */; };
+		45CBDF291B9F036B0060AB14 /* CloudKit-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CBDF281B9F036B0060AB14 /* CloudKit-Extension.swift */; };
 		45FC5F771B6DD7080045F178 /* MenuItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */; };
 		AF79662E4748E3048A76116B /* Pods_Experiment_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2877209060858C580BC83B66 /* Pods_Experiment_Go.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -83,10 +87,14 @@
 		45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewTableViewCell.swift; sourceTree = "<group>"; };
 		45BC4E8C1B69C4A300A9963F /* ExperimentDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentDetailViewController.swift; sourceTree = "<group>"; };
 		45BC4E921B6A145F00A9963F /* UserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
-		45BC4E941B6A24CE00A9963F /* User Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "User Info.plist"; sourceTree = "<group>"; };
 		45BC4E961B6B45B200A9963F /* UserDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
 		45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentTableViewCell.swift; sourceTree = "<group>"; };
 		45BC4E9D1B6DCDB800A9963F /* DefaultStyleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultStyleController.swift; sourceTree = "<group>"; };
+		45C2FC2E1BA01BC4003B190C /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
+		45CBDF221B9BF9730060AB14 /* EGSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EGSplitViewController.swift; sourceTree = "<group>"; };
+		45CBDF241B9C16410060AB14 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		45CBDF261B9C17B90060AB14 /* NotificationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotificationTableViewController.swift; path = ../NotificationTableViewController.swift; sourceTree = "<group>"; };
+		45CBDF281B9F036B0060AB14 /* CloudKit-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CloudKit-Extension.swift"; sourceTree = "<group>"; };
 		45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItemTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -98,6 +106,7 @@
 				45983D141B73430B00ABCF38 /* CloudKit.framework in Frameworks */,
 				45629F951B5BC386000F41E6 /* ChameleonFramework.framework in Frameworks */,
 				AF79662E4748E3048A76116B /* Pods_Experiment_Go.framework in Frameworks */,
+				45CBDF251B9C16410060AB14 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,6 +123,7 @@
 		0ED5787D122823B9536DE104 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				45CBDF241B9C16410060AB14 /* StoreKit.framework */,
 				45983D131B73430B00ABCF38 /* CloudKit.framework */,
 				45629F941B5BC386000F41E6 /* ChameleonFramework.framework */,
 				2877209060858C580BC83B66 /* Pods_Experiment_Go.framework */,
@@ -162,7 +172,6 @@
 				45983D121B7342E200ABCF38 /* Experiment Go.entitlements */,
 				4511B2B01B4FBACA0046DF76 /* Experiment Go-Bridging-Header.h */,
 				4511B2831B4FB7CF0046DF76 /* Info.plist */,
-				45BC4E941B6A24CE00A9963F /* User Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -188,11 +197,8 @@
 			isa = PBXGroup;
 			children = (
 				4511B28D1B4FB7CF0046DF76 /* Main.storyboard */,
-				45983D0E1B71CB1000ABCF38 /* SwitchBarButtonItem.swift */,
-				45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */,
-				4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */,
-				4537CB121B944765004378C3 /* ImageTableViewCell.swift */,
-				45BC4E9B1B6B5CFD00A9963F /* RecordTableViewCell */,
+				45CBDF211B998E650060AB14 /* UIBarButtonItem */,
+				45CBDF201B998E400060AB14 /* UITableViewCell */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -201,7 +207,9 @@
 			isa = PBXGroup;
 			children = (
 				4511B2841B4FB7CF0046DF76 /* AppDelegate.swift */,
+				45CBDF221B9BF9730060AB14 /* EGSplitViewController.swift */,
 				4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */,
+				45CBDF261B9C17B90060AB14 /* NotificationTableViewController.swift */,
 				45A2A2451B8D907E004BEF45 /* CloudKitTableViewController */,
 				45BC4E9C1B6B5D1300A9963F /* RecordDetailViewController */,
 				45A2A2461B8D9095004BEF45 /* EditeTableViewController */,
@@ -212,6 +220,7 @@
 		4511B2AF1B4FBA950046DF76 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				45CBDF281B9F036B0060AB14 /* CloudKit-Extension.swift */,
 				4591E1B01B8EE00200620377 /* CloudManager.swift */,
 				458713BA1B859751004808A3 /* CacheManager.swift */,
 				45A2A23F1B89E9E6004BEF45 /* FetchedRecordsController.swift */,
@@ -243,6 +252,7 @@
 				45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */,
 				45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */,
 				45BC4E921B6A145F00A9963F /* UserTableViewCell.swift */,
+				45C2FC2E1BA01BC4003B190C /* NotificationTableViewCell.swift */,
 			);
 			name = RecordTableViewCell;
 			sourceTree = "<group>";
@@ -256,6 +266,25 @@
 				4599C90C1B6F469B0040461F /* ReviewViewController.swift */,
 			);
 			name = RecordDetailViewController;
+			sourceTree = "<group>";
+		};
+		45CBDF201B998E400060AB14 /* UITableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				45BC4E9B1B6B5CFD00A9963F /* RecordTableViewCell */,
+				45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */,
+				4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */,
+				4537CB121B944765004378C3 /* ImageTableViewCell.swift */,
+			);
+			name = UITableViewCell;
+			sourceTree = "<group>";
+		};
+		45CBDF211B998E650060AB14 /* UIBarButtonItem */ = {
+			isa = PBXGroup;
+			children = (
+				45983D0E1B71CB1000ABCF38 /* SwitchBarButtonItem.swift */,
+			);
+			name = UIBarButtonItem;
 			sourceTree = "<group>";
 		};
 		DF005932E6AAD7CF037CDFD1 /* Pods */ = {
@@ -323,6 +352,12 @@
 						CreatedOnToolsVersion = 6.3;
 						DevelopmentTeam = 6BDKUNMM63;
 						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
 							com.apple.iCloud = {
 								enabled = 1;
 							};
@@ -358,7 +393,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45BC4E951B6A24CE00A9963F /* User Info.plist in Resources */,
 				4511B2AC1B4FBA320046DF76 /* Images.xcassets in Resources */,
 				4511B28F1B4FB7CF0046DF76 /* Main.storyboard in Resources */,
 				4511B2941B4FB7CF0046DF76 /* LaunchScreen.xib in Resources */,
@@ -429,11 +463,15 @@
 			files = (
 				450CDA7B1B92D6490059C1A1 /* RecordDetailViewController.swift in Sources */,
 				4537CB191B959EF9004378C3 /* SubTitleTableViewCell.swift in Sources */,
+				45C2FC2F1BA01BC4003B190C /* NotificationTableViewCell.swift in Sources */,
 				4537CB131B944765004378C3 /* ImageTableViewCell.swift in Sources */,
 				45BC4E931B6A145F00A9963F /* UserTableViewCell.swift in Sources */,
 				4599C90D1B6F469B0040461F /* ReviewViewController.swift in Sources */,
+				45CBDF231B9BF9730060AB14 /* EGSplitViewController.swift in Sources */,
+				45CBDF271B9C17B90060AB14 /* NotificationTableViewController.swift in Sources */,
 				45BC4E971B6B45B200A9963F /* UserDetailViewController.swift in Sources */,
 				45FC5F771B6DD7080045F178 /* MenuItemTableViewCell.swift in Sources */,
+				45CBDF291B9F036B0060AB14 /* CloudKit-Extension.swift in Sources */,
 				45AAB0A21B6E117200595467 /* ReviewTableViewCell.swift in Sources */,
 				45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */,
 				4511B2851B4FB7CF0046DF76 /* AppDelegate.swift in Sources */,

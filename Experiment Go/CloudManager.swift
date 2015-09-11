@@ -10,30 +10,66 @@ import Foundation
 import CloudKit
 import UIKit
 
+enum Notification: String {
+    case CurrentUserHasChange
+}
 
 class CloudManager {
     // MARK: - Update Current User
     
-    var publicCloudDatabase: CKDatabase {
-        return CKContainer.defaultContainer().publicCloudDatabase
+    var publicCloudDatabase: CKDatabase { return CKContainer.defaultContainer().publicCloudDatabase }
+    
+    
+    var currentUser: CKRecord? {
+        get {
+            guard let data = NSUbiquitousKeyValueStore.defaultStore().dataForKey(UbiquitousKey.CurrentUser) else { updateCurrentUser() ; return nil }
+            return CKRecord.recordWithArchivedData(data)
+        }
+        
+        set {
+            NSUbiquitousKeyValueStore.defaultStore().setData(newValue?.archivedData(), forKey: UbiquitousKey.CurrentUser)
+            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+            currentUserDidSet()
+        }
+        
     }
     
-    private var currentUser: CKRecord? {
-        return AppDelegate.Cache.Manager.currentUser()
+    private func currentUserDidSet() {
+        AppDelegate.Cache.Manager.cacheCurrentUser(currentUser)
+        NSNotificationCenter.defaultCenter().postNotificationName(Notification.CurrentUserHasChange.rawValue, object: nil)
     }
     
-    func updateCurrentUser(completionHandler: (CKRecord) -> Void) {
+    
+    func fetchCurrentUserProfileImageIfNeeded() {
+        guard needFetchCurrentUserProfileImage else { return }
+        
+        fetchCurrentUser() { (user) in
+            let url = (user[UsersKey.ProfileImageAsset] as! CKAsset).fileURL
+            UIImage.fetchImageForURL(url) { (_) in
+                NSNotificationCenter.defaultCenter().postNotificationName(Notification.CurrentUserHasChange.rawValue, object: nil) }
+        }
+       
+    }
+    
+    private var needFetchCurrentUserProfileImage: Bool {
+        if let url = (currentUser?[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL {
+            if AppDelegate.Cache.Manager.assetDataForURL(url) == nil { return true }
+        }
+        return false
+    }
+    
+    func updateCurrentUser() {
         requestDiscoverabilityPermission { (granted) in
             guard granted else { abort() }
             self.fetchCurrentUser() { (user) in
-                AppDelegate.Cache.Manager.cacheCurrentUser(user)
-                completionHandler(user)
+                self.currentUser = user
+
             }
         }
     }
-    
+
     private func requestDiscoverabilityPermission(completionHandler: (Bool) -> ()) {
-        CKContainer.defaultContainer().requestApplicationPermission(.PermissionUserDiscoverability) { (applicationPermissionStatus, error) -> Void in
+        CKContainer.defaultContainer().requestApplicationPermission(.UserDiscoverability) { (applicationPermissionStatus, error) -> Void in
             guard  error == nil else { print(error!.localizedDescription) ; abort() }
             dispatch_async(dispatch_get_main_queue()) { completionHandler( applicationPermissionStatus == .Granted ) }
         }
@@ -44,19 +80,20 @@ class CloudManager {
         fetchCurrentUserRecordOperation.perRecordCompletionBlock = {
             (user, _, error) in
             guard  error == nil else { print(error!.localizedDescription) ; abort() }
+            print("fileURL: \((user![UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL)")
             dispatch_async(dispatch_get_main_queue()) { completionHandler( user! ) }
         }
         publicCloudDatabase.addOperation(fetchCurrentUserRecordOperation)
     }
     
-    // MARK: - Cloud Key Value Store
-    
+    // MARK: - Liked Experiments
+
     func amILikingThisExperiment(experiment: CKRecord) -> Bool {
         return likedExperiments.contains(experiment.recordID.recordName)
     }
     
     func likeExperiment(experiment: CKRecord, completionHandler: (NSError?) -> ()) {
-        let fanLink = CKRecord(fanLinktoExperiment: experiment)
+        let fanLink = CKRecord(fanLinkToExperiment: experiment)
         publicCloudDatabase.saveRecord(fanLink) {
             (fanLink, error) in
             guard error == nil else { dispatch_async(dispatch_get_main_queue()) { completionHandler(error!) } ; return }
@@ -76,34 +113,34 @@ class CloudManager {
         }
     }
     
-    private let kLikedExperiments = "CloudManager.likedExperiments"
 
     private var likedExperiments: [String] {
         
         get {
-            return NSUbiquitousKeyValueStore.defaultStore().arrayForKey(kLikedExperiments) as? [String] ?? [String]()
+            return NSUbiquitousKeyValueStore.defaultStore().arrayForKey(UbiquitousKey.LikedExperiments) as? [String] ?? [String]()
         }
         
         set {
-            NSUbiquitousKeyValueStore.defaultStore().setArray(newValue, forKey: kLikedExperiments)
+            NSUbiquitousKeyValueStore.defaultStore().setArray(newValue, forKey: UbiquitousKey.LikedExperiments)
             NSUbiquitousKeyValueStore.defaultStore().synchronize()
         }
         
     }
     
-    
+    // MARK: - Following Users
+
     func amIFollowingTheUser(user: CKRecord) -> Bool {
         return followingUsers.contains(user.recordID.recordName)
     }
     
     func followUser(user: CKRecord, completionHandler: (NSError?) -> ()) {
-        let followLink = CKRecord(followLinktoUser: user)
+        let followLink = CKRecord(followLinkToUser: user)
         
         publicCloudDatabase.saveRecord(followLink) {
             (followLink, error) in
             guard error == nil else { dispatch_async(dispatch_get_main_queue()) { completionHandler(error!) } ; return }
             dispatch_async(dispatch_get_main_queue()) { completionHandler(nil) }
-            self.followingUsers = self.followingUsers + [user.recordID.recordName]
+            self.followingUsers.append(user.recordID.recordName)
         }
         
     }
@@ -118,125 +155,200 @@ class CloudManager {
         }
     }
     
-    private let kFollowingUsers = "followingUsers"
     
     private var followingUsers: [String] {
         
         get {
-            return NSUbiquitousKeyValueStore.defaultStore().arrayForKey(kFollowingUsers) as? [String] ?? [String]()
+            return NSUbiquitousKeyValueStore.defaultStore().arrayForKey(UbiquitousKey.FollowingUsers) as? [String] ?? [String]()
         }
         
         set {
-            NSUbiquitousKeyValueStore.defaultStore().setArray(newValue, forKey: kFollowingUsers)
+            NSUbiquitousKeyValueStore.defaultStore().setArray(newValue, forKey: UbiquitousKey.FollowingUsers)
+            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+        }
+        
+    }
+
+    // MARK: - Notified
+    func hasSetupSubscription() -> Bool { return subscriptionID != nil }
+    
+    private var subscription: CKSubscription {
+        
+        let options: CKSubscriptionOptions = .FiresOnRecordCreation
+        
+        
+        let predicate = NSPredicate.predicateForFollowLinkToUser(currentUser!)
+        let subscription = CKSubscription(
+            recordType: RecordType.Link.rawValue,
+            predicate: predicate,
+            options: options
+        )
+        
+        let notificationInfo = CKNotificationInfo()
+        notificationInfo.alertBody = "Some one is following you!"
+        notificationInfo.desiredKeys = [LinkKey.LinkType, LinkKey.From, LinkKey.To]
+
+        subscription.notificationInfo = notificationInfo
+
+        return subscription
+    }
+    
+    func doNotify(completionHandler: (NSError?) -> ()) {
+        (UIApplication.sharedApplication().delegate as! AppDelegate).requestForRemoteNotifications()
+
+        guard subscriptionID == nil else { return }
+        
+        publicCloudDatabase.saveSubscription(subscription) {
+            (subscription, error) in
+            guard error == nil else { dispatch_async(dispatch_get_main_queue()) { completionHandler(error!) } ; return }
+            dispatch_async(dispatch_get_main_queue()) { completionHandler(nil) }
+            self.subscriptionID = subscription?.subscriptionID
+            print("subscriptionID: \(self.subscriptionID!)")
+        }
+
+    }
+    
+    func doUnNotify(completionHandler: (NSError?) -> ()) {
+        guard subscriptionID != nil else { return }
+        publicCloudDatabase.deleteSubscriptionWithID(subscriptionID!) {
+            (_, error) in
+            guard error == nil else { dispatch_async(dispatch_get_main_queue()) { completionHandler(error!) } ; print(error!.localizedDescription) ;return }
+            dispatch_async(dispatch_get_main_queue()) { completionHandler(nil) }
+            self.subscriptionID = nil
+        }
+    }
+    
+    private var subscriptionID: String? {
+        
+        get {
+            return NSUbiquitousKeyValueStore.defaultStore().stringForKey(UbiquitousKey.SubscriptionID)
+        }
+        
+        set {
+            NSUbiquitousKeyValueStore.defaultStore().setObject(newValue, forKey: UbiquitousKey.SubscriptionID)
             NSUbiquitousKeyValueStore.defaultStore().synchronize()
         }
         
     }
     
     
-}
-
-// MARK: - Cloud Kit Record Key
-
-struct RecordKey {
-    static let RecordID = "recordID"
-    static let CreationDate = "creationDate"
-    static let CreatorUserRecordID = "creatorUserRecordID"
-    static let ModificationDate = "modificationDate"
-    static let LastModifiedUserRecordID = "lastModifiedUserRecordID"
-    static let RecordChangeTag = "recordChangeTag"
-}
-
-struct UserKey {
-    static let RecordType = "User"
-    static let ProfileImageAsset = "profileImageAsset"
-    static let DisplayName = "displayName"
-    static let AboutMe = "aboutMe"
     
-}
-
-struct ExperimentKey {
-    static let RecordType = "Experiment"
-    static let Title = "title"
-    static let Body = "body"
-    static let Reviews = "reviews"
-    static let Fans = "fans"
-}
-
-struct ReviewKey {
-    static let RecordType = "Review"
-    static let Body = "body"
-    static let ReviewTo = "reviewTo"
-
-}
-
-struct LinkKey {
-    static let RecordType = "Link"
-    static let LinkType = "linkType"
-    static let To = "to"
-}
-
-enum RecordType: String {
-    case Experiment
-    case Review
-    case Link
-    case User
-}
-
-enum LinkType: String {
-    case UserLikeExperiment
-    case UserFollowUser
-}
-
-extension CKRecord {
-    convenience init(fanLinktoExperiment experiment: CKRecord) {
-        let recordID = CKRecordID(fanLinktoExperiment: experiment)
-        self.init(linkType: LinkType.UserLikeExperiment, recordID: recordID)
-        self[LinkKey.To] = CKReference(record: experiment, action: .DeleteSelf)
+    // MARK: - Previous Change Token
+    
+    var previousChangeToken: CKServerChangeToken?  {
+        get {
+            guard let encodedObjectData = NSUbiquitousKeyValueStore.defaultStore().objectForKey(UbiquitousKey.PreviousChangeToken) as? NSData else { return nil }
+            return CKServerChangeToken.tokenWithArchivedData(encodedObjectData)
+        }
+        
+        set(newToken) {
+            NSUbiquitousKeyValueStore.defaultStore().setObject(newToken?.archivedData(), forKey:UbiquitousKey.PreviousChangeToken)
+            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+        }
     }
     
-    convenience init(followLinktoUser user: CKRecord) {
-        let recordID = CKRecordID(followLinktoUser: user)
-        self.init(linkType: LinkType.UserFollowUser, recordID: recordID)
-        self[LinkKey.To] = CKReference(record: user, action: .DeleteSelf)
-
-    }
-
-    convenience init(linkType: LinkType, recordID: CKRecordID) {
-        self.init(recordType: LinkKey.RecordType, recordID: recordID)
-        self[LinkKey.LinkType] = linkType.rawValue
-    }
-    
-    var smartStringForCreationDate: String {
-        let date = creationDate ?? NSDate()
-        return NSDateFormatter.smartStringFormDate(date)
+    var notificationRecords: [[CKRecord]] {
+        
+        get {
+            let datas =  NSUbiquitousKeyValueStore.defaultStore().arrayForKey(UbiquitousKey.NotificationRecords) as? [[NSData]] ?? [[NSData]]()
+            return datas.map { $0.map { CKRecord.recordWithArchivedData($0) } }
+        }
+        
+        set {
+            let datas = newValue.map { $0.map { $0.archivedData() } }
+            NSUbiquitousKeyValueStore.defaultStore().setArray(datas, forKey: UbiquitousKey.NotificationRecords)
+            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+        }
+        
     }
     
-    var stringForCreationDate: String {
-        let date = creationDate ?? NSDate()
-        return NSDateFormatter.localizedStringFromDate(date, dateStyle: .MediumStyle, timeStyle: .ShortStyle)
+
+    func resetiCloudKVS() {
+        likedExperiments = []
+        followingUsers = []
+        
+    }
+    
+    
+    
+    
+    // MARK: - KVO
+    
+    init() { startObserve() }
+    deinit { stopObserve()  }
+    
+    var kvso:  NSObjectProtocol?
+    
+    func startObserve() {
+        kvso =
+            NSNotificationCenter.defaultCenter().addObserverForName(NSUbiquitousKeyValueStoreDidChangeExternallyNotification,
+                object: NSUbiquitousKeyValueStore.defaultStore(),
+                queue: NSOperationQueue.mainQueue()) { (noti) in
+                    guard let changedKeys = (noti.userInfo as! Dictionary<String,AnyObject>)[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String] else { return }
+                    guard changedKeys.contains(UbiquitousKey.CurrentUser) else { return }
+                    self.currentUserDidSet()
+                    
+        }
+        
+    }
+    
+    func stopObserve() {
+        if kvso != nil { NSNotificationCenter.defaultCenter().removeObserver(kvso!) }
+    }
+    
+    private struct UbiquitousKey {
+        static let CurrentUser = "CloudManager.currentUser"
+        static let LikedExperiments = "CloudManager.likedExperiments"
+        static let FollowingUsers = "CloudManager.followingUsers"
+        static let SubscriptionID = "CloudManager.subscriptionID"
+        static let NotificationRecords = "NotificationTableViewController.notificationRecords"
+        static let PreviousChangeToken = "NotificationTableViewController.previousChangeToken"
+        
+    }
+    
+}
+extension NSURL {
+    class func profileImageURLForUser(user: CKRecord) -> NSURL? {
+        guard let type = RecordType(rawValue: user.recordType) else { return nil }
+        guard case .Users = type else { return nil }
+        return (user[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL
     }
 }
 
+extension NSPredicate {
+    class func predicateForFollowLinkFromUser(user: CKRecord) -> NSPredicate {
+        let typePredicate = NSPredicate(format: "%K = %@", LinkKey.LinkType ,LinkType.UserFollowUser.rawValue)
+        let userPredicate = NSPredicate(format: "%K = %@", RecordKey.CreatorUserRecordID, user.recordID)
+        return NSCompoundPredicate(type: .AndPredicateType, subpredicates: [userPredicate, typePredicate])
 
-extension CKRecordID {
-    convenience init(fanLinktoExperiment experiment: CKRecord) {
-        let currentUser = AppDelegate.Cache.Manager.currentUser()!
-        let userRecordName = String(dropFirst(currentUser.recordID.recordName.characters))
-        let name = "\(userRecordName)-\(LinkType.UserLikeExperiment.rawValue)-\(experiment.recordID.recordName)"
-        self.init(recordName: name)
-        print(name)
     }
     
-    convenience init(followLinktoUser user: CKRecord) {
-        let currentUser = AppDelegate.Cache.Manager.currentUser()!
-        let currentUserRecordName = String(dropFirst(currentUser.recordID.recordName.characters))
-        let userRecordName = String(dropFirst(user.recordID.recordName.characters))
-        let name = "\(currentUserRecordName)-\(LinkType.UserFollowUser.rawValue)-\(userRecordName)"
-        self.init(recordName: name)
-        print(name)
-
+    class func predicateForFollowLinkToUser(user: CKRecord) -> NSPredicate {
+        let typePredicate = NSPredicate(format: "%K = %@", LinkKey.LinkType ,LinkType.UserFollowUser.rawValue)
+        let userPredicate = NSPredicate(format: "%K = %@", LinkKey.To, user.recordID)
+        return NSCompoundPredicate(type: .AndPredicateType, subpredicates: [userPredicate, typePredicate])
+        
     }
-}
+    
+    class func predicateForLikeLinkFromUser(user: CKRecord) -> NSPredicate {
+        let typePredicate = NSPredicate(format: "%K = %@", LinkKey.LinkType ,LinkType.UserLikeExperiment.rawValue)
+        let userPredicate = NSPredicate(format: "%K = %@", RecordKey.CreatorUserRecordID, user.recordID)
+        return NSCompoundPredicate(type: .AndPredicateType, subpredicates: [userPredicate, typePredicate])
+    }
+    
+    class func predicateForExperimentsPostedBy(user: CKRecord) -> NSPredicate {
+        return NSPredicate(format: "%K = %@", RecordKey.CreatorUserRecordID, user.recordID)
+    }
+    
+    class func predicateForFanLinkToExperiment(experiment: CKRecord) -> NSPredicate {
+        let typePredicate = NSPredicate(format: "%K = %@", LinkKey.LinkType ,LinkType.UserLikeExperiment.rawValue)
+        let toPredicate = NSPredicate(format: "%K = %@", LinkKey.To, experiment)
+        return NSCompoundPredicate(type: .AndPredicateType, subpredicates: [toPredicate, typePredicate])
+    }
+    
+    class func predicateForReviewToExperiment(experiment: CKRecord) -> NSPredicate {
+       return NSPredicate(format: "%K = %@", ReviewKey.To, experiment)
+    }
 
+}
 

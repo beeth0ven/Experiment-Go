@@ -260,7 +260,7 @@ class FetchedRecordsController: NSObject {
     // MARK: - Fetch linked record from cloud
     
     func fetchDestinationFromLinks(links: [CKRecord]) {
-        var linkRecordIDs = Array(Set(links.map { $0.linkToRecordID! }))
+        let linkRecordIDs = Array(Set(links.map { $0.linkToRecordID! }))
         guard linkRecordIDs.count > 0 else { self.callBackBlock() ; return }
         let fetchDestinationRecordsOperation = CKFetchRecordsOperation(recordIDs: linkRecordIDs)
         fetchDestinationRecordsOperation.fetchRecordsCompletionBlock = destinationRecordsFetchedBlock
@@ -300,8 +300,9 @@ class FetchedRecordsController: NSObject {
                 self.fetchedRecords.insert(records, atIndex: 0)
                 self.delegate?.controller?(self, didChangeSections: NSIndexSet(index: 0) , forChangeType: .Insert)
                 self.delegate?.controllerDidChangeContent?(self)
-                
                 self.delegate?.controllerDidAddRecords?(self)
+                self.addSubscriptionsFromRecords(records)
+                
             }
             
         }
@@ -310,20 +311,41 @@ class FetchedRecordsController: NSObject {
 
     }
     
-}
-
-
-
-extension CKRecord {
-    var createdBy: CKRecord? {
-        return AppDelegate.Cache.Manager.userForUserRecordID(creatorUserRecordID!)
+    func addSubscriptionsFromRecords(records: [CKRecord]) {
+        guard let subscriptions = records.reduce([], combine: { $1.subscriptionsToAdd }) else { return }
+        guard subscriptions.count > 0 else { return }
+//        for subscription in subscriptions {
+//            AppDelegate.Cloud.Manager.publicCloudDatabase.saveSubscription(subscription) {
+//                (subscription, error) in
+//                guard error == nil else { print(error!.localizedDescription) ; return }
+//                print("Subscriptions did save.")
+//            }
+//        }
+//
+//        
+        let modifySubscriptionsOperation = CKModifySubscriptionsOperation(subscriptionsToSave: subscriptions, subscriptionIDsToDelete: nil)
+        modifySubscriptionsOperation.modifySubscriptionsCompletionBlock = {
+            (_, _, error) in
+            guard error == nil else {
+                let info = error!.userInfo
+                let dic = info[CKPartialErrorsByItemIDKey] as! [String: NSError]
+                for (_, perError) in dic{
+                    print(perError.localizedDescription)
+                }
+                print(error!.localizedDescription) ; return
+            }
+            print("Subscriptions did save.")
+        }
+        
+        AppDelegate.Cloud.Manager.publicCloudDatabase.addOperation(modifySubscriptionsOperation)
     }
     
-    var linkToRecordID: CKRecordID? {
-        guard recordType == LinkKey.RecordType else { return nil }
-        guard let ref = self[LinkKey.To] as? CKReference else { return nil }
-        return ref.recordID
-    }
 }
+
+
+
+
+
+
 
 

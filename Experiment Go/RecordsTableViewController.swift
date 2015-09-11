@@ -27,6 +27,7 @@ class RecordsTableViewController: CloudKitTableViewController {
 
     }
     
+    
     // MARK: - Table view delegate
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -58,19 +59,19 @@ class RecordsTableViewController: CloudKitTableViewController {
     }
     
     func addNewRecord() -> CKRecord {
-        let result = CKRecord(recordType: recordType)
         guard let recordType = RecordType(rawValue: recordType) else { abort() }
         switch recordType {
         case .Experiment:
-            result[ExperimentKey.Title] = "翡翠👌 石头 过d。"
+            let experiment = CKRecord(recordType: recordType.rawValue)
+            experiment[ExperimentKey.Title] = "翡翠👌 石头 过d。"
+            return experiment
         case .Review:
             guard let nav = navigationController else { abort() }
             guard let rdvc = nav.viewControllers[nav.viewControllers.indexOf(self)! - 1] as? RecordDetailViewController else { abort() }
-            result[ReviewKey.ReviewTo] = CKReference(record: rdvc.record!, action: .DeleteSelf)
-            
-        default: break
+            return CKRecord(reviewToExperiment: rdvc.record!)
+        default:
+            return CKRecord(recordType: recordType.rawValue)
         }
-        return result
     }
     
     private enum SegueID: String {

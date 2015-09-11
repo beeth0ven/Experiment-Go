@@ -10,34 +10,26 @@ import Foundation
 import CloudKit
 import UIKit
 
-let CurrentUserDidChangeNotification = "CurrentUserDidChangeNotification"
 
 class CacheManager {
     
-    
+    init() { cacheCurrentUser(AppDelegate.Cloud.Manager.currentUser) }
     
     private var userCache: NSMutableDictionary =  NSMutableDictionary()
     
-    var knownUserRecordNames: [String]  {
-        return userCache.allKeys as! [String]
-    }
+    var knownUserRecordNames: [String]  { return userCache.allKeys as! [String] }
 
-    func cacheUser(user: CKRecord) {
-        userCache.setObject(user, forKey: user.recordID.recordName)
-    }
+    func cacheUser(user: CKRecord) { userCache.setObject(user, forKey: user.recordID.recordName) }
 
-    func userForUserRecordID(userRecordID: CKRecordID) -> CKRecord? {
-        return userCache.objectForKey(userRecordID.recordName) as? CKRecord
-    }
+    func userForUserRecordID(userRecordID: CKRecordID) -> CKRecord? { return userCache.objectForKey(userRecordID.recordName) as? CKRecord }
     
-    func cacheCurrentUser(user: CKRecord) {
-        cacheUser(user)
-        userCache.setObject(user, forKey: CKOwnerDefaultName)
-        NSNotificationCenter.defaultCenter().postNotificationName(CurrentUserDidChangeNotification, object: nil)
-    }
-    
-    func currentUser() -> CKRecord? {
-        return userCache.objectForKey(CKOwnerDefaultName) as? CKRecord
+    func cacheCurrentUser(currentUser: CKRecord?) {
+        if let user = currentUser {
+            userCache.setObject(user, forKey: user.recordID.recordName)
+            userCache.setObject(user, forKey: CKOwnerDefaultName)
+        } else {
+            userCache.removeObjectForKey(CKOwnerDefaultName)
+        }
     }
     
     
@@ -80,13 +72,9 @@ class CacheManager {
         return result
     }
     
-    private func fileExistsAtURL(url: NSURL) -> Bool {
-        return fileManager.fileExistsAtPath(url.path!)
-    }
+    private func fileExistsAtURL(url: NSURL) -> Bool { return fileManager.fileExistsAtPath(url.path!) }
     
-    private func localCachedURLforURL(url: NSURL) -> NSURL {
-        return assetCacheFolder.URLByAppendingPathComponent(url.pathExtension!)
-    }
+    private func localCachedURLforURL(url: NSURL) -> NSURL { return assetCacheFolder.URLByAppendingPathComponent(url.pathExtension!) }
     
     // Cache size 10M
     private var cacheSize = 10 * 1024 * 1024

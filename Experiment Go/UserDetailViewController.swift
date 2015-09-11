@@ -18,9 +18,7 @@ class UserDetailViewController: RecordDetailViewController {
     
     var user: CKRecord? {
         get { return record }
-        set { record = newValue ;
-            title = newValue?[UserKey.DisplayName] as? String
-        }
+        set { record = newValue }
     }
     
     // MARK: - View Configure
@@ -124,15 +122,15 @@ class UserDetailViewController: RecordDetailViewController {
         
         var result = [SectionInfo]()
         // Sections 1: OverView
-        let imageRow: RowInfo = .Image(key: UserKey.ProfileImageAsset)
-        let aboutMeRow: RowInfo = .SubTitle(key: UserKey.AboutMe)
+        let imageRow: RowInfo = .Image(key: UsersKey.ProfileImageAsset)
+        let aboutMeRow: RowInfo = .SubTitle(key: RecordKey.AboutMe)
         let overViewSectionInfo = SectionInfo(title: "OverView", rows: [imageRow, aboutMeRow])
         result.append(overViewSectionInfo)
         
         // Sections 2: Experiments
         if editing == false {
-            let postedExperimentsRow: RowInfo = .Basic(key: "Posted Experiments")
-            let likedExperimentRow: RowInfo = .Basic(key: "Liked Experiments")
+            let postedExperimentsRow: RowInfo = .Basic(key: "Posted")
+            let likedExperimentRow: RowInfo = .Basic(key: "Liked")
             let experimentsSectionInfo = SectionInfo(title: "Experiments", rows: [postedExperimentsRow, likedExperimentRow])
             result.append(experimentsSectionInfo)
         }
@@ -157,7 +155,7 @@ class UserDetailViewController: RecordDetailViewController {
             guard let subTitleCell = cell as? SubTitleTableViewCell else { return }
             subTitleCell.titleLabel.text = "About me:"
             let text = (user?[key] as? CustomStringConvertible)?.description
-            subTitleCell.subTttleLabel.text = text ?? "Not Set"
+            subTitleCell.subTttleLabel.text = text ?? " "
             subTitleCell.accessoryType = editing ? .DisclosureIndicator : .None
         case .Image(let key):
             guard let imageCell = cell as? ImageTableViewCell else { return }
@@ -205,12 +203,12 @@ class UserDetailViewController: RecordDetailViewController {
     
     private var segueIDByKey: [String: SegueID] {
         return [
-            "Posted Experiments":       .ShowPostedExperiments,
-            "Liked Experiments":        .ShowLikedExperiments,
+            "Posted":       .ShowPostedExperiments,
+            "Liked":        .ShowLikedExperiments,
             "Following":                .ShowFollowingUsers,
             "Follower":                 .ShowFollower,
-            UserKey.AboutMe:            .EditeText,
-            UserKey.ProfileImageAsset:  .EditeImage
+            RecordKey.AboutMe:            .EditeText,
+            UsersKey.ProfileImageAsset:  .EditeImage
         ]
     }
     
@@ -234,31 +232,25 @@ class UserDetailViewController: RecordDetailViewController {
         case .ShowPostedExperiments:
             guard let rtvc = segue.destinationViewController.contentViewController as? RecordsTableViewController else { return }
             rtvc.title = (sender as! UITableViewCell).textLabel?.text
-            rtvc.queryPredicate = NSPredicate(format: "%K = %@", RecordKey.CreatorUserRecordID, user!.recordID)
+            rtvc.queryPredicate = NSPredicate.predicateForExperimentsPostedBy(user!)
             
         case .ShowLikedExperiments:
             guard let rtvc = segue.destinationViewController.contentViewController as? RecordsTableViewController else { return }
             rtvc.title = (sender as! UITableViewCell).textLabel?.text
             rtvc.recordType = RecordType.Link.rawValue
-            let userPredicate = NSPredicate(format: "%K = %@", RecordKey.CreatorUserRecordID, user!.recordID)
-            let typePredicate = NSPredicate(format: "%K = %@", LinkKey.LinkType ,LinkType.UserLikeExperiment.rawValue)
-            rtvc.queryPredicate = NSCompoundPredicate(type: .AndPredicateType, subpredicates: [userPredicate, typePredicate])
+            rtvc.queryPredicate = NSPredicate.predicateForLikeLinkFromUser(user!)
             rtvc.fetchType = FetchedRecordsController.FetchType.LinkIncludeDestinationAndDestinationCreatorUser.rawValue
             
         case .ShowFollowingUsers:
             guard let rtvc = segue.destinationViewController.contentViewController as? RecordsTableViewController else { return }
             rtvc.title = (sender as! UITableViewCell).textLabel?.text
-            let userPredicate = NSPredicate(format: "%K = %@", RecordKey.CreatorUserRecordID, user!.recordID)
-            let typePredicate = NSPredicate(format: "%K = %@", LinkKey.LinkType ,LinkType.UserFollowUser.rawValue)
-            rtvc.queryPredicate = NSCompoundPredicate(type: .AndPredicateType, subpredicates: [userPredicate, typePredicate])
+            rtvc.queryPredicate = NSPredicate.predicateForFollowLinkFromUser(user!)
             rtvc.fetchType = FetchedRecordsController.FetchType.LinkIncludeDestination.rawValue
 
         case .ShowFollower:
             guard let rtvc = segue.destinationViewController.contentViewController as? RecordsTableViewController else { return }
             rtvc.title = (sender as! UITableViewCell).textLabel?.text
-            let toPredicate = NSPredicate(format: "%K = %@", LinkKey.To, user!)
-            let typePredicate = NSPredicate(format: "%K = %@", LinkKey.LinkType ,LinkType.UserFollowUser.rawValue)
-            rtvc.queryPredicate = NSCompoundPredicate(type: .AndPredicateType, subpredicates: [toPredicate, typePredicate])
+            rtvc.queryPredicate = NSPredicate.predicateForFollowLinkToUser(user!)
 
         default: break
         }
@@ -294,7 +286,7 @@ extension UserDetailViewController: UIImagePickerControllerDelegate, UINavigatio
 //        let imageData = UIImageJPEGRepresentation(image, 0.2)!
 //        let profileImageAsset = CKAsset(data: imageData)
 //        let currentUser = AppDelegate.Cache.Manager.currentUser()!
-//        currentUser[UserKey.ProfileImageAsset] = profileImageAsset
+//        currentUser[UsersKey.ProfileImageAsset] = profileImageAsset
 //        self.profileImagButtonActivity?.startAnimating()
 //        AppDelegate.Cloud.Manager.publicCloudDatabase.saveRecord(currentUser) { (_, error) in
 //            guard error == nil else { print(error!.localizedDescription) ; abort() }

@@ -30,28 +30,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
         // Override point for customization after application launch.
         let splitViewController = self.window!.rootViewController as! UISplitViewController
-        let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
-        navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
         splitViewController.delegate = self
         
-
+        requestForRemoteNotifications()
         //  Set default UI style.
         DefaultStyleController.applyStyle()
-
         return true
     }
+    
+    func requestForRemoteNotifications() {
+        let type: UIUserNotificationType = [.Alert, .Badge, .Sound]
+        let settings = UIUserNotificationSettings(forTypes:type , categories: nil)
+        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        UIApplication.sharedApplication().registerForRemoteNotifications()
+    }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        print("Successfully to Register For Remote Notifications.")
 
+    }
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        print("Fail To Register For Remote Notifications: \(error.localizedDescription)")
+    }
+
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        print("didReceiveRemoteNotification.")
+    }
+    
+    
     // MARK: - Split view
 
     func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
         return true
     }
     
-}
-
-extension NSObject {
-    
-
 }
 
 

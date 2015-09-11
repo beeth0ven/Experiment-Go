@@ -21,7 +21,7 @@ class ExperimentTableViewCell: RecordTableViewCell {
     }
     
     var profileImageURL: NSURL? {
-        return (record?.createdBy?[UserKey.ProfileImageAsset] as? CKAsset)?.fileURL
+        return (record?.createdBy?[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL
     }
     
     @IBOutlet weak var authorProfileImageView: UIImageView!

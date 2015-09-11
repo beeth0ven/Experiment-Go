@@ -66,7 +66,7 @@ class CloudKitTableViewController: UITableViewController {
     private func startObserveIfNeeded() {
         guard includeCreatorUser else { return }
         uno =
-            NSNotificationCenter.defaultCenter().addObserverForName(CurrentUserDidChangeNotification,
+            NSNotificationCenter.defaultCenter().addObserverForName(Notification.CurrentUserHasChange.rawValue,
                 object: nil,
                 queue: NSOperationQueue.mainQueue(),
                 usingBlock: {

@@ -17,6 +17,7 @@ class EditeTextTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateUI()
+        navigationController?.setNavigationBarHidden(false, animated: true)
         // Do any additional setup after loading the view.
     }
     

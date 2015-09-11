@@ -25,7 +25,7 @@ class ReviewTableViewCell: RecordTableViewCell {
         let reviewBy = review.createdBy!
         
         bodyabel.text = review[ReviewKey.Body] as? String
-        authorLabel.text = reviewBy[UserKey.DisplayName] as? String
+        authorLabel.text = reviewBy[UsersKey.DisplayName] as? String
         creationDateLabel.text = review.smartStringForCreationDate
         
         guard let url = profileImageURL else { return }
@@ -49,7 +49,7 @@ class ReviewTableViewCell: RecordTableViewCell {
     }
     
     var profileImageURL: NSURL? {
-        return (record?.createdBy?[UserKey.ProfileImageAsset] as? CKAsset)?.fileURL
+        return (record?.createdBy?[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL
     }
     
 }

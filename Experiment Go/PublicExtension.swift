@@ -33,6 +33,8 @@ extension UIImage {
                 if imageData != nil {
                     AppDelegate.Cache.Manager.cacheAssetData(imageData!, forURL: url)
                     image = UIImage(data: imageData!)
+                } else {
+                    AppDelegate.Cloud.Manager.fetchCurrentUserProfileImageIfNeeded()
                 }
                 dispatch_async(dispatch_get_main_queue()) {
                     completion(image)
@@ -176,7 +178,7 @@ extension UIColor {
         var alpha: CGFloat = 1.0
         
         if hex.hasPrefix("#") {
-            let index   = advance(hex.startIndex, 1)
+            let index   = hex.startIndex.advancedBy(1)
             let hex     = hex.substringFromIndex(index)
             let scanner = NSScanner(string: hex)
             var hexValue: CUnsignedLongLong = 0

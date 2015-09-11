@@ -23,7 +23,7 @@ class UserTableViewCell: RecordTableViewCell {
     }
     
     var profileImageURL: NSURL? {
-        return (user?[UserKey.ProfileImageAsset] as? CKAsset)?.fileURL
+        return (user?[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL
     }
     
     @IBOutlet weak var profileImageView: UIImageView!
@@ -33,7 +33,7 @@ class UserTableViewCell: RecordTableViewCell {
     override func updateUI() {
         profileImage = nil
 
-        nameLabel.text = user?[UserKey.DisplayName] as? String
+        nameLabel.text = user?[UsersKey.DisplayName] as? String
         
         guard let url = profileImageURL else { return }
         if let imageData = AppDelegate.Cache.Manager.assetDataForURL(url) {
