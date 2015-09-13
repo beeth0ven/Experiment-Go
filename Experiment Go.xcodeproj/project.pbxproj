@@ -16,6 +16,8 @@
 		4537CB131B944765004378C3 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB121B944765004378C3 /* ImageTableViewCell.swift */; };
 		4537CB151B95680E004378C3 /* EditeTextTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */; };
 		4537CB191B959EF9004378C3 /* SubTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */; };
+		45419AC71BA57F96006F8A83 /* TagCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45419AC61BA57F96006F8A83 /* TagCollectionViewCell.swift */; };
+		45419AC91BA58B9E006F8A83 /* TagsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45419AC81BA58B9E006F8A83 /* TagsTableViewCell.swift */; };
 		45629F951B5BC386000F41E6 /* ChameleonFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45629F941B5BC386000F41E6 /* ChameleonFramework.framework */; };
 		4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */; };
 		45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */; };
@@ -29,6 +31,7 @@
 		45A2A2421B8AE224004BEF45 /* CloudKitTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */; };
 		45A2A2441B8D7EF5004BEF45 /* RecordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2A2431B8D7EF5004BEF45 /* RecordTableViewCell.swift */; };
 		45AAB0A21B6E117200595467 /* ReviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */; };
+		45B6FB6C1BA548040089AC15 /* SearchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B6FB6B1BA548040089AC15 /* SearchResultsController.swift */; };
 		45BC4E8D1B69C4A300A9963F /* ExperimentDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E8C1B69C4A300A9963F /* ExperimentDetailViewController.swift */; };
 		45BC4E931B6A145F00A9963F /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E921B6A145F00A9963F /* UserTableViewCell.swift */; };
 		45BC4E971B6B45B200A9963F /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E961B6B45B200A9963F /* UserDetailViewController.swift */; };
@@ -39,6 +42,9 @@
 		45CBDF251B9C16410060AB14 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CBDF241B9C16410060AB14 /* StoreKit.framework */; };
 		45CBDF271B9C17B90060AB14 /* NotificationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CBDF261B9C17B90060AB14 /* NotificationTableViewController.swift */; };
 		45CBDF291B9F036B0060AB14 /* CloudKit-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CBDF281B9F036B0060AB14 /* CloudKit-Extension.swift */; };
+		45DDF5C91BA2A1490006A269 /* SearchRecordsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DDF5C81BA2A1490006A269 /* SearchRecordsTableViewController.swift */; };
+		45DDF5CD1BA536300006A269 /* HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DDF5CC1BA536300006A269 /* HistoryManager.swift */; };
+		45F2E0891BA57F4100785F0B /* TagsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F2E0881BA57F4100785F0B /* TagsCollectionViewController.swift */; };
 		45FC5F771B6DD7080045F178 /* MenuItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */; };
 		AF79662E4748E3048A76116B /* Pods_Experiment_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2877209060858C580BC83B66 /* Pods_Experiment_Go.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -70,6 +76,8 @@
 		4537CB121B944765004378C3 /* ImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
 		4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditeTextTableViewController.swift; sourceTree = "<group>"; };
 		4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubTitleTableViewCell.swift; sourceTree = "<group>"; };
+		45419AC61BA57F96006F8A83 /* TagCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCollectionViewCell.swift; sourceTree = "<group>"; };
+		45419AC81BA58B9E006F8A83 /* TagsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsTableViewCell.swift; sourceTree = "<group>"; };
 		45629F941B5BC386000F41E6 /* ChameleonFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChameleonFramework.framework; path = "Pods/../build/Debug-iphoneos/Pods-Experiment Go/ChameleonFramework.framework"; sourceTree = "<group>"; };
 		4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicExtension.swift; sourceTree = "<group>"; };
@@ -85,6 +93,7 @@
 		45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitTableViewController.swift; sourceTree = "<group>"; };
 		45A2A2431B8D7EF5004BEF45 /* RecordTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordTableViewCell.swift; sourceTree = "<group>"; };
 		45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewTableViewCell.swift; sourceTree = "<group>"; };
+		45B6FB6B1BA548040089AC15 /* SearchResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsController.swift; sourceTree = "<group>"; };
 		45BC4E8C1B69C4A300A9963F /* ExperimentDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentDetailViewController.swift; sourceTree = "<group>"; };
 		45BC4E921B6A145F00A9963F /* UserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		45BC4E961B6B45B200A9963F /* UserDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
@@ -95,6 +104,9 @@
 		45CBDF241B9C16410060AB14 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		45CBDF261B9C17B90060AB14 /* NotificationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotificationTableViewController.swift; path = ../NotificationTableViewController.swift; sourceTree = "<group>"; };
 		45CBDF281B9F036B0060AB14 /* CloudKit-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CloudKit-Extension.swift"; sourceTree = "<group>"; };
+		45DDF5C81BA2A1490006A269 /* SearchRecordsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchRecordsTableViewController.swift; sourceTree = "<group>"; };
+		45DDF5CC1BA536300006A269 /* HistoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
+		45F2E0881BA57F4100785F0B /* TagsCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsCollectionViewController.swift; sourceTree = "<group>"; };
 		45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItemTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -197,6 +209,8 @@
 			isa = PBXGroup;
 			children = (
 				4511B28D1B4FB7CF0046DF76 /* Main.storyboard */,
+				45419AC61BA57F96006F8A83 /* TagCollectionViewCell.swift */,
+				45419AC81BA58B9E006F8A83 /* TagsTableViewCell.swift */,
 				45CBDF211B998E650060AB14 /* UIBarButtonItem */,
 				45CBDF201B998E400060AB14 /* UITableViewCell */,
 			);
@@ -210,6 +224,7 @@
 				45CBDF221B9BF9730060AB14 /* EGSplitViewController.swift */,
 				4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */,
 				45CBDF261B9C17B90060AB14 /* NotificationTableViewController.swift */,
+				45F2E0881BA57F4100785F0B /* TagsCollectionViewController.swift */,
 				45A2A2451B8D907E004BEF45 /* CloudKitTableViewController */,
 				45BC4E9C1B6B5D1300A9963F /* RecordDetailViewController */,
 				45A2A2461B8D9095004BEF45 /* EditeTableViewController */,
@@ -220,6 +235,7 @@
 		4511B2AF1B4FBA950046DF76 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				45DDF5CC1BA536300006A269 /* HistoryManager.swift */,
 				45CBDF281B9F036B0060AB14 /* CloudKit-Extension.swift */,
 				4591E1B01B8EE00200620377 /* CloudManager.swift */,
 				458713BA1B859751004808A3 /* CacheManager.swift */,
@@ -233,6 +249,8 @@
 			children = (
 				45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */,
 				459BE6931B92F261003345BF /* RecordsTableViewController.swift */,
+				45DDF5C81BA2A1490006A269 /* SearchRecordsTableViewController.swift */,
+				45B6FB6B1BA548040089AC15 /* SearchResultsController.swift */,
 			);
 			name = CloudKitTableViewController;
 			sourceTree = "<group>";
@@ -465,10 +483,14 @@
 				4537CB191B959EF9004378C3 /* SubTitleTableViewCell.swift in Sources */,
 				45C2FC2F1BA01BC4003B190C /* NotificationTableViewCell.swift in Sources */,
 				4537CB131B944765004378C3 /* ImageTableViewCell.swift in Sources */,
+				45419AC91BA58B9E006F8A83 /* TagsTableViewCell.swift in Sources */,
+				45DDF5CD1BA536300006A269 /* HistoryManager.swift in Sources */,
 				45BC4E931B6A145F00A9963F /* UserTableViewCell.swift in Sources */,
 				4599C90D1B6F469B0040461F /* ReviewViewController.swift in Sources */,
 				45CBDF231B9BF9730060AB14 /* EGSplitViewController.swift in Sources */,
+				45DDF5C91BA2A1490006A269 /* SearchRecordsTableViewController.swift in Sources */,
 				45CBDF271B9C17B90060AB14 /* NotificationTableViewController.swift in Sources */,
+				45419AC71BA57F96006F8A83 /* TagCollectionViewCell.swift in Sources */,
 				45BC4E971B6B45B200A9963F /* UserDetailViewController.swift in Sources */,
 				45FC5F771B6DD7080045F178 /* MenuItemTableViewCell.swift in Sources */,
 				45CBDF291B9F036B0060AB14 /* CloudKit-Extension.swift in Sources */,
@@ -482,9 +504,11 @@
 				45A2A2421B8AE224004BEF45 /* CloudKitTableViewController.swift in Sources */,
 				45A2A2441B8D7EF5004BEF45 /* RecordTableViewCell.swift in Sources */,
 				458713BB1B859751004808A3 /* CacheManager.swift in Sources */,
+				45B6FB6C1BA548040089AC15 /* SearchResultsController.swift in Sources */,
 				45983D0F1B71CB1000ABCF38 /* SwitchBarButtonItem.swift in Sources */,
 				45BC4E9E1B6DCDB800A9963F /* DefaultStyleController.swift in Sources */,
 				45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */,
+				45F2E0891BA57F4100785F0B /* TagsCollectionViewController.swift in Sources */,
 				4537CB151B95680E004378C3 /* EditeTextTableViewController.swift in Sources */,
 				45BC4E8D1B69C4A300A9963F /* ExperimentDetailViewController.swift in Sources */,
 			);

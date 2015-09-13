@@ -43,7 +43,7 @@ class CloudKitTableViewController: UITableViewController {
     @IBInspectable
     var estimatedRowHeight: CGFloat = 80
 
-    var queryPredicate: NSPredicate = NSPredicate(value: true)
+    var queryPredicate: NSPredicate = NSPredicate(value: true) { didSet { fetchedRecordsController.fetchedQuery = queryForTable() } }
     
     
     // MARK: - View Controller Lifecycle

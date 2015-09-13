@@ -27,6 +27,7 @@ class ExperimentDetailViewController: RecordDetailViewController {
         guard beenHerebefore == false else { return }
         beenHerebefore = true
         tableView(tableView, didSelectRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 0))
+        
     }
     
     var beenHerebefore = false
@@ -104,6 +105,7 @@ class ExperimentDetailViewController: RecordDetailViewController {
     private enum RowInfo: ReusableCellInfo {
         case Basic(key:String)
         case SubTitle(key:String)
+        case Collection(key:String)
         case RightDetail(key:String)
         case User(key:String)
         
@@ -113,6 +115,8 @@ class ExperimentDetailViewController: RecordDetailViewController {
                 return "BasicCell"
             case .SubTitle(_):
                 return "SubTitleCell"
+            case .Collection(_):
+                return "CollectionCell"
             case .RightDetail(_):
                 return "RightDetailCell"
             case .User(_):
@@ -126,6 +130,8 @@ class ExperimentDetailViewController: RecordDetailViewController {
             case .Basic(let key):
                 return key
             case .SubTitle(let key):
+                return key
+            case .Collection(let key):
                 return key
             case .RightDetail(let key):
                 return key
@@ -144,7 +150,7 @@ class ExperimentDetailViewController: RecordDetailViewController {
         var overViewSectionRows = [ReusableCellInfo]()
         let titleRow: RowInfo = RowInfo.RightDetail(key: ExperimentKey.Title)
         overViewSectionRows.append(titleRow)
-        if shouldAddRowForKey(ExperimentKey.Tags) { overViewSectionRows.append(RowInfo.SubTitle(key: ExperimentKey.Tags)) }
+        if shouldAddRowForKey(ExperimentKey.Tags) { overViewSectionRows.append(RowInfo.Collection(key: ExperimentKey.Tags)) }
         if editing == false {
             let creationDateRow: RowInfo = .RightDetail(key: RecordKey.CreationDate)
             overViewSectionRows.append(creationDateRow)
@@ -161,12 +167,14 @@ class ExperimentDetailViewController: RecordDetailViewController {
         }
         
         // Sections 3: Body
-        var bodySectionRows = [ReusableCellInfo]()
-        if shouldAddRowForKey(ExperimentKey.Purpose) { bodySectionRows.append(RowInfo.SubTitle(key: ExperimentKey.Purpose)) }
-        if shouldAddRowForKey(ExperimentKey.Principle) { bodySectionRows.append(RowInfo.SubTitle(key: ExperimentKey.Principle)) }
-        if shouldAddRowForKey(ExperimentKey.Content) { bodySectionRows.append(RowInfo.SubTitle(key: ExperimentKey.Content)) }
-        if shouldAddRowForKey(ExperimentKey.Steps) { bodySectionRows.append(RowInfo.SubTitle(key: ExperimentKey.Steps)) }
-        if shouldAddRowForKey(ExperimentKey.Results) { bodySectionRows.append(RowInfo.SubTitle(key: ExperimentKey.Results)) }
+        let keys = [
+            ExperimentKey.Purpose ,
+            ExperimentKey.Principle,
+            ExperimentKey.Content,
+            ExperimentKey.Steps,
+            ExperimentKey.Results
+        ]
+        let bodySectionRows: [ReusableCellInfo] = keys.flatMap { shouldAddRowForKey($0) ? RowInfo.SubTitle(key: $0) : nil }
         if bodySectionRows.count > 0 { let bodySectionInfo = SectionInfo(title: "Body", rows: bodySectionRows) ; result.append(bodySectionInfo) }
 
         // Sections 4: Conclusion
@@ -205,9 +213,15 @@ class ExperimentDetailViewController: RecordDetailViewController {
         case .SubTitle(let key):
             guard let subTitleCell = cell as? SubTitleTableViewCell else { return }
             subTitleCell.titleLabel.text = labelTextByKey[key]
-            let text = (experiment?[key] as? CustomStringConvertible)?.description
+            let text = textForExperimentKey(key)
             subTitleCell.subTttleLabel.text = text ?? " "
             subTitleCell.accessoryType = editing ? .DisclosureIndicator : .None
+            
+        case .Collection(let key):
+            guard let collectionCell = cell as? TagsTableViewCell else { return }
+            collectionCell.tags = experiment?[key] as? [String]
+            collectionCell.accessoryType = editing ? .DisclosureIndicator : .None
+
         case .RightDetail(let key):
             cell.textLabel!.text = labelTextByKey[key]
             let text = key == RecordKey.CreationDate ?
@@ -220,6 +234,13 @@ class ExperimentDetailViewController: RecordDetailViewController {
             userCell.record = experiment?.createdBy
         }
     }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
+        guard case .Collection(_) = rowInfo else { return UITableViewAutomaticDimension }
+        return 84
+    }
+    
     
     private var labelTextByKey: [String: String] {
         return [
@@ -259,6 +280,10 @@ class ExperimentDetailViewController: RecordDetailViewController {
             guard editing else { return nil }
             return segueIDByKey[key]
             
+        case .Collection(let key):
+            guard editing else { return nil }
+            return segueIDByKey[key]
+            
         case .RightDetail(let key):
             guard editing else { return nil }
             return segueIDByKey[key]
@@ -293,15 +318,31 @@ class ExperimentDetailViewController: RecordDetailViewController {
         case .EditeText:
             guard let ettvc = segue.destinationViewController.contentViewController as? EditeTextTableViewController else { return }
             let indexPath = tableView.indexPathForCell((sender as! UITableViewCell))! ; let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
-            ettvc.text = experiment![rowInfo.key!] as? String
+            ettvc.text = textForExperimentKey(rowInfo.key!)
             ettvc.title = labelTextByKey[rowInfo.key!]
             
             ettvc.doneBlock = {
-                self.experiment![rowInfo.key!] = ettvc.text;
+                self.setText(ettvc.text, ForExperimentKey: rowInfo.key!)
                 if rowInfo.key! ==  ExperimentKey.Title { self.title = ettvc.text }
                 self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             }
             
+        }
+    }
+    
+    private func textForExperimentKey(key: String) -> String? {
+        if (key == ExperimentKey.Tags) {
+            return (experiment?[key] as? [String])?.joinWithSeparator(" ")
+        } else {
+            return (experiment?[key] as? CustomStringConvertible)?.description
+        }
+    }
+    
+    private func setText(text: String?, ForExperimentKey key: String) {
+        if (key == ExperimentKey.Tags) {
+            experiment?[key] = text?.lowercaseString.componentsSeparatedByString(" ").filter{ $0.removeWhitespace() != "" }
+        } else {
+            experiment?[key] = text
         }
     }
     
@@ -333,7 +374,15 @@ class ExperimentDetailViewController: RecordDetailViewController {
 }
 
 
-
+extension String {
+    func replace(string: String, with replacement: String) -> String {
+        return self.stringByReplacingOccurrencesOfString(string, withString: replacement, options: .LiteralSearch, range: nil)
+    }
+    
+    func removeWhitespace() -> String {
+        return replace(" ", with: "")
+    }
+}
 
 
 

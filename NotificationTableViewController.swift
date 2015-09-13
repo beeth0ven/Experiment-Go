@@ -46,7 +46,7 @@ class NotificationTableViewController: UITableViewController {
         
         print("previousChangeToken: \(previousChangeToken)")
         let fetchNotificationChangesOp = CKFetchNotificationChangesOperation(previousServerChangeToken: previousChangeToken)
-        fetchNotificationChangesOp.resultsLimit = 30
+        fetchNotificationChangesOp.resultsLimit = 50
         fetchNotificationChangesOp.notificationChangedBlock = { self.currentPageNotificationRecordIDs.append(($0 as! CKQueryNotification).recordID! ) }
         
         fetchNotificationChangesOp.fetchNotificationChangesCompletionBlock = {

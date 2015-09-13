@@ -262,10 +262,23 @@ class CloudManager {
         
     }
     
+    var experimentSearchHistories: [String] {
+        
+        get {
+            return NSUbiquitousKeyValueStore.defaultStore().arrayForKey(UbiquitousKey.ExperimentSearchHistories) as? [String] ?? [String]()
+        }
+        
+        set {
+            NSUbiquitousKeyValueStore.defaultStore().setArray(newValue, forKey: UbiquitousKey.ExperimentSearchHistories)
+            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+        }
 
+    }
+    
     func resetiCloudKVS() {
         likedExperiments = []
         followingUsers = []
+        notificationRecords = []
         
     }
     
@@ -301,9 +314,10 @@ class CloudManager {
         static let LikedExperiments = "CloudManager.likedExperiments"
         static let FollowingUsers = "CloudManager.followingUsers"
         static let SubscriptionID = "CloudManager.subscriptionID"
-        static let NotificationRecords = "NotificationTableViewController.notificationRecords"
-        static let PreviousChangeToken = "NotificationTableViewController.previousChangeToken"
-        
+        static let NotificationRecords = "CloudManager.notificationRecords"
+        static let PreviousChangeToken = "CloudManager.previousChangeToken"
+        static let ExperimentSearchHistories = "CloudManager.experimentSearchHistories"
+     
     }
     
 }
