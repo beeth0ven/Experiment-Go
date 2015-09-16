@@ -12,7 +12,7 @@ import CloudKit
 class ReviewTableViewCell: RecordTableViewCell {
     
 
-    @IBOutlet weak var authorProfileImageView: UIImageView!
+    @IBOutlet weak var authorProfileImageButton: UIButton!
     @IBOutlet weak var authorLabel: UILabel!
     @IBOutlet weak var bodyabel: UILabel!
     @IBOutlet weak var creationDateLabel: UILabel!
@@ -41,10 +41,10 @@ class ReviewTableViewCell: RecordTableViewCell {
     
     var authorProfileImage: UIImage? {
         get {
-            return authorProfileImageView.image
+            return authorProfileImageButton.backgroundImageForState(.Normal)
         }
         set {
-            authorProfileImageView.image = newValue
+            authorProfileImageButton.setBackgroundImage(newValue, forState: .Normal)
         }
     }
     

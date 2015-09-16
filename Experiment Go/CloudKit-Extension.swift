@@ -37,7 +37,7 @@ extension CKSubscription {
         )
         
         let notificationInfo = CKNotificationInfo()
-        notificationInfo.alertBody = "New review to your experiment!!"
+        notificationInfo.alertBody = "New review to your experiment!"
         notificationInfo.desiredKeys = [ReviewKey.From, ReviewKey.To]
         
         self.notificationInfo = notificationInfo

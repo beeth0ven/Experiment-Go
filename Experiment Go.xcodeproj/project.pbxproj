@@ -18,6 +18,7 @@
 		4537CB191B959EF9004378C3 /* SubTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */; };
 		45419AC71BA57F96006F8A83 /* TagCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45419AC61BA57F96006F8A83 /* TagCollectionViewCell.swift */; };
 		45419AC91BA58B9E006F8A83 /* TagsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45419AC81BA58B9E006F8A83 /* TagsTableViewCell.swift */; };
+		45419ACF1BA81C39006F8A83 /* AppDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45419ACE1BA81C39006F8A83 /* AppDetailViewController.swift */; };
 		45629F951B5BC386000F41E6 /* ChameleonFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45629F941B5BC386000F41E6 /* ChameleonFramework.framework */; };
 		4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */; };
 		45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */; };
@@ -44,7 +45,7 @@
 		45CBDF291B9F036B0060AB14 /* CloudKit-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CBDF281B9F036B0060AB14 /* CloudKit-Extension.swift */; };
 		45DDF5C91BA2A1490006A269 /* SearchRecordsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DDF5C81BA2A1490006A269 /* SearchRecordsTableViewController.swift */; };
 		45DDF5CD1BA536300006A269 /* HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DDF5CC1BA536300006A269 /* HistoryManager.swift */; };
-		45F2E0891BA57F4100785F0B /* TagsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F2E0881BA57F4100785F0B /* TagsCollectionViewController.swift */; };
+		45F2E0891BA57F4100785F0B /* EditeTagsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F2E0881BA57F4100785F0B /* EditeTagsCollectionViewController.swift */; };
 		45FC5F771B6DD7080045F178 /* MenuItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */; };
 		AF79662E4748E3048A76116B /* Pods_Experiment_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2877209060858C580BC83B66 /* Pods_Experiment_Go.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -78,6 +79,7 @@
 		4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubTitleTableViewCell.swift; sourceTree = "<group>"; };
 		45419AC61BA57F96006F8A83 /* TagCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCollectionViewCell.swift; sourceTree = "<group>"; };
 		45419AC81BA58B9E006F8A83 /* TagsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsTableViewCell.swift; sourceTree = "<group>"; };
+		45419ACE1BA81C39006F8A83 /* AppDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDetailViewController.swift; sourceTree = "<group>"; };
 		45629F941B5BC386000F41E6 /* ChameleonFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChameleonFramework.framework; path = "Pods/../build/Debug-iphoneos/Pods-Experiment Go/ChameleonFramework.framework"; sourceTree = "<group>"; };
 		4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicExtension.swift; sourceTree = "<group>"; };
@@ -106,7 +108,7 @@
 		45CBDF281B9F036B0060AB14 /* CloudKit-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CloudKit-Extension.swift"; sourceTree = "<group>"; };
 		45DDF5C81BA2A1490006A269 /* SearchRecordsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchRecordsTableViewController.swift; sourceTree = "<group>"; };
 		45DDF5CC1BA536300006A269 /* HistoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
-		45F2E0881BA57F4100785F0B /* TagsCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsCollectionViewController.swift; sourceTree = "<group>"; };
+		45F2E0881BA57F4100785F0B /* EditeTagsCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditeTagsCollectionViewController.swift; sourceTree = "<group>"; };
 		45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItemTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -209,9 +211,8 @@
 			isa = PBXGroup;
 			children = (
 				4511B28D1B4FB7CF0046DF76 /* Main.storyboard */,
-				45419AC61BA57F96006F8A83 /* TagCollectionViewCell.swift */,
-				45419AC81BA58B9E006F8A83 /* TagsTableViewCell.swift */,
 				45CBDF211B998E650060AB14 /* UIBarButtonItem */,
+				45419ACA1BA7F950006F8A83 /* UICollectionViewCell */,
 				45CBDF201B998E400060AB14 /* UITableViewCell */,
 			);
 			name = View;
@@ -221,13 +222,12 @@
 			isa = PBXGroup;
 			children = (
 				4511B2841B4FB7CF0046DF76 /* AppDelegate.swift */,
-				45CBDF221B9BF9730060AB14 /* EGSplitViewController.swift */,
-				4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */,
-				45CBDF261B9C17B90060AB14 /* NotificationTableViewController.swift */,
-				45F2E0881BA57F4100785F0B /* TagsCollectionViewController.swift */,
+				45419ACE1BA81C39006F8A83 /* AppDetailViewController.swift */,
+				45419ACB1BA7F974006F8A83 /* UISplitViewController */,
 				45A2A2451B8D907E004BEF45 /* CloudKitTableViewController */,
 				45BC4E9C1B6B5D1300A9963F /* RecordDetailViewController */,
 				45A2A2461B8D9095004BEF45 /* EditeTableViewController */,
+				45419ACC1BA7F9A2006F8A83 /* UISearchController */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -236,12 +236,45 @@
 			isa = PBXGroup;
 			children = (
 				45DDF5CC1BA536300006A269 /* HistoryManager.swift */,
-				45CBDF281B9F036B0060AB14 /* CloudKit-Extension.swift */,
-				4591E1B01B8EE00200620377 /* CloudManager.swift */,
 				458713BA1B859751004808A3 /* CacheManager.swift */,
-				45A2A23F1B89E9E6004BEF45 /* FetchedRecordsController.swift */,
+				45419ACD1BA7F9EA006F8A83 /* CloudKit */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		45419ACA1BA7F950006F8A83 /* UICollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				45419AC61BA57F96006F8A83 /* TagCollectionViewCell.swift */,
+			);
+			name = UICollectionViewCell;
+			sourceTree = "<group>";
+		};
+		45419ACB1BA7F974006F8A83 /* UISplitViewController */ = {
+			isa = PBXGroup;
+			children = (
+				45CBDF221B9BF9730060AB14 /* EGSplitViewController.swift */,
+				4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */,
+			);
+			name = UISplitViewController;
+			sourceTree = "<group>";
+		};
+		45419ACC1BA7F9A2006F8A83 /* UISearchController */ = {
+			isa = PBXGroup;
+			children = (
+				45B6FB6B1BA548040089AC15 /* SearchResultsController.swift */,
+			);
+			name = UISearchController;
+			sourceTree = "<group>";
+		};
+		45419ACD1BA7F9EA006F8A83 /* CloudKit */ = {
+			isa = PBXGroup;
+			children = (
+				45CBDF281B9F036B0060AB14 /* CloudKit-Extension.swift */,
+				4591E1B01B8EE00200620377 /* CloudManager.swift */,
+				45A2A23F1B89E9E6004BEF45 /* FetchedRecordsController.swift */,
+			);
+			name = CloudKit;
 			sourceTree = "<group>";
 		};
 		45A2A2451B8D907E004BEF45 /* CloudKitTableViewController */ = {
@@ -250,7 +283,7 @@
 				45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */,
 				459BE6931B92F261003345BF /* RecordsTableViewController.swift */,
 				45DDF5C81BA2A1490006A269 /* SearchRecordsTableViewController.swift */,
-				45B6FB6B1BA548040089AC15 /* SearchResultsController.swift */,
+				45CBDF261B9C17B90060AB14 /* NotificationTableViewController.swift */,
 			);
 			name = CloudKitTableViewController;
 			sourceTree = "<group>";
@@ -259,6 +292,7 @@
 			isa = PBXGroup;
 			children = (
 				4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */,
+				45F2E0881BA57F4100785F0B /* EditeTagsCollectionViewController.swift */,
 			);
 			name = EditeTableViewController;
 			sourceTree = "<group>";
@@ -293,6 +327,7 @@
 				45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */,
 				4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */,
 				4537CB121B944765004378C3 /* ImageTableViewCell.swift */,
+				45419AC81BA58B9E006F8A83 /* TagsTableViewCell.swift */,
 			);
 			name = UITableViewCell;
 			sourceTree = "<group>";
@@ -497,6 +532,7 @@
 				45AAB0A21B6E117200595467 /* ReviewTableViewCell.swift in Sources */,
 				45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */,
 				4511B2851B4FB7CF0046DF76 /* AppDelegate.swift in Sources */,
+				45419ACF1BA81C39006F8A83 /* AppDetailViewController.swift in Sources */,
 				459BE6941B92F261003345BF /* RecordsTableViewController.swift in Sources */,
 				4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */,
 				4591E1B11B8EE00200620377 /* CloudManager.swift in Sources */,
@@ -508,7 +544,7 @@
 				45983D0F1B71CB1000ABCF38 /* SwitchBarButtonItem.swift in Sources */,
 				45BC4E9E1B6DCDB800A9963F /* DefaultStyleController.swift in Sources */,
 				45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */,
-				45F2E0891BA57F4100785F0B /* TagsCollectionViewController.swift in Sources */,
+				45F2E0891BA57F4100785F0B /* EditeTagsCollectionViewController.swift in Sources */,
 				4537CB151B95680E004378C3 /* EditeTextTableViewController.swift in Sources */,
 				45BC4E8D1B69C4A300A9963F /* ExperimentDetailViewController.swift in Sources */,
 			);

@@ -18,7 +18,6 @@ class EditeTextTableViewController: UITableViewController {
         super.viewDidLoad()
         updateUI()
         navigationController?.setNavigationBarHidden(false, animated: true)
-        // Do any additional setup after loading the view.
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -35,11 +34,11 @@ class EditeTextTableViewController: UITableViewController {
     }
     
     
-    var doneBlock: (() -> ())?
+    var doneBlock: ((String?) -> ())?
     
     @IBAction func done(sender: UIBarButtonItem) {
         bodyTextView.resignFirstResponder()
-        doneBlock?()
+        doneBlock?(text)
         navigationController?.popViewControllerAnimated(true)
     }
     

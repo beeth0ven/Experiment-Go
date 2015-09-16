@@ -226,7 +226,8 @@ class UserDetailViewController: RecordDetailViewController {
             ettvc.title = "About me"
             
             ettvc.doneBlock = {
-                self.user![rowInfo.key!] = ettvc.text;
+                (text) in
+                self.user![rowInfo.key!] = text;
                 self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             }
         case .ShowPostedExperiments:

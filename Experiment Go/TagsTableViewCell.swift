@@ -10,23 +10,25 @@ import UIKit
 
 class TagsTableViewCell: UITableViewCell, UICollectionViewDataSource {
     
-    var tags: [String]? { didSet { collectionView.reloadData() } }
+    var tags = [String]() { didSet { if ( tags != oldValue) { collectionView?.reloadData() } } }
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
             let layout = collectionView!.collectionViewLayout as! UICollectionViewFlowLayout
-            layout.estimatedItemSize = CGSizeMake(84, 32)
+            layout.estimatedItemSize = CGSizeMake(20, 20)
             collectionView.dataSource = self
         }
     }
     
     
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int { return tags?.count > 0 ? 1 : 0 }
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return tags!.count }
+    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int { return 1 }
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return tags.count }
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! TagCollectionViewCell
-        cell.button.setTitle(tags![indexPath.item], forState: .Normal)
+        cell.title = tags[indexPath.item]
         return cell
     }
+    
+    
 }

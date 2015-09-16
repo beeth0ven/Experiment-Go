@@ -211,7 +211,6 @@ extension CloudKitTableViewController: FetchedRecordsControllerDelegate {
     func controllerWillRefreshData(controller: FetchedRecordsController) {
         print("controller Will Refresh Data")
         loadingState = .Loading
-//        tableView.tableFooterView = loadPageActivityView
     }
     
     func controllerFailedToRefreshData(controller: FetchedRecordsController, error: NSError) {
@@ -221,14 +220,12 @@ extension CloudKitTableViewController: FetchedRecordsControllerDelegate {
     func controllerDidRefreshData(controller: FetchedRecordsController) {
         print("controller Did Refresh Data")
         loadingState = .Finish
-//        tableView.tableFooterView = UIView()
     }
     
     // Fetch Next Page Delegate
     func controllerWillFetchNextPage(controller: FetchedRecordsController) {
         print("controller Will Fetch Next Page")
         loadingState = .Loading
-//        tableView.tableFooterView = loadPageActivityView
     }
     
     func controllerFailedToFetchNextPage(controller: FetchedRecordsController, error: NSError) {
@@ -238,7 +235,6 @@ extension CloudKitTableViewController: FetchedRecordsControllerDelegate {
     func controllerDidFetchNextPage(controller: FetchedRecordsController) {
         print("controller Did Fetch Next Page")
         loadingState = .Finish
-//        tableView.tableFooterView = UIView()
     }
     
     // Content Change Delegate

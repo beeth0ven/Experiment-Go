@@ -76,8 +76,8 @@ class CacheManager {
     
     private func localCachedURLforURL(url: NSURL) -> NSURL { return assetCacheFolder.URLByAppendingPathComponent(url.pathExtension!) }
     
-    // Cache size 10M
-    private var cacheSize = 10 * 1024 * 1024
+    // Cache size 20M
+    private var cacheSize = 20 * 1024 * 1024
     
     private func cleanupOldFiles() {
         let dirEnumerator = fileManager.enumeratorAtURL(assetCacheFolder,

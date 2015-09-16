@@ -54,6 +54,10 @@ class RecordsTableViewController: CloudKitTableViewController {
                 else { return }
             rdvc.record = cell.record
             
+        case .ShowUserDetail:
+            guard let udvc = segue.destinationViewController.contentViewController as? UserDetailViewController,
+                let cell = UITableViewCell.cellContainsSubView(sender as! UIButton) as? RecordTableViewCell else { return }
+            udvc.user = cell.record?.createdBy
             
         }
     }
@@ -63,7 +67,7 @@ class RecordsTableViewController: CloudKitTableViewController {
         switch recordType {
         case .Experiment:
             let experiment = CKRecord(recordType: recordType.rawValue)
-            experiment[ExperimentKey.Title] = "翡翠👌 石头 过d。"
+            experiment[ExperimentKey.Title] = "翡翠👌 石头 过"
             return experiment
         case .Review:
             guard let nav = navigationController else { abort() }
@@ -77,6 +81,7 @@ class RecordsTableViewController: CloudKitTableViewController {
     private enum SegueID: String {
         case AddRecord
         case ShowRecord
+        case ShowUserDetail
     }
     
 }

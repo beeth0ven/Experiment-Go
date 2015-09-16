@@ -100,6 +100,8 @@ class ExperimentDetailViewController: RecordDetailViewController {
     }
     
     
+    
+    
     // MARK: - Table View Data Struct
 
     private enum RowInfo: ReusableCellInfo {
@@ -219,7 +221,8 @@ class ExperimentDetailViewController: RecordDetailViewController {
             
         case .Collection(let key):
             guard let collectionCell = cell as? TagsTableViewCell else { return }
-            collectionCell.tags = experiment?[key] as? [String]
+            collectionCell.tags = experiment?[key] as? [String] ?? []
+            collectionCell.collectionView.userInteractionEnabled = editing ? false : true
             collectionCell.accessoryType = editing ? .DisclosureIndicator : .None
 
         case .RightDetail(let key):
@@ -229,6 +232,7 @@ class ExperimentDetailViewController: RecordDetailViewController {
                 (experiment?[key] as? CustomStringConvertible)?.description
             cell.detailTextLabel!.text = text ?? " " // For debug. nil cause the cell not update
             cell.accessoryType = editing ? .DisclosureIndicator : .None
+            
         case .User(_):
             guard let userCell = cell as? UserTableViewCell else { break }
             userCell.record = experiment?.createdBy
@@ -238,7 +242,7 @@ class ExperimentDetailViewController: RecordDetailViewController {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
         guard case .Collection(_) = rowInfo else { return UITableViewAutomaticDimension }
-        return 84
+        return 80
     }
     
     
@@ -315,6 +319,11 @@ class ExperimentDetailViewController: RecordDetailViewController {
             guard let rtvc = segue.destinationViewController.contentViewController as? RecordsTableViewController else { return }
             rtvc.queryPredicate = NSPredicate.predicateForFanLinkToExperiment(experiment!)
             
+        case .ShowExperimentsByTag:
+            guard let srtvc = segue.destinationViewController.contentViewController as? SearchRecordsTableViewController else { return }
+            srtvc.searchText = (sender as! UIButton).currentTitle
+            srtvc.title = srtvc.searchText
+            
         case .EditeText:
             guard let ettvc = segue.destinationViewController.contentViewController as? EditeTextTableViewController else { return }
             let indexPath = tableView.indexPathForCell((sender as! UITableViewCell))! ; let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
@@ -322,11 +331,25 @@ class ExperimentDetailViewController: RecordDetailViewController {
             ettvc.title = labelTextByKey[rowInfo.key!]
             
             ettvc.doneBlock = {
-                self.setText(ettvc.text, ForExperimentKey: rowInfo.key!)
-                if rowInfo.key! ==  ExperimentKey.Title { self.title = ettvc.text }
+                (text) in
+                self.setText(text, ForExperimentKey: rowInfo.key!)
+                if rowInfo.key! ==  ExperimentKey.Title { self.title = text }
                 self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             }
             
+        case .EditeTags:
+            guard let etcvc = segue.destinationViewController.contentViewController as? EditeTagsCollectionViewController else { return }
+            let tagsTableViewCell = sender as! TagsTableViewCell
+            etcvc.tags = tagsTableViewCell.tags ?? []
+            etcvc.title = tagsTableViewCell.titleLabel.text
+            
+            etcvc.doneBlock = {
+                (tags) in
+                guard tags != tagsTableViewCell.tags ?? [] else { return }
+                self.experiment?[ExperimentKey.Tags] = tags
+                self.tableView.reloadRowsAtIndexPaths([self.tableView.indexPathForCell(tagsTableViewCell)!], withRowAnimation: .Fade)
+
+            }
         }
     }
     
@@ -357,9 +380,9 @@ class ExperimentDetailViewController: RecordDetailViewController {
             ExperimentKey.Purpose:      .EditeText,
             ExperimentKey.Results:      .EditeText,
             ExperimentKey.Steps:        .EditeText,
-            ExperimentKey.Tags:         .EditeText,
             ExperimentKey.FootNote:     .EditeText,
-    
+            ExperimentKey.Tags:         .EditeTags,
+
         ]
     }
     
@@ -368,7 +391,9 @@ class ExperimentDetailViewController: RecordDetailViewController {
         case ShowUserDetail
         case ShowReviews
         case ShowFans
+        case ShowExperimentsByTag
         case EditeText
+        case EditeTags
     }
     
 }

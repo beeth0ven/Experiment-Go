@@ -127,13 +127,32 @@ class MenuTableViewController: UITableViewController {
         case .ShowUserDetail:
             guard let udvc = segue.destinationViewController.contentViewController as? UserDetailViewController else { return }
             udvc.user = AppDelegate.Cloud.Manager.currentUser
+        case .ShowAppDetail:
+        guard let advc = segue.destinationViewController.contentViewController as? AppDetailViewController else { return }
+        guard let ppc = advc.navigationController?.popoverPresentationController else { return }
+            ppc.backgroundColor = UIColor.whiteColor()
+            ppc.delegate = self
         }
     }
     
     private enum SegueID: String {
         case ShowUserDetail
+        case ShowAppDetail
     }
     
+}
+
+extension MenuTableViewController: UIPopoverPresentationControllerDelegate {
+    
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .FullScreen
+    }
+    
+    func presentationController(controller: UIPresentationController, viewControllerForAdaptivePresentationStyle style: UIModalPresentationStyle) -> UIViewController? {
+        let nav = controller.presentedViewController ; let advc = nav.contentViewController as! AppDetailViewController
+        advc.adapted = true
+        return nav
+    }
 }
 
 extension MenuTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate  {

@@ -88,8 +88,8 @@ class FetchedRecordsController: NSObject {
         loadingStates = .RefreshData
         self.delegate?.controllerWillRefreshData?(self)
         
-        fetchedRecords = [[CKRecord]]()
-        currentPageRecords = [CKRecord]()
+        fetchedRecords.removeAll()
+        currentPageRecords.removeAll()
         
         let queryOperation =  CKQueryOperation(query: fetchedQuery)
         queryOperation.resultsLimit = recordsPerPage
@@ -117,7 +117,7 @@ class FetchedRecordsController: NSObject {
         loadingStates = .FetchNextPage
         self.delegate?.controllerWillFetchNextPage?(self)
 
-        currentPageRecords = [CKRecord]()
+        currentPageRecords.removeAll()
         
         let queryOperation = nextPageToQuery!
         queryOperation.resultsLimit = recordsPerPage
@@ -284,7 +284,7 @@ class FetchedRecordsController: NSObject {
     var currentFetchedDestinationRecords: [CKRecordID : CKRecord]?
     
 
-    // MARK: - Fetch users from cloud
+    // MARK: - Add new records to cloud
     
     func addNewRecords(records: [CKRecord]) {
         
@@ -314,15 +314,6 @@ class FetchedRecordsController: NSObject {
     func addSubscriptionsFromRecords(records: [CKRecord]) {
         guard let subscriptions = records.reduce([], combine: { $1.subscriptionsToAdd }) else { return }
         guard subscriptions.count > 0 else { return }
-//        for subscription in subscriptions {
-//            AppDelegate.Cloud.Manager.publicCloudDatabase.saveSubscription(subscription) {
-//                (subscription, error) in
-//                guard error == nil else { print(error!.localizedDescription) ; return }
-//                print("Subscriptions did save.")
-//            }
-//        }
-//
-//        
         let modifySubscriptionsOperation = CKModifySubscriptionsOperation(subscriptionsToSave: subscriptions, subscriptionIDsToDelete: nil)
         modifySubscriptionsOperation.modifySubscriptionsCompletionBlock = {
             (_, _, error) in

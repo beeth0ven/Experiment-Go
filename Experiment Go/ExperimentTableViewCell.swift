@@ -13,10 +13,10 @@ class ExperimentTableViewCell: RecordTableViewCell {
 
     var authorProfileImage: UIImage? {
         get {
-            return authorProfileImageView.image
+            return authorProfileImageButton.backgroundImageForState(.Normal)
         }
         set {
-            authorProfileImageView.image = newValue
+            authorProfileImageButton.setBackgroundImage(newValue, forState: .Normal)
         }
     }
     
@@ -24,15 +24,17 @@ class ExperimentTableViewCell: RecordTableViewCell {
         return (record?.createdBy?[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL
     }
     
-    @IBOutlet weak var authorProfileImageView: UIImageView!
+    @IBOutlet weak var authorProfileImageButton: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var creationDateLabel: UILabel!
+    @IBOutlet weak var authorLabel: UILabel!
 
     override func updateUI() {
         authorProfileImage = nil
 
         let experiment = record!
         titleLabel.text = experiment[ExperimentKey.Title] as? String
+        authorLabel.text = experiment.createdBy?[UsersKey.DisplayName] as? String
         creationDateLabel.text = NSDateFormatter.smartStringFormDate(experiment.creationDate!)
         
         guard let url = profileImageURL else { return }
