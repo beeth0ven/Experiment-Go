@@ -13,6 +13,7 @@ import UIKit
 
 class CacheManager {
     
+    
     init() { cacheCurrentUser(AppDelegate.Cloud.Manager.currentUser) }
     
     private var userCache: NSMutableDictionary =  NSMutableDictionary()
