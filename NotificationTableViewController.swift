@@ -102,6 +102,14 @@ class NotificationTableViewController: UITableViewController {
         fetchNextPage()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        setBarSeparatorHidden(true)
+        navigationController?.hidesBarsOnSwipe = false
+        navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+
+    
     func configureTableView() {
         tableView.estimatedRowHeight = 66
         tableView.rowHeight = UITableViewAutomaticDimension

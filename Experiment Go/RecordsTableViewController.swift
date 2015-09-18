@@ -36,6 +36,17 @@ class RecordsTableViewController: CloudKitTableViewController {
     
     
     // MARK: - Segue
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        if identifier == SegueID.AddRecord.rawValue {
+            if hasCloudWritePermision != true {
+                presentWelcomeToCloudTVC { self.performSegueWithIdentifier(identifier, sender: sender) }
+                return false
+            }
+        }
+        
+        return true
+    }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         guard let identifier = segue.identifier else { return }

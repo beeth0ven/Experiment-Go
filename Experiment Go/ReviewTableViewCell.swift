@@ -30,9 +30,9 @@ class ReviewTableViewCell: RecordTableViewCell {
         
         guard let url = profileImageURL else { return }
         
-        UIImage.fetchImageForURL(url) { (image) in
+        UIImage.getImageForURL(url) {
             guard url == self.profileImageURL else { return }
-            self.authorProfileImage = image
+            self.authorProfileImage = $0
         }
         
     }
@@ -40,12 +40,8 @@ class ReviewTableViewCell: RecordTableViewCell {
 
     
     var authorProfileImage: UIImage? {
-        get {
-            return authorProfileImageButton.backgroundImageForState(.Normal)
-        }
-        set {
-            authorProfileImageButton.setBackgroundImage(newValue, forState: .Normal)
-        }
+        get { return authorProfileImageButton.backgroundImageForState(.Normal) }
+        set { authorProfileImageButton.setBackgroundImage(newValue, forState: .Normal) }
     }
     
     var profileImageURL: NSURL? {

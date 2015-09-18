@@ -19,6 +19,7 @@
 		45419AC71BA57F96006F8A83 /* TagCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45419AC61BA57F96006F8A83 /* TagCollectionViewCell.swift */; };
 		45419AC91BA58B9E006F8A83 /* TagsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45419AC81BA58B9E006F8A83 /* TagsTableViewCell.swift */; };
 		45419ACF1BA81C39006F8A83 /* AppDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45419ACE1BA81C39006F8A83 /* AppDetailViewController.swift */; };
+		45419AD11BA949B6006F8A83 /* WelcomeToCloudTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45419AD01BA949B6006F8A83 /* WelcomeToCloudTVC.swift */; };
 		45629F951B5BC386000F41E6 /* ChameleonFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45629F941B5BC386000F41E6 /* ChameleonFramework.framework */; };
 		4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */; };
 		45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */; };
@@ -80,6 +81,7 @@
 		45419AC61BA57F96006F8A83 /* TagCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCollectionViewCell.swift; sourceTree = "<group>"; };
 		45419AC81BA58B9E006F8A83 /* TagsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsTableViewCell.swift; sourceTree = "<group>"; };
 		45419ACE1BA81C39006F8A83 /* AppDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDetailViewController.swift; sourceTree = "<group>"; };
+		45419AD01BA949B6006F8A83 /* WelcomeToCloudTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeToCloudTVC.swift; sourceTree = "<group>"; };
 		45629F941B5BC386000F41E6 /* ChameleonFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChameleonFramework.framework; path = "Pods/../build/Debug-iphoneos/Pods-Experiment Go/ChameleonFramework.framework"; sourceTree = "<group>"; };
 		4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicExtension.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 			children = (
 				4511B2841B4FB7CF0046DF76 /* AppDelegate.swift */,
 				45419ACE1BA81C39006F8A83 /* AppDetailViewController.swift */,
+				45419AD01BA949B6006F8A83 /* WelcomeToCloudTVC.swift */,
 				45419ACB1BA7F974006F8A83 /* UISplitViewController */,
 				45A2A2451B8D907E004BEF45 /* CloudKitTableViewController */,
 				45BC4E9C1B6B5D1300A9963F /* RecordDetailViewController */,
@@ -523,6 +526,7 @@
 				45BC4E931B6A145F00A9963F /* UserTableViewCell.swift in Sources */,
 				4599C90D1B6F469B0040461F /* ReviewViewController.swift in Sources */,
 				45CBDF231B9BF9730060AB14 /* EGSplitViewController.swift in Sources */,
+				45419AD11BA949B6006F8A83 /* WelcomeToCloudTVC.swift in Sources */,
 				45DDF5C91BA2A1490006A269 /* SearchRecordsTableViewController.swift in Sources */,
 				45CBDF271B9C17B90060AB14 /* NotificationTableViewController.swift in Sources */,
 				45419AC71BA57F96006F8A83 /* TagCollectionViewCell.swift in Sources */,

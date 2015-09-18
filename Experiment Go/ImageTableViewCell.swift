@@ -23,7 +23,7 @@ class ImageTableViewCell: UITableViewCell {
     func updateUI() {
         profileImge = nil
         guard let url = profileImageURL else { return }
-        UIImage.fetchImageForURL(url) { (image) in self.profileImge = image }
+        UIImage.getImageForURL(url) { self.profileImge = $0 }
     }
     
 

@@ -16,15 +16,109 @@ public func <(date0: NSDate, date1: NSDate) -> Bool { return date0.compare(date1
 
 extension NSDate: Comparable {}
 
+extension UIViewController {
+    func handleFailed(error: NSError) {
+        var message: String
+        if let errorCode = CKErrorCode(rawValue: error.code)  {
+            switch errorCode{
+            case .NetworkUnavailable:
+                message = "NetworkUnavailable"
+            case .NetworkFailure:
+                message = "NetworkFailure"
+            case .ServiceUnavailable:
+                message = "ServiceUnavailable"
+            case .RequestRateLimited:
+                message = "RequestRateLimited"
+            case .UnknownItem:
+                message = "UnknownItem"
+            case .InvalidArguments:
+                message = "InvalidArguments"
+            case .IncompatibleVersion:
+                message = "IncompatibleVersion"
+            case .BadContainer:
+                message = "BadContainer"
+            case .MissingEntitlement:
+                message = "MissingEntitlement"
+            case .PermissionFailure:
+                message = "PermissionFailure"
+            case .BadDatabase:
+                message = "BadDatabase"
+            case .AssetFileNotFound:
+                message = "AssetFileNotFound"
+            case .PartialFailure:
+                message = "PartialFailure"
+            case .QuotaExceeded:
+                message = "QuotaExceeded"
+            case .OperationCancelled:
+                message = "OperationCancelled"
+            case .NotAuthenticated:
+                message = "NotAuthenticated"
+            case .ResultsTruncated:
+                message = "ResultsTruncated"
+            case .ServerRecordChanged:
+                message = "ServerRecordChanged"
+            case .AssetFileModified:
+                message = "AssetFileModified"
+            case .ChangeTokenExpired:
+                message = "ChangeTokenExpired"
+            case .BatchRequestFailed:
+                message = "BatchRequestFailed"
+            case .ZoneBusy:
+                message = "ZoneBusy"
+            case .ZoneNotFound:
+                message = "ZoneNotFound"
+            case .LimitExceeded:
+                message = "LimitExceeded"
+            case .UserDeletedZone:
+                message = "UserDeletedZone"
+            case .InternalError:
+                message = "InternalError"
+            case .ServerRejectedRequest:
+                message = "ServerRejectedRequest"
+            case .ConstraintViolation:
+                message = "ConstraintViolation"
+            }
+        } else {
+            message =  error.localizedDescription
+        }
+        
+        let alert = UIAlertController(errorMessage: error.localizedDescription)
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+}
+
+extension UIAlertController {
+    
+    convenience init(errorMessage: String) {
+        self.init(
+            title: "Experiment Go",
+            message: errorMessage,
+            preferredStyle: .Alert
+        )
+        self.addAction(UIAlertAction(title: "Ok", style: .Cancel, handler: nil))
+    }
+}
+
+extension UIActivityIndicatorView {
+    class func defaultView() -> UIActivityIndicatorView {
+        let result = self.init(activityIndicatorStyle: .Gray)
+        result.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        result.color = UIColor.globalTintColor()
+        result.startAnimating()
+        result.hidesWhenStopped = true
+        return result
+    }
+}
+
 extension CGRect {
     static let BarButtonItemDefaultRect = CGRectMake(0, 0, 44, 44)
 
 }
 
 extension UIImage {
-    class func fetchImageForURL(url: NSURL, completion:((UIImage?)->())) {
+    class func getImageForURL(url: NSURL, didGet:((UIImage?)->())) {
         if let imageData = AppDelegate.Cache.Manager.assetDataForURL(url) {
-            completion(UIImage(data: imageData))
+            didGet(UIImage(data: imageData))
         } else {
             let qos = QOS_CLASS_USER_INITIATED
             dispatch_async(dispatch_get_global_queue(qos, 0)) {
@@ -34,10 +128,10 @@ extension UIImage {
                     AppDelegate.Cache.Manager.cacheAssetData(imageData!, forURL: url)
                     image = UIImage(data: imageData!)
                 } else {
-                    AppDelegate.Cloud.Manager.fetchCurrentUserProfileImageIfNeeded()
+                    AppDelegate.Cloud.Manager.getCurrentUserProfileImageIfNeeded()
                 }
                 dispatch_async(dispatch_get_main_queue()) {
-                    completion(image)
+                    didGet(image)
                 }
             }
         }

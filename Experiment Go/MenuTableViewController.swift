@@ -77,9 +77,9 @@ class MenuTableViewController: UITableViewController {
         
         guard let url = profileImageURL else { profileImagButtonActivity?.stopAnimating() ; return  }
         
-        UIImage.fetchImageForURL(url) { (image) in
+        UIImage.getImageForURL(url) {
             guard url == self.profileImageURL else { return }
-            self.profileImagButton.setBackgroundImage(image, forState: .Normal)
+            self.profileImagButton.setBackgroundImage($0, forState: .Normal)
             self.profileImagButtonActivity?.stopAnimating()
         }
 

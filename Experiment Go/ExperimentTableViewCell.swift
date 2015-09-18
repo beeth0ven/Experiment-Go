@@ -39,7 +39,7 @@ class ExperimentTableViewCell: RecordTableViewCell {
         
         guard let url = profileImageURL else { return }
         
-        UIImage.fetchImageForURL(url) { (image) in
+        UIImage.getImageForURL(url) { (image) in
             guard url == self.profileImageURL else { return }
             self.authorProfileImage = image
         }

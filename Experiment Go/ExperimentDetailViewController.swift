@@ -271,7 +271,7 @@ class ExperimentDetailViewController: RecordDetailViewController {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         guard let segueID = segueIDAtIndexPath(indexPath) else { return }
-        performSegueWithIdentifier(segueID.rawValue, sender: tableView.cellForRowAtIndexPath(indexPath))
+        self.performSegueWithIdentifier(segueID.rawValue, sender: tableView.cellForRowAtIndexPath(indexPath))
     }
     
     private func segueIDAtIndexPath(indexPath: NSIndexPath) -> SegueID? {

@@ -40,18 +40,23 @@ class CloudManager {
     }
     
     
-    func fetchCurrentUserProfileImageIfNeeded() {
-        guard needFetchCurrentUserProfileImage else { return }
-        
-        fetchCurrentUser() { (user) in
-            let url = (user[UsersKey.ProfileImageAsset] as! CKAsset).fileURL
-            UIImage.fetchImageForURL(url) { (_) in
-                NSNotificationCenter.defaultCenter().postNotificationName(Notification.CurrentUserHasChange.rawValue, object: nil) }
-        }
-       
+    func getCurrentUserProfileImageIfNeeded() {
+        guard needGetCurrentUserProfileImage else { return }
+        getCurrentUser(
+            didGet: {
+                (user) in
+                let url = (user[UsersKey.ProfileImageAsset] as! CKAsset).fileURL
+                UIImage.getImageForURL(url,
+                    didGet: { (_) in
+                        NSNotificationCenter.defaultCenter().postNotificationName(Notification.CurrentUserHasChange.rawValue, object: nil)
+                    }
+                )
+            },
+            failed: nil
+        )
     }
     
-    private var needFetchCurrentUserProfileImage: Bool {
+    private var needGetCurrentUserProfileImage: Bool {
         if let url = (currentUser?[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL {
             if AppDelegate.Cache.Manager.assetDataForURL(url) == nil { return true }
         }
@@ -59,31 +64,84 @@ class CloudManager {
     }
     
     func updateCurrentUser() {
-        requestDiscoverabilityPermission { (granted) in
-            guard granted else { abort() }
-            self.fetchCurrentUser() { (user) in
+        getCurrentUser(
+            didGet: {
+                (user) in
                 self.currentUser = user
-
+            },
+            
+            failed: nil
+        )
+    }
+    
+    private var isRequestingDiscoverability = false
+    func getDiscoverabilityPermission(didGet didGet: (Bool) -> (), failed: ((NSError) -> ())?) {
+        guard isRequestingDiscoverability == false else { return }
+        isRequestingDiscoverability = true
+        CKContainer.defaultContainer().requestApplicationPermission(.UserDiscoverability) { (applicationPermissionStatus, error) -> Void in
+            self.isRequestingDiscoverability = false
+            dispatch_async(dispatch_get_main_queue()) {
+                guard  error == nil else { failed?(error!) ; return }
+                didGet( applicationPermissionStatus == .Granted )
             }
         }
     }
-
-    private func requestDiscoverabilityPermission(completionHandler: (Bool) -> ()) {
-        CKContainer.defaultContainer().requestApplicationPermission(.UserDiscoverability) { (applicationPermissionStatus, error) -> Void in
-            guard  error == nil else { print(error!.localizedDescription) ; abort() }
-            dispatch_async(dispatch_get_main_queue()) { completionHandler( applicationPermissionStatus == .Granted ) }
-        }
-    }
     
-    private func fetchCurrentUser(completionHandler: (CKRecord) -> Void) {
+    private var isFetchingCurrentUser = false
+    func getCurrentUser(didGet didGet: (CKRecord) -> (), failed: ((NSError) -> ())?) {
+        guard isFetchingCurrentUser == false else { return }
+        isFetchingCurrentUser = true
         let fetchCurrentUserRecordOperation = CKFetchRecordsOperation.fetchCurrentUserRecordOperation()
         fetchCurrentUserRecordOperation.perRecordCompletionBlock = {
             (user, _, error) in
-            guard  error == nil else { print(error!.localizedDescription) ; abort() }
-            print("fileURL: \((user![UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL)")
-            dispatch_async(dispatch_get_main_queue()) { completionHandler( user! ) }
+            self.isFetchingCurrentUser = false
+            dispatch_async(dispatch_get_main_queue()) {
+                guard  error == nil else { failed?(error!) ; return }
+                didGet( user! )
+            }
         }
         publicCloudDatabase.addOperation(fetchCurrentUserRecordOperation)
+    }
+    
+    var hasCloudWritePermision: Bool? {
+        get {
+            return NSUbiquitousKeyValueStore.defaultStore().objectForKey(UbiquitousKey.HasCloudWritePermision) as? Bool
+        }
+        
+        set {
+            NSUbiquitousKeyValueStore.defaultStore().setObject(newValue, forKey: UbiquitousKey.HasCloudWritePermision)
+            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+        }
+        
+    }
+    
+    private var displayNameInUsedError: NSError {
+        let description = NSLocalizedString("This display name is in use.\n Please choose another one.", comment: "")
+        return NSError(domain: "displayNameInUsedError", code: 100, userInfo: [NSLocalizedDescriptionKey: description])
+    }
+    
+    func setUserDisplayName(name: String, didSet: (() -> Void), failed: ((NSError) -> Void)?) {
+        
+        func checkDisplayNameAvaliable(avaliabled: () -> Void) {
+            let displayNameRecord = CKRecord(recordType: RecordType.DisplayName.rawValue, recordID: CKRecordID(recordName: name.lowercaseString))
+            publicCloudDatabase.saveRecord(displayNameRecord,
+                didSave: { avaliabled() },
+                failed: { $0.code == CKErrorCode.ServerRecordChanged.rawValue ? failed?(self.displayNameInUsedError) : failed?($0) }
+            )
+        }
+        
+        checkDisplayNameAvaliable {
+            self.getCurrentUser(
+                didGet: {
+                    (currentUser) in
+                    guard currentUser[UsersKey.DisplayName] == nil else {  self.currentUser = currentUser ; didSet() ; return }
+                    currentUser[UsersKey.DisplayName] = name
+                    self.publicCloudDatabase.saveRecord(currentUser, didSave: { self.currentUser = currentUser ; didSet()}, failed: failed)
+                },
+                failed: failed
+            )
+        }
+        
     }
     
     // MARK: - Liked Experiments
@@ -317,10 +375,12 @@ class CloudManager {
         static let NotificationRecords = "CloudManager.notificationRecords"
         static let PreviousChangeToken = "CloudManager.previousChangeToken"
         static let ExperimentSearchHistories = "CloudManager.experimentSearchHistories"
+        static let HasCloudWritePermision = "CloudManager.hasCloudWritePermision"
      
     }
     
 }
+
 extension NSURL {
     class func profileImageURLForUser(user: CKRecord) -> NSURL? {
         guard let type = RecordType(rawValue: user.recordType) else { return nil }

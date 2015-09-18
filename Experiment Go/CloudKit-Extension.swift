@@ -9,6 +9,18 @@
 import Foundation
 import CloudKit
 
+extension CKDatabase {
+    func saveRecord(record: CKRecord, didSave: () -> () ,failed: ((NSError) -> Void)?) {
+        saveRecord(record) {
+            (_, error) in
+            dispatch_async(dispatch_get_main_queue()) {
+                guard error == nil else { failed?(error!) ; return }
+                didSave()
+            }
+        }
+    }
+}
+
 extension CKSubscription {
     
     convenience init(likeToExperiment experiment: CKRecord) {
@@ -68,27 +80,27 @@ extension CKRecordID {
 extension CKRecord {
     convenience init(fanLinkToExperiment experiment: CKRecord) {
         let recordID = CKRecordID(fanLinktoExperiment: experiment)
-        let user = AppDelegate.Cloud.Manager.currentUser!
+        let currentUser = AppDelegate.Cloud.Manager.currentUser!
         self.init(linkType: LinkType.UserLikeExperiment, recordID: recordID)
+        self[LinkKey.From] = CKReference(recordID: currentUser.recordID, action: .DeleteSelf)
         self[LinkKey.To] = CKReference(record: experiment, action: .DeleteSelf)
-        self[LinkKey.From] = CKReference(recordID: user.recordID, action: .DeleteSelf)
-        self[RecordKey.AboutMe] = "\(user[UsersKey.DisplayName] as! String) liked experiment <\(experiment[ExperimentKey.Title] as! String)> !"
+        self[RecordKey.AboutMe] = "\(currentUser[UsersKey.DisplayName] as! String) liked experiment <\(experiment[ExperimentKey.Title] as! String)> !"
     }
     
     convenience init(followLinkToUser user: CKRecord) {
         let recordID = CKRecordID(followLinktoUser: user)
-        let user = AppDelegate.Cloud.Manager.currentUser!
+        let currentUser = AppDelegate.Cloud.Manager.currentUser!
         self.init(linkType: LinkType.UserFollowUser, recordID: recordID)
+        self[LinkKey.From] = CKReference(recordID: currentUser.recordID, action: .DeleteSelf)
         self[LinkKey.To] = CKReference(record: user, action: .DeleteSelf)
-        self[LinkKey.From] = CKReference(recordID: user.recordID, action: .DeleteSelf)
         self[RecordKey.AboutMe] = "\(user[UsersKey.DisplayName] as! String) is following you!"
     }
     
     convenience init(reviewToExperiment experiment: CKRecord) {
         self.init(recordType: RecordType.Review.rawValue)
         let user = AppDelegate.Cloud.Manager.currentUser!
-        self[ReviewKey.To] = CKReference(record: experiment, action: .DeleteSelf)
         self[ReviewKey.From] = CKReference(recordID: user.recordID, action: .DeleteSelf)
+        self[ReviewKey.To] = CKReference(record: experiment, action: .DeleteSelf)
         self[RecordKey.AboutMe] = "\(user[UsersKey.DisplayName] as! String) has reviewed to experiment <\(experiment[ExperimentKey.Title] as! String)> !"
     }
     
@@ -218,6 +230,7 @@ enum RecordType: String {
     case Review
     case Link
     case Users
+    case DisplayName
 }
 
 enum LinkType: String {

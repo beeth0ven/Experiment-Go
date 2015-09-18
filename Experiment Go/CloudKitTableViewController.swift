@@ -23,7 +23,11 @@ class CloudKitTableViewController: UITableViewController {
     var cellReusableIdentifier: String?
     
     @IBInspectable
-    var fetchType: String = FetchedRecordsController.FetchType.IncludeCreatorUser.rawValue
+    var fetchType: String = FetchedRecordsController.FetchType.IncludeCreatorUser.rawValue {
+        didSet {
+            fetchedRecordsController.fetchType = FetchedRecordsController.FetchType(rawValue: fetchType)!
+        }
+    }
     
     @IBInspectable
     var passCreatorUser: Bool = false
