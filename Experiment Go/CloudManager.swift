@@ -19,23 +19,23 @@ class CloudManager {
     
     var publicCloudDatabase: CKDatabase { return CKContainer.defaultContainer().publicCloudDatabase }
     
+    private var iCloudKVS = NSUbiquitousKeyValueStore.defaultStore()
     
-    var currentUser: CKRecord? {
+    var currentUser: CKUsers? {
         get {
-            guard let data = NSUbiquitousKeyValueStore.defaultStore().dataForKey(UbiquitousKey.CurrentUser) else { updateCurrentUser() ; return nil }
-            return CKRecord.recordWithArchivedData(data)
+            guard let data = iCloudKVS.dataForKey(UbiquitousKey.CurrentUser) else { updateCurrentUser() ; return nil }
+            return CKUsers(record: CKRecord.recordWithArchivedData(data))
         }
         
         set {
-            NSUbiquitousKeyValueStore.defaultStore().setData(newValue?.archivedData(), forKey: UbiquitousKey.CurrentUser)
-            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+            iCloudKVS.setData(newValue?.record.archivedData(), forKey: UbiquitousKey.CurrentUser)
+            iCloudKVS.synchronize()
             currentUserDidSet()
         }
         
     }
     
     private func currentUserDidSet() {
-        AppDelegate.Cache.Manager.cacheCurrentUser(currentUser)
         NSNotificationCenter.defaultCenter().postNotificationName(Notification.CurrentUserHasChange.rawValue, object: nil)
     }
     
@@ -45,19 +45,19 @@ class CloudManager {
         getCurrentUser(
             didGet: {
                 (user) in
-                let url = (user[UsersKey.ProfileImageAsset] as! CKAsset).fileURL
+                let url = user.profileImageAsset!.fileURL
                 UIImage.getImageForURL(url,
                     didGet: { (_) in
                         NSNotificationCenter.defaultCenter().postNotificationName(Notification.CurrentUserHasChange.rawValue, object: nil)
                     }
                 )
             },
-            failed: nil
+            didFail: nil
         )
     }
     
     private var needGetCurrentUserProfileImage: Bool {
-        if let url = (currentUser?[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL {
+        if let url = currentUser?.profileImageAsset?.fileURL {
             if AppDelegate.Cache.Manager.assetDataForURL(url) == nil { return true }
         }
         return false
@@ -70,34 +70,34 @@ class CloudManager {
                 self.currentUser = user
             },
             
-            failed: nil
+            didFail: nil
         )
     }
     
     private var isRequestingDiscoverability = false
-    func getDiscoverabilityPermission(didGet didGet: (Bool) -> (), failed: ((NSError) -> ())?) {
+    func getDiscoverabilityPermission(didGet didGet: (Bool) -> (), didFail: ((NSError) -> ())?) {
         guard isRequestingDiscoverability == false else { return }
         isRequestingDiscoverability = true
         CKContainer.defaultContainer().requestApplicationPermission(.UserDiscoverability) { (applicationPermissionStatus, error) -> Void in
             self.isRequestingDiscoverability = false
             dispatch_async(dispatch_get_main_queue()) {
-                guard  error == nil else { failed?(error!) ; return }
+                guard  error == nil else { didFail?(error!) ; return }
                 didGet( applicationPermissionStatus == .Granted )
             }
         }
     }
     
     private var isFetchingCurrentUser = false
-    func getCurrentUser(didGet didGet: (CKRecord) -> (), failed: ((NSError) -> ())?) {
+    func getCurrentUser(didGet didGet: (CKUsers) -> (), didFail: ((NSError) -> ())?) {
         guard isFetchingCurrentUser == false else { return }
         isFetchingCurrentUser = true
         let fetchCurrentUserRecordOperation = CKFetchRecordsOperation.fetchCurrentUserRecordOperation()
         fetchCurrentUserRecordOperation.perRecordCompletionBlock = {
-            (user, _, error) in
+            (userRecord, _, error) in
             self.isFetchingCurrentUser = false
             dispatch_async(dispatch_get_main_queue()) {
-                guard  error == nil else { failed?(error!) ; return }
-                didGet( user! )
+                guard  error == nil else { didFail?(error!) ; return }
+                didGet( CKUsers(record: userRecord!) )
             }
         }
         publicCloudDatabase.addOperation(fetchCurrentUserRecordOperation)
@@ -105,12 +105,12 @@ class CloudManager {
     
     var hasCloudWritePermision: Bool? {
         get {
-            return NSUbiquitousKeyValueStore.defaultStore().objectForKey(UbiquitousKey.HasCloudWritePermision) as? Bool
+            return iCloudKVS.objectForKey(UbiquitousKey.HasCloudWritePermision) as? Bool
         }
         
         set {
-            NSUbiquitousKeyValueStore.defaultStore().setObject(newValue, forKey: UbiquitousKey.HasCloudWritePermision)
-            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+            iCloudKVS.setObject(newValue, forKey: UbiquitousKey.HasCloudWritePermision)
+            iCloudKVS.synchronize()
         }
         
     }
@@ -120,25 +120,27 @@ class CloudManager {
         return NSError(domain: "displayNameInUsedError", code: 100, userInfo: [NSLocalizedDescriptionKey: description])
     }
     
-    func setUserDisplayName(name: String, didSet: (() -> Void), failed: ((NSError) -> Void)?) {
+    func setUserDisplayName(name: String, didSet: (() -> Void), didFail: ((NSError) -> Void)?) {
         
         func checkDisplayNameAvaliable(avaliabled: () -> Void) {
             let displayNameRecord = CKRecord(recordType: RecordType.DisplayName.rawValue, recordID: CKRecordID(recordName: name.lowercaseString))
-            publicCloudDatabase.saveRecord(displayNameRecord,
-                didSave: { avaliabled() },
-                failed: { $0.code == CKErrorCode.ServerRecordChanged.rawValue ? failed?(self.displayNameInUsedError) : failed?($0) }
-            )
+            
+//            publicCloudDatabase.saveRecord(displayNameRecord,
+//                didSave: { avaliabled() },
+//                didFail: { $0.code == CKErrorCode.ServerRecordChanged.rawValue ? didFail?(self.displayNameInUsedError) : didFail?($0) }
+//            )
         }
         
         checkDisplayNameAvaliable {
             self.getCurrentUser(
                 didGet: {
                     (currentUser) in
-                    guard currentUser[UsersKey.DisplayName] == nil else {  self.currentUser = currentUser ; didSet() ; return }
-                    currentUser[UsersKey.DisplayName] = name
-                    self.publicCloudDatabase.saveRecord(currentUser, didSave: { self.currentUser = currentUser ; didSet()}, failed: failed)
-                },
-                failed: failed
+                    guard currentUser.displayName == nil else {  self.currentUser = currentUser ; didSet() ; return }
+                    currentUser.displayName = name
+                    currentUser.saveInBackground(
+                        didSave: { self.currentUser = currentUser ; didSet()},
+                        didFail: didFail)                },
+                didFail: didFail
             )
         }
         
@@ -175,12 +177,12 @@ class CloudManager {
     private var likedExperiments: [String] {
         
         get {
-            return NSUbiquitousKeyValueStore.defaultStore().arrayForKey(UbiquitousKey.LikedExperiments) as? [String] ?? [String]()
+            return iCloudKVS.arrayForKey(UbiquitousKey.LikedExperiments) as? [String] ?? [String]()
         }
         
         set {
-            NSUbiquitousKeyValueStore.defaultStore().setArray(newValue, forKey: UbiquitousKey.LikedExperiments)
-            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+            iCloudKVS.setArray(newValue, forKey: UbiquitousKey.LikedExperiments)
+            iCloudKVS.synchronize()
         }
         
     }
@@ -217,12 +219,12 @@ class CloudManager {
     private var followingUsers: [String] {
         
         get {
-            return NSUbiquitousKeyValueStore.defaultStore().arrayForKey(UbiquitousKey.FollowingUsers) as? [String] ?? [String]()
+            return iCloudKVS.arrayForKey(UbiquitousKey.FollowingUsers) as? [String] ?? [String]()
         }
         
         set {
-            NSUbiquitousKeyValueStore.defaultStore().setArray(newValue, forKey: UbiquitousKey.FollowingUsers)
-            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+            iCloudKVS.setArray(newValue, forKey: UbiquitousKey.FollowingUsers)
+            iCloudKVS.synchronize()
         }
         
     }
@@ -235,7 +237,7 @@ class CloudManager {
         let options: CKSubscriptionOptions = .FiresOnRecordCreation
         
         
-        let predicate = NSPredicate.predicateForFollowLinkToUser(currentUser!)
+        let predicate = NSPredicate.predicateForFollowLinkToUser(currentUser!.record)
         let subscription = CKSubscription(
             recordType: RecordType.Link.rawValue,
             predicate: predicate,
@@ -279,12 +281,12 @@ class CloudManager {
     private var subscriptionID: String? {
         
         get {
-            return NSUbiquitousKeyValueStore.defaultStore().stringForKey(UbiquitousKey.SubscriptionID)
+            return iCloudKVS.stringForKey(UbiquitousKey.SubscriptionID)
         }
         
         set {
-            NSUbiquitousKeyValueStore.defaultStore().setObject(newValue, forKey: UbiquitousKey.SubscriptionID)
-            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+            iCloudKVS.setObject(newValue, forKey: UbiquitousKey.SubscriptionID)
+            iCloudKVS.synchronize()
         }
         
     }
@@ -295,27 +297,27 @@ class CloudManager {
     
     var previousChangeToken: CKServerChangeToken?  {
         get {
-            guard let encodedObjectData = NSUbiquitousKeyValueStore.defaultStore().objectForKey(UbiquitousKey.PreviousChangeToken) as? NSData else { return nil }
+            guard let encodedObjectData = iCloudKVS.objectForKey(UbiquitousKey.PreviousChangeToken) as? NSData else { return nil }
             return CKServerChangeToken.tokenWithArchivedData(encodedObjectData)
         }
         
         set(newToken) {
-            NSUbiquitousKeyValueStore.defaultStore().setObject(newToken?.archivedData(), forKey:UbiquitousKey.PreviousChangeToken)
-            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+            iCloudKVS.setObject(newToken?.archivedData(), forKey:UbiquitousKey.PreviousChangeToken)
+            iCloudKVS.synchronize()
         }
     }
     
     var notificationRecords: [[CKRecord]] {
         
         get {
-            let datas =  NSUbiquitousKeyValueStore.defaultStore().arrayForKey(UbiquitousKey.NotificationRecords) as? [[NSData]] ?? [[NSData]]()
+            let datas =  iCloudKVS.arrayForKey(UbiquitousKey.NotificationRecords) as? [[NSData]] ?? [[NSData]]()
             return datas.map { $0.map { CKRecord.recordWithArchivedData($0) } }
         }
         
         set {
             let datas = newValue.map { $0.map { $0.archivedData() } }
-            NSUbiquitousKeyValueStore.defaultStore().setArray(datas, forKey: UbiquitousKey.NotificationRecords)
-            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+            iCloudKVS.setArray(datas, forKey: UbiquitousKey.NotificationRecords)
+            iCloudKVS.synchronize()
         }
         
     }
@@ -323,12 +325,12 @@ class CloudManager {
     var experimentSearchHistories: [String] {
         
         get {
-            return NSUbiquitousKeyValueStore.defaultStore().arrayForKey(UbiquitousKey.ExperimentSearchHistories) as? [String] ?? [String]()
+            return iCloudKVS.arrayForKey(UbiquitousKey.ExperimentSearchHistories) as? [String] ?? [String]()
         }
         
         set {
-            NSUbiquitousKeyValueStore.defaultStore().setArray(newValue, forKey: UbiquitousKey.ExperimentSearchHistories)
-            NSUbiquitousKeyValueStore.defaultStore().synchronize()
+            iCloudKVS.setArray(newValue, forKey: UbiquitousKey.ExperimentSearchHistories)
+            iCloudKVS.synchronize()
         }
 
     }
@@ -353,7 +355,7 @@ class CloudManager {
     func startObserve() {
         kvso =
             NSNotificationCenter.defaultCenter().addObserverForName(NSUbiquitousKeyValueStoreDidChangeExternallyNotification,
-                object: NSUbiquitousKeyValueStore.defaultStore(),
+                object: iCloudKVS,
                 queue: NSOperationQueue.mainQueue()) { (noti) in
                     guard let changedKeys = (noti.userInfo as! Dictionary<String,AnyObject>)[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String] else { return }
                     guard changedKeys.contains(UbiquitousKey.CurrentUser) else { return }

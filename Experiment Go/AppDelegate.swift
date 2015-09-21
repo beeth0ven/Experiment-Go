@@ -11,29 +11,17 @@ import CoreData
 import CloudKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
+
+class AppDelegate: UIResponder, UIApplicationDelegate  {
     
-    struct Cloud {
-        static let Manager = CloudManager()
-    }
-    
-    struct Cache {
-        static let Manager = CacheManager()
-    }
+    struct Cloud { static let Manager = CloudManager() }
+    struct Cache { static let Manager = CacheManager() }
     
 
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
-        // Init all users for the first time.
-
-        // Override point for customization after application launch.
-        let splitViewController = self.window!.rootViewController as! UISplitViewController
-        splitViewController.delegate = self
-        
         requestForRemoteNotifications()
-        //  Set default UI style.
         DefaultStyleController.applyStyle()
         return true
     }
@@ -59,12 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
     
     
-    // MARK: - Split view
 
-    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
-        return true
-    }
-    
 }
 
 

@@ -12,10 +12,8 @@ import CloudKit
 
 class RecordTableViewCell: UITableViewCell {
     
-    var record: CKRecord? { didSet { updateUI() } }
+    var object: CKObject? { didSet { updateUI() } }
     
-    func updateUI() {
-        
-    }
+    func updateUI() {}
     
 }

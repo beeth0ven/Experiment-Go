@@ -9,18 +9,6 @@
 import Foundation
 import CloudKit
 
-extension CKDatabase {
-    func saveRecord(record: CKRecord, didSave: () -> () ,failed: ((NSError) -> Void)?) {
-        saveRecord(record) {
-            (_, error) in
-            dispatch_async(dispatch_get_main_queue()) {
-                guard error == nil else { failed?(error!) ; return }
-                didSave()
-            }
-        }
-    }
-}
-
 extension CKSubscription {
     
     convenience init(likeToExperiment experiment: CKRecord) {
@@ -135,10 +123,6 @@ extension CKRecord {
     }
     
     
-    var createdBy: CKRecord? {
-        return AppDelegate.Cache.Manager.userForUserRecordID(creatorUserRecordID!)
-    }
-    
     var linkToRecordID: CKRecordID? {
         guard recordType == LinkKey.RecordType else { return nil }
         guard let ref = self[LinkKey.To] as? CKReference else { return nil }
@@ -178,38 +162,8 @@ extension CKServerChangeToken{
 
 // MARK: - Cloud Kit Record Key
 
-struct RecordKey {
-    static let RecordID = "recordID"
-    static let CreationDate = "creationDate"
-    static let CreatorUserRecordID = "creatorUserRecordID"
-    static let ModificationDate = "modificationDate"
-    static let LastModifiedUserRecordID = "lastModifiedUserRecordID"
-    static let RecordChangeTag = "recordChangeTag"
-    static let AboutMe = "aboutMe"
-}
 
-struct UsersKey {
-    static let RecordType = "User"
-    static let ProfileImageAsset = "profileImageAsset"
-    static let DisplayName = "displayName"
-    
-}
 
-struct ExperimentKey {
-    static let RecordType = "Experiment"
-    static let Title = "title"
-    static let Conclusion = "conclusion"
-    static let Reviews = "reviews"
-    static let Fans = "fans"
-    static let Content = "content"
-    static let FootNote = "footNote"
-    static let Principle = "principle"
-    static let Purpose = "purpose"
-    static let Results = "results"
-    static let Steps = "steps"
-    static let Tags = "tags"
-
-}
 
 struct ReviewKey {
     static let RecordType = "Review"
@@ -225,13 +179,6 @@ struct LinkKey {
     static let To = "to"
 }
 
-enum RecordType: String {
-    case Experiment
-    case Review
-    case Link
-    case Users
-    case DisplayName
-}
 
 enum LinkType: String {
     case UserLikeExperiment

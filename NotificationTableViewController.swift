@@ -76,12 +76,14 @@ class NotificationTableViewController: UITableViewController {
         
         fetchRecordsOperation.fetchRecordsCompletionBlock = {
             (_, error) in
-            guard error == nil else { abort() }
-            self.notificationRecords.insert(self.currentPageNotificationRecords, atIndex: 0)
-            self.tableView.insertSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
-            self.refreshControl?.endRefreshing()
-            self.previousChangeToken = self.currentServerChangeToken
-            if self.moreComing { self.fetchNextPage() }
+            dispatch_async(dispatch_get_main_queue()){
+                guard error == nil else { abort() }
+                self.notificationRecords.insert(self.currentPageNotificationRecords, atIndex: 0)
+                self.tableView.insertSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
+                self.refreshControl?.endRefreshing()
+                self.previousChangeToken = self.currentServerChangeToken
+                if self.moreComing { self.fetchNextPage() }
+            }
 
         }
         

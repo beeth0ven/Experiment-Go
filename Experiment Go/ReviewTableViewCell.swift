@@ -19,33 +19,33 @@ class ReviewTableViewCell: RecordTableViewCell {
     
     override func updateUI() {
         
-        authorProfileImage = nil
-        
-        let review = record!
-        let reviewBy = review.createdBy!
-        
-        bodyabel.text = review[ReviewKey.Body] as? String
-        authorLabel.text = reviewBy[UsersKey.DisplayName] as? String
-        creationDateLabel.text = review.smartStringForCreationDate
-        
-        guard let url = profileImageURL else { return }
-        
-        UIImage.getImageForURL(url) {
-            guard url == self.profileImageURL else { return }
-            self.authorProfileImage = $0
-        }
+//        authorProfileImage = nil
+//        
+//        let review = record!
+//        let reviewBy = review.createdBy!
+//        
+//        bodyabel.text = review[ReviewKey.Body] as? String
+//        authorLabel.text = reviewBy[UsersKey.DisplayName] as? String
+//        creationDateLabel.text = review.smartStringForCreationDate
+//        
+//        guard let url = profileImageURL else { return }
+//        
+//        UIImage.getImageForURL(url) {
+//            guard url == self.profileImageURL else { return }
+//            self.authorProfileImage = $0
+//        }
         
     }
     
 
     
-    var authorProfileImage: UIImage? {
-        get { return authorProfileImageButton.backgroundImageForState(.Normal) }
-        set { authorProfileImageButton.setBackgroundImage(newValue, forState: .Normal) }
-    }
-    
-    var profileImageURL: NSURL? {
-        return (record?.createdBy?[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL
-    }
+//    var authorProfileImage: UIImage? {
+//        get { return authorProfileImageButton.backgroundImageForState(.Normal) }
+//        set { authorProfileImageButton.setBackgroundImage(newValue, forState: .Normal) }
+//    }
+//    
+//    var profileImageURL: NSURL? {
+//        return (record?.createdBy?[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL
+//    }
     
 }

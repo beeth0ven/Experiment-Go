@@ -16,8 +16,8 @@ class NotificationTableViewCell : RecordTableViewCell {
     @IBOutlet weak var creationDateLabel: UILabel!
     
     override func updateUI() {
-        aboutMeLabel.text = record?[RecordKey.AboutMe] as? String
-        creationDateLabel.text = record?.smartStringForCreationDate
+//        aboutMeLabel.text = record?[RecordKey.AboutMe] as? String
+//        creationDateLabel.text = record?.smartStringForCreationDate
     }
     
 }

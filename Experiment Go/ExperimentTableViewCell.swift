@@ -10,19 +10,18 @@ import UIKit
 import CloudKit
 
 class ExperimentTableViewCell: RecordTableViewCell {
+    
+    var experiment: CKExperiment? {
+        get { return object as? CKExperiment }
+        set { object = newValue }
+    }
 
     var authorProfileImage: UIImage? {
-        get {
-            return authorProfileImageButton.backgroundImageForState(.Normal)
-        }
-        set {
-            authorProfileImageButton.setBackgroundImage(newValue, forState: .Normal)
-        }
+        get { return authorProfileImageButton.backgroundImageForState(.Normal) }
+        set { authorProfileImageButton.setBackgroundImage(newValue, forState: .Normal) }
     }
     
-    var profileImageURL: NSURL? {
-        return (record?.createdBy?[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL
-    }
+    var profileImageURL: NSURL? { return experiment?.creatorUser?.profileImageAsset?.fileURL }
     
     @IBOutlet weak var authorProfileImageButton: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
@@ -31,11 +30,10 @@ class ExperimentTableViewCell: RecordTableViewCell {
 
     override func updateUI() {
         authorProfileImage = nil
-
-        let experiment = record!
-        titleLabel.text = experiment[ExperimentKey.Title] as? String
-        authorLabel.text = experiment.createdBy?[UsersKey.DisplayName] as? String
-        creationDateLabel.text = NSDateFormatter.smartStringFormDate(experiment.creationDate!)
+        
+        titleLabel.text = experiment?.title
+        authorLabel.text = experiment?.creatorUser?.displayName
+        creationDateLabel.text = experiment?.creationDate == nil ? nil : NSDateFormatter.smartStringFormDate(experiment!.creationDate!)
         
         guard let url = profileImageURL else { return }
         

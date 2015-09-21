@@ -98,7 +98,7 @@ class WelcomeToCloudTVC: UITableViewController {
         presentViewController(alert, animated: true, completion: nil)
     }
     
-    func failed(error: NSError) { updateUI() ; handleFailed(error) }
+    func didFail(error: NSError) { updateUI() ; handleFail(error) }
     
     private func requestPermission(sender: UITableViewCell) {
         sender.accessoryView = UIActivityIndicatorView.defaultView()
@@ -111,7 +111,7 @@ class WelcomeToCloudTVC: UITableViewController {
                 if !success { self.showPermissonAuthorizationFailedAlert() }
             },
             
-            failed: failed
+            didFail: didFail
         )
     }
     
@@ -128,7 +128,7 @@ class WelcomeToCloudTVC: UITableViewController {
                 sender.accessoryView = UIActivityIndicatorView.defaultView()
                 self.cloudManager.setUserDisplayName(name,
                     didSet: {  self.updateUI() },
-                    failed: self.failed)
+                    didFail: self.didFail)
             }
         )
     }

@@ -13,6 +13,8 @@
 		4511B2941B4FB7CF0046DF76 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4511B2921B4FB7CF0046DF76 /* LaunchScreen.xib */; };
 		4511B2A01B4FB7CF0046DF76 /* Experiment_GoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B29F1B4FB7CF0046DF76 /* Experiment_GoTests.swift */; };
 		4511B2AC1B4FBA320046DF76 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4511B2AB1B4FBA320046DF76 /* Images.xcassets */; };
+		452BF8621BAEC5560060EBA4 /* ExperimentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452BF8611BAEC5560060EBA4 /* ExperimentsTableViewController.swift */; };
+		452BF8641BAED0C10060EBA4 /* GetExperimentsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452BF8631BAED0C10060EBA4 /* GetExperimentsOperation.swift */; };
 		4537CB131B944765004378C3 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB121B944765004378C3 /* ImageTableViewCell.swift */; };
 		4537CB151B95680E004378C3 /* EditeTextTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */; };
 		4537CB191B959EF9004378C3 /* SubTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */; };
@@ -29,6 +31,10 @@
 		45983D141B73430B00ABCF38 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45983D131B73430B00ABCF38 /* CloudKit.framework */; };
 		4599C90D1B6F469B0040461F /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4599C90C1B6F469B0040461F /* ReviewViewController.swift */; };
 		459BE6941B92F261003345BF /* RecordsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459BE6931B92F261003345BF /* RecordsTableViewController.swift */; };
+		45A0230A1BAFCBA600C6BB4B /* CKUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A023091BAFCBA600C6BB4B /* CKUsers.swift */; };
+		45A0230C1BAFCBB400C6BB4B /* CKExperiment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0230B1BAFCBB400C6BB4B /* CKExperiment.swift */; };
+		45A0230E1BAFCBD500C6BB4B /* CKObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0230D1BAFCBD500C6BB4B /* CKObject.swift */; };
+		45A023111BAFE42600C6BB4B /* GetCKObjectsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A023101BAFE42600C6BB4B /* GetCKObjectsOperation.swift */; };
 		45A2A2401B89E9E6004BEF45 /* FetchedRecordsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2A23F1B89E9E6004BEF45 /* FetchedRecordsController.swift */; };
 		45A2A2421B8AE224004BEF45 /* CloudKitTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */; };
 		45A2A2441B8D7EF5004BEF45 /* RecordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2A2431B8D7EF5004BEF45 /* RecordTableViewCell.swift */; };
@@ -75,24 +81,30 @@
 		4511B29F1B4FB7CF0046DF76 /* Experiment_GoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Experiment_GoTests.swift; sourceTree = "<group>"; };
 		4511B2AB1B4FBA320046DF76 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4511B2B01B4FBACA0046DF76 /* Experiment Go-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Experiment Go-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		452BF8611BAEC5560060EBA4 /* ExperimentsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentsTableViewController.swift; sourceTree = "<group>"; };
+		452BF8631BAED0C10060EBA4 /* GetExperimentsOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GetExperimentsOperation.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		4537CB121B944765004378C3 /* ImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
 		4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditeTextTableViewController.swift; sourceTree = "<group>"; };
 		4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubTitleTableViewCell.swift; sourceTree = "<group>"; };
 		45419AC61BA57F96006F8A83 /* TagCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCollectionViewCell.swift; sourceTree = "<group>"; };
 		45419AC81BA58B9E006F8A83 /* TagsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsTableViewCell.swift; sourceTree = "<group>"; };
 		45419ACE1BA81C39006F8A83 /* AppDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDetailViewController.swift; sourceTree = "<group>"; };
-		45419AD01BA949B6006F8A83 /* WelcomeToCloudTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeToCloudTVC.swift; sourceTree = "<group>"; };
+		45419AD01BA949B6006F8A83 /* WelcomeToCloudTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = WelcomeToCloudTVC.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45629F941B5BC386000F41E6 /* ChameleonFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChameleonFramework.framework; path = "Pods/../build/Debug-iphoneos/Pods-Experiment Go/ChameleonFramework.framework"; sourceTree = "<group>"; };
 		4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicExtension.swift; sourceTree = "<group>"; };
 		458713BA1B859751004808A3 /* CacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
-		4591E1B01B8EE00200620377 /* CloudManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudManager.swift; sourceTree = "<group>"; };
+		4591E1B01B8EE00200620377 /* CloudManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CloudManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45983D0E1B71CB1000ABCF38 /* SwitchBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchBarButtonItem.swift; sourceTree = "<group>"; };
 		45983D121B7342E200ABCF38 /* Experiment Go.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Experiment Go.entitlements"; sourceTree = "<group>"; };
 		45983D131B73430B00ABCF38 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		4599C90C1B6F469B0040461F /* ReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		459BE6931B92F261003345BF /* RecordsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordsTableViewController.swift; sourceTree = "<group>"; };
 		459C3DB7BFCEAA28C645268E /* Pods-Experiment Go.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Experiment Go.release.xcconfig"; path = "Pods/Target Support Files/Pods-Experiment Go/Pods-Experiment Go.release.xcconfig"; sourceTree = "<group>"; };
+		45A023091BAFCBA600C6BB4B /* CKUsers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKUsers.swift; sourceTree = "<group>"; };
+		45A0230B1BAFCBB400C6BB4B /* CKExperiment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKExperiment.swift; sourceTree = "<group>"; };
+		45A0230D1BAFCBD500C6BB4B /* CKObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKObject.swift; sourceTree = "<group>"; };
+		45A023101BAFE42600C6BB4B /* GetCKObjectsOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetCKObjectsOperation.swift; sourceTree = "<group>"; };
 		45A2A23F1B89E9E6004BEF45 /* FetchedRecordsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedRecordsController.swift; sourceTree = "<group>"; };
 		45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitTableViewController.swift; sourceTree = "<group>"; };
 		45A2A2431B8D7EF5004BEF45 /* RecordTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordTableViewCell.swift; sourceTree = "<group>"; };
@@ -107,7 +119,7 @@
 		45CBDF221B9BF9730060AB14 /* EGSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EGSplitViewController.swift; sourceTree = "<group>"; };
 		45CBDF241B9C16410060AB14 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		45CBDF261B9C17B90060AB14 /* NotificationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotificationTableViewController.swift; path = ../NotificationTableViewController.swift; sourceTree = "<group>"; };
-		45CBDF281B9F036B0060AB14 /* CloudKit-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CloudKit-Extension.swift"; sourceTree = "<group>"; };
+		45CBDF281B9F036B0060AB14 /* CloudKit-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "CloudKit-Extension.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45DDF5C81BA2A1490006A269 /* SearchRecordsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchRecordsTableViewController.swift; sourceTree = "<group>"; };
 		45DDF5CC1BA536300006A269 /* HistoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
 		45F2E0881BA57F4100785F0B /* EditeTagsCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditeTagsCollectionViewController.swift; sourceTree = "<group>"; };
@@ -226,6 +238,7 @@
 				4511B2841B4FB7CF0046DF76 /* AppDelegate.swift */,
 				45419ACE1BA81C39006F8A83 /* AppDetailViewController.swift */,
 				45419AD01BA949B6006F8A83 /* WelcomeToCloudTVC.swift */,
+				452BF8611BAEC5560060EBA4 /* ExperimentsTableViewController.swift */,
 				45419ACB1BA7F974006F8A83 /* UISplitViewController */,
 				45A2A2451B8D907E004BEF45 /* CloudKitTableViewController */,
 				45BC4E9C1B6B5D1300A9963F /* RecordDetailViewController */,
@@ -273,11 +286,32 @@
 		45419ACD1BA7F9EA006F8A83 /* CloudKit */ = {
 			isa = PBXGroup;
 			children = (
+				45A023121BAFE44400C6BB4B /* GetCKObjectsOperation */,
+				45A0230F1BAFDAA400C6BB4B /* CKObject */,
 				45CBDF281B9F036B0060AB14 /* CloudKit-Extension.swift */,
 				4591E1B01B8EE00200620377 /* CloudManager.swift */,
 				45A2A23F1B89E9E6004BEF45 /* FetchedRecordsController.swift */,
 			);
 			name = CloudKit;
+			sourceTree = "<group>";
+		};
+		45A0230F1BAFDAA400C6BB4B /* CKObject */ = {
+			isa = PBXGroup;
+			children = (
+				45A0230D1BAFCBD500C6BB4B /* CKObject.swift */,
+				45A023091BAFCBA600C6BB4B /* CKUsers.swift */,
+				45A0230B1BAFCBB400C6BB4B /* CKExperiment.swift */,
+			);
+			name = CKObject;
+			sourceTree = "<group>";
+		};
+		45A023121BAFE44400C6BB4B /* GetCKObjectsOperation */ = {
+			isa = PBXGroup;
+			children = (
+				45A023101BAFE42600C6BB4B /* GetCKObjectsOperation.swift */,
+				452BF8631BAED0C10060EBA4 /* GetExperimentsOperation.swift */,
+			);
+			name = GetCKObjectsOperation;
 			sourceTree = "<group>";
 		};
 		45A2A2451B8D907E004BEF45 /* CloudKitTableViewController */ = {
@@ -519,6 +553,7 @@
 			files = (
 				450CDA7B1B92D6490059C1A1 /* RecordDetailViewController.swift in Sources */,
 				4537CB191B959EF9004378C3 /* SubTitleTableViewCell.swift in Sources */,
+				45A0230A1BAFCBA600C6BB4B /* CKUsers.swift in Sources */,
 				45C2FC2F1BA01BC4003B190C /* NotificationTableViewCell.swift in Sources */,
 				4537CB131B944765004378C3 /* ImageTableViewCell.swift in Sources */,
 				45419AC91BA58B9E006F8A83 /* TagsTableViewCell.swift in Sources */,
@@ -541,6 +576,9 @@
 				4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */,
 				4591E1B11B8EE00200620377 /* CloudManager.swift in Sources */,
 				45A2A2401B89E9E6004BEF45 /* FetchedRecordsController.swift in Sources */,
+				452BF8621BAEC5560060EBA4 /* ExperimentsTableViewController.swift in Sources */,
+				45A0230E1BAFCBD500C6BB4B /* CKObject.swift in Sources */,
+				45A0230C1BAFCBB400C6BB4B /* CKExperiment.swift in Sources */,
 				45A2A2421B8AE224004BEF45 /* CloudKitTableViewController.swift in Sources */,
 				45A2A2441B8D7EF5004BEF45 /* RecordTableViewCell.swift in Sources */,
 				458713BB1B859751004808A3 /* CacheManager.swift in Sources */,
@@ -549,8 +587,10 @@
 				45BC4E9E1B6DCDB800A9963F /* DefaultStyleController.swift in Sources */,
 				45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */,
 				45F2E0891BA57F4100785F0B /* EditeTagsCollectionViewController.swift in Sources */,
+				452BF8641BAED0C10060EBA4 /* GetExperimentsOperation.swift in Sources */,
 				4537CB151B95680E004378C3 /* EditeTextTableViewController.swift in Sources */,
 				45BC4E8D1B69C4A300A9963F /* ExperimentDetailViewController.swift in Sources */,
+				45A023111BAFE42600C6BB4B /* GetCKObjectsOperation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -11,7 +11,10 @@ import CloudKit
 
 class UserTableViewCell: RecordTableViewCell {
     
-    var user: CKRecord? { return record }
+    var user: CKUsers? {
+        get { return object as? CKUsers }
+        set { object = newValue }
+    }
     
     var profileImage: UIImage? {
         get {
@@ -23,7 +26,7 @@ class UserTableViewCell: RecordTableViewCell {
     }
     
     var profileImageURL: NSURL? {
-        return (user?[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL
+        return user?.profileImageAsset?.fileURL
     }
     
     @IBOutlet weak var profileImageView: UIImageView!
@@ -32,26 +35,12 @@ class UserTableViewCell: RecordTableViewCell {
     
     override func updateUI() {
         profileImage = nil
-
-        nameLabel.text = user?[UsersKey.DisplayName] as? String
-        
+        nameLabel.text = user?.displayName
         guard let url = profileImageURL else { return }
-        if let imageData = AppDelegate.Cache.Manager.assetDataForURL(url) {
-            profileImage = UIImage(data: imageData)
-        } else {
-            let qos = QOS_CLASS_USER_INITIATED
-            dispatch_async(dispatch_get_global_queue(qos, 0)) {
-                guard let imageData = NSData(contentsOfURL: url) else { return }
-                AppDelegate.Cache.Manager.cacheAssetData(imageData, forURL: url)
-                guard url == self.profileImageURL else { return }
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.profileImage = UIImage(data: imageData)
-                }
-            }
+        UIImage.getImageForURL(url) { (image) in
+            guard url == self.profileImageURL else { return }
+            self.profileImage = image
         }
-        
-      
-        
     }
 
 }

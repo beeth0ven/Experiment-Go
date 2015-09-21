@@ -8,7 +8,42 @@
 
 import UIKit
 
-class EGSplitViewController: UISplitViewController {
+class EGSplitViewController: UISplitViewController, UISplitViewControllerDelegate {
+    
+    override func loadView() {
+        super.loadView()
+        view.layer.cornerRadius = 5
+        view.layer.masksToBounds = true
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        initConfiguration()
+    }
+    
+    func initConfiguration() {
+        let controller = detailViewControllers.first! as! UINavigationController
+        viewControllers.append(controller)
+        controller.topViewController!.navigationItem.leftBarButtonItem = displayModeButtonItem()
+        delegate = self
+    }
+    
+    lazy var detailViewControllers =  DetailViewControllerType.allTypes.map { $0.viewController }
+    
+    func showDetailViewControllerAtIndex(index: Int) {
+        let controller = detailViewControllers[index]  as! UINavigationController
+        showDetailViewController(controller, sender: nil)
+        controller.topViewController!.navigationItem.leftBarButtonItem = displayModeButtonItem()
+        controller.topViewController!.navigationItem.leftItemsSupplementBackButton = true
+        toggleMasterView()
+    }
+    
+    // MARK: - UISplitView Controller Delegate
+    
+    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
+        return true
+    }
+    
     
     private enum DetailViewControllerType: String {
         case Home
@@ -37,29 +72,6 @@ class EGSplitViewController: UISplitViewController {
         
         
     }
-
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        initConfiguration()
-    }
-    
-    func initConfiguration() {
-        let controller = detailViewControllers.first! as! UINavigationController
-        viewControllers.append(controller)
-        controller.topViewController!.navigationItem.leftBarButtonItem = displayModeButtonItem()
-    }
-    
-    lazy var detailViewControllers: [UIViewController] = {
-        return DetailViewControllerType.allTypes.map { $0.viewController }
-    }()
-    
-    func showDetailViewControllerAtIndex(index: Int) {
-        let controller = detailViewControllers[index]  as! UINavigationController
-        showDetailViewController(controller, sender: nil)
-        controller.topViewController!.navigationItem.leftBarButtonItem = displayModeButtonItem()
-        controller.topViewController!.navigationItem.leftItemsSupplementBackButton = true
-        toggleMasterView()
-    }
     
 }

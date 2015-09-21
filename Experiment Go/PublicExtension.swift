@@ -16,8 +16,10 @@ public func <(date0: NSDate, date1: NSDate) -> Bool { return date0.compare(date1
 
 extension NSDate: Comparable {}
 
+typealias HandleFailed = NSError -> Void
+
 extension UIViewController {
-    func handleFailed(error: NSError) {
+    func handleFail(error: NSError) {
         var message: String
         if let errorCode = CKErrorCode(rawValue: error.code)  {
             switch errorCode{

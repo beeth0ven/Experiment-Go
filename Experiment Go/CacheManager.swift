@@ -13,27 +13,6 @@ import UIKit
 
 class CacheManager {
     
-    
-    init() { cacheCurrentUser(AppDelegate.Cloud.Manager.currentUser) }
-    
-    private var userCache: NSMutableDictionary =  NSMutableDictionary()
-    
-    var knownUserRecordNames: [String]  { return userCache.allKeys as! [String] }
-
-    func cacheUser(user: CKRecord) { userCache.setObject(user, forKey: user.recordID.recordName) }
-
-    func userForUserRecordID(userRecordID: CKRecordID) -> CKRecord? { return userCache.objectForKey(userRecordID.recordName) as? CKRecord }
-    
-    func cacheCurrentUser(currentUser: CKRecord?) {
-        if let user = currentUser {
-            userCache.setObject(user, forKey: user.recordID.recordName)
-            userCache.setObject(user, forKey: CKOwnerDefaultName)
-        } else {
-            userCache.removeObjectForKey(CKOwnerDefaultName)
-        }
-    }
-    
-    
     func cacheAssetData(data: NSData ,forURL url: NSURL) {
         let cachedUrl = localCachedURLforURL(url)
         guard fileExistsAtURL(cachedUrl) == false else { return }
