@@ -9,11 +9,11 @@
 import UIKit
 import CloudKit
 
-class ExperimentTableViewCell: RecordTableViewCell {
+class ExperimentTableViewCell: CKItemTableViewCell {
     
     var experiment: CKExperiment? {
-        get { return object as? CKExperiment }
-        set { object = newValue }
+        get { return item as? CKExperiment }
+        set { item = newValue }
     }
 
     var authorProfileImage: UIImage? {
@@ -33,7 +33,7 @@ class ExperimentTableViewCell: RecordTableViewCell {
         
         titleLabel.text = experiment?.title
         authorLabel.text = experiment?.creatorUser?.displayName
-        creationDateLabel.text = experiment?.creationDate == nil ? nil : NSDateFormatter.smartStringFormDate(experiment!.creationDate!)
+        creationDateLabel.text = (experiment?.creationDate ?? NSDate()).smartString
         
         guard let url = profileImageURL else { return }
         

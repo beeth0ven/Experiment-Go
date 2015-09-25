@@ -130,7 +130,7 @@ extension UIImage {
                     AppDelegate.Cache.Manager.cacheAssetData(imageData!, forURL: url)
                     image = UIImage(data: imageData!)
                 } else {
-                    AppDelegate.Cloud.Manager.getCurrentUserProfileImageIfNeeded()
+                    CKUsers.getCurrentUserProfileImageIfNeeded()
                 }
                 dispatch_async(dispatch_get_main_queue()) {
                     didGet(image)
@@ -160,8 +160,22 @@ extension String: CustomStringConvertible {
 }
 
 extension UIViewController {
+
+    
+    var contentViewController: UIViewController {
+        if let nav = self as? UINavigationController {
+            return nav.topViewController!
+        } else {
+            return self
+        }
+    }
+    
+    
+}
+
+extension UIViewController {
     func setBarSeparatorHidden(hidden: Bool) {
-//        print("navigationController title: \(navigationController?.title)")
+        //        print("navigationController title: \(navigationController?.title)")
         let image: UIImage? = hidden ? UIImage.onePixelImageFromColor(UIColor.clearColor()) : nil
         navigationController?.navigationBar.shadowImage = image
         navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
@@ -177,13 +191,15 @@ extension UIViewController {
         navigationController?.setToolbarHidden(!show, animated: true)
     }
     
-    var contentViewController: UIViewController {
-        if let nav = self as? UINavigationController {
-            return nav.topViewController!
-        } else {
-            return self
-        }
+    func showCloseBarButtonItemIfNeeded() {
+        //        print("navigationController count: \(navigationController?.viewControllers.count)")
+        navigationItem.leftItemsSupplementBackButton  = true
+        guard closeBarButtonItem != nil else { return }
+        guard navigationController?.viewControllers.first == self ||
+            navigationController?.viewControllers.count > 4 else { return }
+        navigationItem.leftBarButtonItems = [closeBarButtonItem!]
     }
+
     
     var flexibleSpaceBarButtonItem: UIBarButtonItem  {
         return UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
@@ -201,22 +217,25 @@ extension UIViewController {
     
     var closeBarButtonItem: UIBarButtonItem? {
         guard presentingViewController != nil else { return nil }
-        let reselt = UIBarButtonItem(title: "Close", style: .Done, target: self, action: "close")
+        let reselt = UIBarButtonItem(title: "Close", style: .Done, target: self, action: "closeClicked")
         return reselt
     }
     
-    func close() {
+    func closeClicked() {
         presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func showCloseBarButtonItemIfNeeded() {
-//        print("navigationController count: \(navigationController?.viewControllers.count)")
-        navigationItem.leftItemsSupplementBackButton  = true
-        guard closeBarButtonItem != nil else { return }
-        guard navigationController?.viewControllers.first == self ||
-        navigationController?.viewControllers.count > 4 else { return }
-        navigationItem.leftBarButtonItems = [closeBarButtonItem!]
+    var cancelBarButtonItem: UIBarButtonItem? {
+        let result = closeBarButtonItem
+        result?.title = "Cancel"
+        return result
     }
+    
+    var doneButtonItem: UIBarButtonItem {
+        return UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneClicked")
+    }
+    
+    func doneClicked() { }
     
 }
 

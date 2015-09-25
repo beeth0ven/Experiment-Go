@@ -14,21 +14,21 @@ class HistoryManager {
         static let limiteBy = 10
     }
     
-    var experimentSearchHistories: [String] {
-        get { return AppDelegate.Cloud.Manager.experimentSearchHistories }
-        set { AppDelegate.Cloud.Manager.experimentSearchHistories = newValue  }
-    }
+//    var experimentSearchHistories: [String] {
+//        get { return AppDelegate.Cloud.Manager.experimentSearchHistories }
+//        set { AppDelegate.Cloud.Manager.experimentSearchHistories = newValue  }
+//    }
     
-    func addSearchText(text: String) {
-        guard !text.isEmpty else { return }
-        let lowercaseText = text.lowercaseString
-        if let index = experimentSearchHistories.indexOf(lowercaseText) {
-            experimentSearchHistories.removeAtIndex(index)
-        }
-        var histories = experimentSearchHistories
-        histories.insert(lowercaseText, atIndex: 0)
-        while experimentSearchHistories.count > Constants.limiteBy { experimentSearchHistories.removeLast() }
-        experimentSearchHistories = histories
-    }
+//    func addSearchText(text: String) {
+//        guard !text.isEmpty else { return }
+//        let lowercaseText = text.lowercaseString
+//        if let index = experimentSearchHistories.indexOf(lowercaseText) {
+//            experimentSearchHistories.removeAtIndex(index)
+//        }
+//        var histories = experimentSearchHistories
+//        histories.insert(lowercaseText, atIndex: 0)
+//        while experimentSearchHistories.count > Constants.limiteBy { experimentSearchHistories.removeLast() }
+//        experimentSearchHistories = histories
+//    }
     
 }

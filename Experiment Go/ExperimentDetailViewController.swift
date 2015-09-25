@@ -2,339 +2,162 @@
 //  ExperimentDetailViewController.swift
 //  Experiment Go
 //
-//  Created by luojie on 7/30/15.
+//  Created by luojie on 9/22/15.
 //  Copyright © 2015 LuoJie. All rights reserved.
 //
 
-
+import Foundation
 import CloudKit
 
 
-class ExperimentDetailViewController: RecordDetailViewController {
-
-
-    // MARK: - Properties
-
-    var experiment: CKRecord? {
-        get { return record }
-        set { record = newValue }
+class ExperimentDetailViewController: ObjectDetailViewController {
+    
+    var experiment: CKExperiment? {
+        get { return item as? CKExperiment }
+        set { item = newValue }
     }
     
+    var delete: ((CKExperiment) -> Void)?
 
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        guard case .New = editeState else { return }
-        guard beenHerebefore == false else { return }
-        beenHerebefore = true
-        tableView(tableView, didSelectRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 0))
-        
-    }
-    
-    var beenHerebefore = false
-    
-    // MARK: - View Configure
-
-    
-    @IBOutlet var likeBarButtonItem: SwitchBarButtonItem!
-    
     override func configureBarButtons() {
-        switch editeState {
-        case .New:
-            navigationItem.leftBarButtonItem = closeBarButtonItem
-            navigationItem.leftBarButtonItem?.title = "Cancel"
-            navigationItem.rightBarButtonItems = [saveBarButtonItem]
-            toolbarItems = nil
-            
-        case .Read:
-            showCloseBarButtonItemIfNeeded()
-            if imCreator {
-                navigationItem.rightBarButtonItems = [editButtonItem()]
+        showCloseBarButtonItemIfNeeded()
+        if experiment?.createdByMe == true {
+            // createdByMe
+            navigationItem.rightBarButtonItem = editButtonItem()
+            if !editing {
                 toolbarItems = nil
             } else {
-                navigationItem.rightBarButtonItems = nil
-                likeBarButtonItem.on = AppDelegate.Cloud.Manager.amILikingThisExperiment(experiment!)
-                toolbarItems = [likeBarButtonItem]
+                navigationItem.hideLeftBarButtonItems()
+                toolbarItems = [flexibleSpaceBarButtonItem, deleteBarButtonItem]
             }
-            
-        case .Write:
-            navigationItem.leftItemsSupplementBackButton = false
-            navigationItem.leftBarButtonItems = [UIBarButtonItem(customView: UIView())]
-            navigationItem.rightBarButtonItems = [editButtonItem()]
-            toolbarItems = [flexibleSpaceBarButtonItem, deleteBarButtonItem]
-        }
-        
-    }
-    
-    // MARK: - @IBAction
-
-    @IBAction func toggleLikeState(sender: SwitchBarButtonItem) {
-        let unLike = !sender.on
-        if unLike {
-            doLike()
         } else {
-            doUnLike()
+            toolbarItems = [likeBarButtonItem]
         }
     }
     
-    private func doLike() {
-        self.setToolbarItems([activityBarButtonItem], animated: true)
-        AppDelegate.Cloud.Manager.likeExperiment(experiment!) {
-            (error) in
-            self.setToolbarItems([self.likeBarButtonItem], animated: true)
-            guard error == nil else { print(error!.localizedDescription) ; return }
-            self.likeBarButtonItem.on = true
-        }
-        
-        
-        
-    }
-    
-    private func doUnLike() {
-        self.setToolbarItems([activityBarButtonItem], animated: true)
-        AppDelegate.Cloud.Manager.unLikeExperiment(experiment!) {
-            (error) in
-            self.setToolbarItems([self.likeBarButtonItem], animated: true)
-            guard error == nil else { print(error!.localizedDescription) ; return }
-            self.likeBarButtonItem.on = false
-        }
-    }
-    
-    
-    
-    
-    // MARK: - Table View Data Struct
-
-    private enum RowInfo: ReusableCellInfo {
-        case Basic(key:String)
-        case SubTitle(key:String)
-        case Collection(key:String)
-        case RightDetail(key:String)
-        case User(key:String)
-        
-        var cellReuseIdentifier: String {
-            switch self {
-            case .Basic(_):
-                return "BasicCell"
-            case .SubTitle(_):
-                return "SubTitleCell"
-            case .Collection(_):
-                return "CollectionCell"
-            case .RightDetail(_):
-                return "RightDetailCell"
-            case .User(_):
-                return "UserCell"
-            }
-        }
-        
-        
-        var key: String? {
-            switch self {
-            case .Basic(let key):
-                return key
-            case .SubTitle(let key):
-                return key
-            case .Collection(let key):
-                return key
-            case .RightDetail(let key):
-                return key
-            case .User(let key):
-                return key
-            }
-        }
-        
-
-    }
-    
-    
-    override func setupSections() -> [SectionInfo] {
-        var result = [SectionInfo]()
-        // Sections 1: OverView
-        var overViewSectionRows = [ReusableCellInfo]()
-        let titleRow: RowInfo = RowInfo.RightDetail(key: ExperimentKey.Title)
-        overViewSectionRows.append(titleRow)
-        if shouldAddRowForKey(ExperimentKey.Tags) { overViewSectionRows.append(RowInfo.Collection(key: ExperimentKey.Tags)) }
-        if editing == false {
-            let creationDateRow: RowInfo = .RightDetail(key: RecordKey.CreationDate)
-            overViewSectionRows.append(creationDateRow)
-        }
-        let overViewSectionInfo = SectionInfo(title: "OverView", rows: overViewSectionRows)
-        result.append(overViewSectionInfo)
-        
-        // Sections 2: Author
-        if editing == false {
-            let authorRow: RowInfo = .User(key: RecordKey.CreatorUserRecordID)
-            let authorSectionInfo = SectionInfo(title: "Author", rows: [authorRow])
-            result.append(authorSectionInfo)
-            
-        }
-        
-        // Sections 3: Body
-        let keys = [
-            ExperimentKey.Purpose ,
-            ExperimentKey.Principle,
-            ExperimentKey.Content,
-            ExperimentKey.Steps,
-            ExperimentKey.Results
-        ]
-        let bodySectionRows: [ReusableCellInfo] = keys.flatMap { shouldAddRowForKey($0) ? RowInfo.SubTitle(key: $0) : nil }
-        if bodySectionRows.count > 0 { let bodySectionInfo = SectionInfo(title: "Body", rows: bodySectionRows) ; result.append(bodySectionInfo) }
-
-        // Sections 4: Conclusion
-        if shouldAddRowForKey(ExperimentKey.Conclusion) {
-            let conclusionRow : RowInfo = .SubTitle(key: ExperimentKey.Conclusion)
-            let conclusionSectionInfo = SectionInfo(title: "Conclusion", rows: [conclusionRow])
-            result.append(conclusionSectionInfo)
-        }
-
-        
-        // Sections 5: Foot Note
-        if shouldAddRowForKey(ExperimentKey.FootNote) {
-            let footNoteRow : RowInfo = .SubTitle(key: ExperimentKey.FootNote)
-            let footNoteSectionInfo = SectionInfo(title: "FootNote", rows: [footNoteRow])
-            result.append(footNoteSectionInfo)
-        }
-
-        // Sections 6: Related
-        if editing == false {
-            let reviewsRow: RowInfo = .Basic(key: "Reviews")
-            let fansRow: RowInfo = .Basic(key: "Fans")
-            let relateSectionInfo = SectionInfo(title: "Related", rows: [reviewsRow, fansRow])
-            result.append(relateSectionInfo)
-        }
-        return result
-    }
-    
-    private func shouldAddRowForKey(key: String) -> Bool { return editing  ? true : experiment?[key] != nil }
-    
-    override func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
-        super.configureCell(cell, atIndexPath: indexPath)
-        let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
+    override func configureCell(cell: UITableViewCell, forKey key: String) {
+        let rowInfo = RowInfo(rawValue: key)!
         switch rowInfo {
-        case .Basic(let key):
-            cell.textLabel!.text = key
-        case .SubTitle(let key):
-            guard let subTitleCell = cell as? SubTitleTableViewCell else { return }
-            subTitleCell.titleLabel.text = labelTextByKey[key]
-            let text = textForExperimentKey(key)
-            subTitleCell.subTttleLabel.text = text ?? " "
-            subTitleCell.accessoryType = editing ? .DisclosureIndicator : .None
-            
-        case .Collection(let key):
-            guard let collectionCell = cell as? TagsTableViewCell else { return }
-            collectionCell.tags = experiment?[key] as? [String] ?? []
-            collectionCell.collectionView.userInteractionEnabled = editing ? false : true
-            collectionCell.accessoryType = editing ? .DisclosureIndicator : .None
-
-        case .RightDetail(let key):
-            cell.textLabel!.text = labelTextByKey[key]
-            let text = key == RecordKey.CreationDate ?
-                experiment?.stringForCreationDate :
-                (experiment?[key] as? CustomStringConvertible)?.description
-            cell.detailTextLabel!.text = text ?? " " // For debug. nil cause the cell not update
+        case .title:
+            cell.title = key.capitalizedString
+            cell.subTitle = experiment?.title
             cell.accessoryType = editing ? .DisclosureIndicator : .None
             
-        case .User(_):
-            guard let userCell = cell as? UserTableViewCell else { break }
-            userCell.record = experiment?.createdBy
+        case .creationDate:
+            cell.title = "Date"
+            cell.subTitle = (experiment?.creationDate ?? NSDate()).string
+            
+        case .tags:
+            let collectionCell = cell as! TagsTableViewCell
+            collectionCell.tags = experiment?.tags ?? []
+            collectionCell.collectionView.userInteractionEnabled = editing ? false : true
+            cell.accessoryType = editing ? .DisclosureIndicator : .None
+
+        case .purpose, .principle, .content, .steps, .results, .conclusion, .footNote:
+            cell.title = key.capitalizedString
+            cell.subTitle = experiment?[key] as? String
+            cell.accessoryType = editing ? .DisclosureIndicator : .None
+
+        case .reviews, .fans:
+            cell.textLabel?.text = key.capitalizedString
+            
+        case .author:
+            let userCell = cell as! UserTableViewCell
+            userCell.user = experiment?.creatorUser
+        }
+    }
+    
+    override func setupSections() -> [SectionInfo] {
+        let infos = !editing ? sectionInfos : sectionInfosWhileEditing
+        return  infos.map { SectionInfo(title: $0.title, rows: $0.reusableCellInfos) }
+    }
+    
+    private var sectionInfos: [(title: String, reusableCellInfos: [ReusableCellInfo])] {
+        return allSectionInfos.flatMap {
+            if ["Author", "Related"].contains($0.title) { return  $0 }
+            let reusableCellInfos = $0.reusableCellInfos.filter { self.experiment?[$0.key]  != nil }
+            return reusableCellInfos.count > 0 ? (title: $0.title, reusableCellInfos: reusableCellInfos) : nil
+        }
+    }
+    
+    private var sectionInfosWhileEditing: [(title: String, reusableCellInfos: [ReusableCellInfo])] {
+        return allSectionInfos.filter {  ["Author", "Related"].contains($0.title) == false }
+    }
+
+    private var allSectionInfos: [(title: String, reusableCellInfos: [ReusableCellInfo])] = [
+        
+        ("OverView", [
+            RowInfo.title,
+            RowInfo.tags,
+            RowInfo.creationDate
+            ]
+        ),
+        
+        ("Author",[
+            RowInfo.author
+            ]
+        ),
+        
+        ("Body",[
+            RowInfo.purpose,
+            RowInfo.principle,
+            RowInfo.content,
+            RowInfo.steps,
+            RowInfo.results,
+            ]
+        ),
+        
+        ("Conclusion",[
+            RowInfo.conclusion
+            ]
+        ),
+        
+        ("FootNote",[
+            RowInfo.footNote
+            ]
+        ),
+        
+        ("Related",[
+            RowInfo.reviews,
+            RowInfo.fans
+            ]
+        ),
+        
+    ]
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
+        if let segueID = !editing ? rowInfo.segueID : rowInfo.segueIDWhileEditing {
+            performSegueWithIdentifier(segueID.rawValue, sender: tableView.cellForRowAtIndexPath(indexPath))
         }
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
-        guard case .Collection(_) = rowInfo else { return UITableViewAutomaticDimension }
-        return 80
+        if case .tags = rowInfo { return 80 } else { return UITableViewAutomaticDimension }
     }
     
-    
-    private var labelTextByKey: [String: String] {
-        return [
-            ExperimentKey.Title:        ExperimentKey.Title.capitalizedString,
-            ExperimentKey.Conclusion:   ExperimentKey.Conclusion.capitalizedString,
-            ExperimentKey.Content:      ExperimentKey.Content.capitalizedString,
-            ExperimentKey.Principle:    ExperimentKey.Principle.capitalizedString,
-            ExperimentKey.Purpose:      ExperimentKey.Purpose.capitalizedString,
-            ExperimentKey.Results:      ExperimentKey.Results.capitalizedString,
-            ExperimentKey.Steps:        ExperimentKey.Steps.capitalizedString,
-            ExperimentKey.Tags:         ExperimentKey.Tags.capitalizedString,
-            ExperimentKey.FootNote:     "Foot Note",
-            RecordKey.CreationDate:     "Date",
-        ]
-    }
-    
-    
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let title = sections[section].title
-        return ["FootNote", "Conclusion"].contains(title) ?  nil : title
-    }
-    // MARK: - Table view delegate
-
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        guard let segueID = segueIDAtIndexPath(indexPath) else { return }
-        self.performSegueWithIdentifier(segueID.rawValue, sender: tableView.cellForRowAtIndexPath(indexPath))
-    }
-    
-    private func segueIDAtIndexPath(indexPath: NSIndexPath) -> SegueID? {
-        guard let rowInfo = sections[indexPath.section].rows[indexPath.row] as? RowInfo else { return nil }
-        switch rowInfo {
-        case .Basic(let key):
-            return segueIDByKey[key]
-            
-        case .SubTitle(let key):
-            guard editing else { return nil }
-            return segueIDByKey[key]
-            
-        case .Collection(let key):
-            guard editing else { return nil }
-            return segueIDByKey[key]
-            
-        case .RightDetail(let key):
-            guard editing else { return nil }
-            return segueIDByKey[key]
-            
-        case .User(let key):
-            return segueIDByKey[key]
-            
-        }
-    }
-    
-
     // MARK: - Segue
-
-
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         guard let identifier = segue.identifier else { return }
         guard let segueID = SegueID(rawValue: identifier) else { return }
         switch segueID {
-        case .ShowUserDetail:
-            guard let udvc = segue.destinationViewController.contentViewController as? UserDetailViewController else { return }
-            udvc.user = experiment?.createdBy
-            
-        case .ShowReviews:
-            guard let rtvc = segue.destinationViewController.contentViewController as? RecordsTableViewController else { return }
-            rtvc.queryPredicate = NSPredicate.predicateForReviewToExperiment(experiment!)
-            
-        case .ShowFans:
-            guard let rtvc = segue.destinationViewController.contentViewController as? RecordsTableViewController else { return }
-            rtvc.queryPredicate = NSPredicate.predicateForFanLinkToExperiment(experiment!)
-            
-        case .ShowExperimentsByTag:
-            guard let srtvc = segue.destinationViewController.contentViewController as? SearchRecordsTableViewController else { return }
-            srtvc.searchText = (sender as! UIButton).currentTitle
-            srtvc.title = srtvc.searchText
-            
         case .EditeText:
             guard let ettvc = segue.destinationViewController.contentViewController as? EditeTextTableViewController else { return }
-            let indexPath = tableView.indexPathForCell((sender as! UITableViewCell))! ; let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
-            ettvc.text = textForExperimentKey(rowInfo.key!)
-            ettvc.title = labelTextByKey[rowInfo.key!]
+            let cell = sender as! UITableViewCell
+            let indexPath = tableView.indexPathForCell(cell)! ; let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
+            ettvc.title = cell.title
+            ettvc.text = cell.subTitle?.stringByTrimmingWhitespace
             
-            ettvc.doneBlock = {
+            
+            ettvc.done = {
                 (text) in
-                self.setText(text, ForExperimentKey: rowInfo.key!)
-                if rowInfo.key! ==  ExperimentKey.Title { self.title = text }
-                self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                let newText = text?.stringByTrimmingWhitespace
+                self.experiment?[rowInfo.key] = newText
+                if case .title = rowInfo { self.title = newText }
+                self.tableView.reloadCell(cell)
             }
             
         case .EditeTags:
@@ -343,50 +166,16 @@ class ExperimentDetailViewController: RecordDetailViewController {
             etcvc.tags = tagsTableViewCell.tags ?? []
             etcvc.title = tagsTableViewCell.titleLabel.text
             
-            etcvc.doneBlock = {
+            etcvc.done = {
                 (tags) in
-                guard tags != tagsTableViewCell.tags ?? [] else { return }
-                self.experiment?[ExperimentKey.Tags] = tags
-                self.tableView.reloadRowsAtIndexPaths([self.tableView.indexPathForCell(tagsTableViewCell)!], withRowAnimation: .Fade)
-
+                self.experiment?.tags = tags
+                self.tableView.reloadCell(tagsTableViewCell)
             }
+        default: break
         }
     }
     
-    private func textForExperimentKey(key: String) -> String? {
-        if (key == ExperimentKey.Tags) {
-            return (experiment?[key] as? [String])?.joinWithSeparator(" ")
-        } else {
-            return (experiment?[key] as? CustomStringConvertible)?.description
-        }
-    }
-    
-    private func setText(text: String?, ForExperimentKey key: String) {
-        if (key == ExperimentKey.Tags) {
-            experiment?[key] = text?.lowercaseString.componentsSeparatedByString(" ").filter{ $0.removeWhitespace() != "" }
-        } else {
-            experiment?[key] = text
-        }
-    }
-    
-    private var segueIDByKey: [String: SegueID] {
-        return [
-            "Reviews":                  .ShowReviews,
-            "Fans":                     .ShowFans,
-            ExperimentKey.Title:        .EditeText,
-            ExperimentKey.Conclusion:   .EditeText,
-            ExperimentKey.Content:      .EditeText,
-            ExperimentKey.Principle:    .EditeText,
-            ExperimentKey.Purpose:      .EditeText,
-            ExperimentKey.Results:      .EditeText,
-            ExperimentKey.Steps:        .EditeText,
-            ExperimentKey.FootNote:     .EditeText,
-            ExperimentKey.Tags:         .EditeTags,
 
-        ]
-    }
-    
-    
     private enum SegueID: String {
         case ShowUserDetail
         case ShowReviews
@@ -396,22 +185,124 @@ class ExperimentDetailViewController: RecordDetailViewController {
         case EditeTags
     }
     
-}
+    private enum RowInfo: String, ReusableCellInfo {
+        case title
+        case tags
+        case creationDate
+        
+        case author
 
-
-extension String {
-    func replace(string: String, with replacement: String) -> String {
-        return self.stringByReplacingOccurrencesOfString(string, withString: replacement, options: .LiteralSearch, range: nil)
+        case purpose
+        case principle
+        case content
+        case steps
+        case results
+        
+        case conclusion
+        
+        case footNote
+        
+        case reviews
+        case fans
+        
+        var cellReuseIdentifier: String {
+            switch self {
+            case .title, .creationDate:
+                return "RightDetailCell"
+            case .tags:
+                return "CollectionCell"
+            case .purpose, .principle, .content, .steps, .results, .conclusion, .footNote:
+                return "SubTitleCell"
+            case .reviews, .fans:
+                return "BasicCell"
+            case .author:
+                return "UserCell"
+            }
+        }
+        
+        var key: String { return rawValue }
+        
+        var segueID: SegueID? {
+            switch self {
+            case .author:
+                return .ShowUserDetail
+            case .reviews:
+                return .ShowReviews
+            case .fans:
+                return .ShowFans
+            default: return nil
+            }
+        }
+        
+        var segueIDWhileEditing: SegueID? {
+            switch self {
+            case .tags:
+                return .EditeTags
+            case .title, .purpose, .principle, .content, .steps, .results, .conclusion, .footNote:
+                return .EditeText
+            default: return nil
+            }
+        }
+        
     }
     
-    func removeWhitespace() -> String {
-        return replace(" ", with: "")
-    }
 }
 
+extension ExperimentDetailViewController {
+    // MARK: - Bar Button Item
+    var likeBarButtonItem: SwitchBarButtonItem {
+        let result = SwitchBarButtonItem(title: "", style: .Plain, target: self, action: "likeClicked:")
+        result.onStateTitle = "Liking"
+        result.offStateTitle = "Like"
+        result.on = false
+        return result
+    }
+    
+    func likeClicked(sender: SwitchBarButtonItem) {
+        
+    }
+    
+    var deleteBarButtonItem: UIBarButtonItem {
+        return UIBarButtonItem(title: "Delete", style: .Done, target: self, action: "deleteClicked")
+    }
+    
+    func deleteClicked() {
+        presentingViewController?.dismissViewControllerAnimated(true) { delete?(experiment!) }
+    }
+    
+    
+}
 
+extension NSDate {
+    var smartString: String {
+        let absTimeIntervalSinceNow = -timeIntervalSinceNow
+        switch absTimeIntervalSinceNow {
+        case let x where x < NSDate.OneMinute:
+            return "Now"
+        case let x where x < NSDate.OneHour:
+            // eg. 10 Minutes
+            let minutes = Int(absTimeIntervalSinceNow / NSDate.OneMinute)
+            return "\(minutes) minutes ago"
+        case let x where x < NSDate.OneDay:
+            // eg. 10 Hours
+            let hours = Int(absTimeIntervalSinceNow / NSDate.OneHour)
+            return "\(hours) hours ago"
+        default:
+            // eg. 10 Days
+            let days = Int(absTimeIntervalSinceNow / NSDate.OneDay)
+            return "\(days) days ago"
+        }
+    }
+    
+    var string: String { return NSDateFormatter.localizedStringFromDate(self, dateStyle: .MediumStyle, timeStyle: .ShortStyle) }
+    
+    static var OneMinute:   Double { return 60 }
+    static var OneHour:     Double { return 60 * 60 }
+    static var OneDay:      Double { return 24 * 60 * 60 }
 
+}
 
-
-
+extension String {
+    var stringByTrimmingWhitespace: String { return stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()) }
+}
 

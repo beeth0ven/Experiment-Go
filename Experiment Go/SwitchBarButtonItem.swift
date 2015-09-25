@@ -11,6 +11,7 @@ import UIKit
 @IBDesignable
 
 class SwitchBarButtonItem: UIBarButtonItem {
+    
     var on = false { didSet { updateUI() } }
     
     @IBInspectable

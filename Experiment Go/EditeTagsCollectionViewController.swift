@@ -12,14 +12,20 @@ class EditeTagsCollectionViewController: UICollectionViewController {
     
     var tags = [String]() { didSet { if ( tags != oldValue) { collectionView?.reloadData() } } }
     
-    var doneBlock: (([String]) -> ())?
+    var done: (([String]) -> ())?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         let layout = collectionView!.collectionViewLayout as! UICollectionViewFlowLayout
         layout.estimatedItemSize = CGSizeMake(10, 10)
+        navigationItem.rightBarButtonItem = doneButtonItem
+        navigationItem.rightBarButtonItem?.enabled = false
     }
-    override func viewWillAppear(animated: Bool) { super.viewWillAppear(animated) ; showOrHideToolBarIfNeeded() ; navigationController?.setNavigationBarHidden(false, animated: true) }
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        showOrHideToolBarIfNeeded()
+        navigationController?.setNavigationBarHidden(false, animated: true)
+    }
 
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int { return 1 }
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return  tags.count + 1 }
@@ -36,14 +42,13 @@ class EditeTagsCollectionViewController: UICollectionViewController {
     }
     
     @IBAction func tagClicked(button: UIButton) {
-        
-        
         guard button.currentTitle != "+" else { performSegueWithIdentifier(SegueID.AddTag.rawValue, sender: button) ; return }
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alert.addAction(UIAlertAction(title: "Edite", style: .Default, handler: { (_) in self.performSegueWithIdentifier(SegueID.EditeTag.rawValue, sender: button) }))
-        alert.addAction(UIAlertAction(title: "Delete", style: .Destructive, handler: { (_) in
+        alert.addAction(UIAlertAction(title: "Edite", style: .Default, handler: { _ in self.performSegueWithIdentifier(SegueID.EditeTag.rawValue, sender: button) }))
+        alert.addAction(UIAlertAction(title: "Delete", style: .Destructive, handler: { _ in
             let indexPath = self.indexPathForCellSubView(button)!
             self.tags.removeAtIndex(indexPath.row)
+            self.navigationItem.rightBarButtonItem?.enabled = true
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
         
@@ -55,11 +60,13 @@ class EditeTagsCollectionViewController: UICollectionViewController {
 
     }
     
-    @IBAction func done(sender: UIBarButtonItem) {
-        doneBlock?(tags)
-        navigationController?.popViewControllerAnimated(true)
-    }
     
+    override func doneClicked() {
+        done?(tags)
+        navigationController?.popViewControllerAnimated(true)
+
+    }
+
     // MARK: - Segue
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         guard let identifier = segue.identifier else { return }
@@ -68,10 +75,11 @@ class EditeTagsCollectionViewController: UICollectionViewController {
         case .AddTag:
             guard let dttvc = segue.destinationViewController.contentViewController as? EditeTextTableViewController else { return }
             dttvc.title = "New Tag"
-            dttvc.doneBlock = {
+            dttvc.done = {
                 (text) in
                 guard !String.isBlank(text) else { return }
                 self.tags.append(text!)
+                self.navigationItem.rightBarButtonItem?.enabled = true
             }
             
         case .EditeTag:
@@ -80,11 +88,12 @@ class EditeTagsCollectionViewController: UICollectionViewController {
             let indexPath = indexPathForCellSubView(button)!
             dttvc.title = "Edite Tag"
             dttvc.text = button.currentTitle
-            dttvc.doneBlock = {
+            dttvc.done = {
                 (text) in
                 guard !String.isBlank(text) else { return }
                 self.tags.removeAtIndex(indexPath.row)
                 self.tags.insert(text!, atIndex: indexPath.row)
+                self.navigationItem.rightBarButtonItem?.enabled = true
             }
         }
     }

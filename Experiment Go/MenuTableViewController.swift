@@ -9,7 +9,7 @@
 import UIKit
 import CloudKit
 
-class MenuTableViewController: UITableViewController {
+class MenuTableViewController: UITableViewController, CurrentUserHasChangeObserver {
     
     private struct Storyboard {
         static let TableHeaderViewDefualtHeight: CGFloat = 150
@@ -31,56 +31,33 @@ class MenuTableViewController: UITableViewController {
     
     @IBOutlet weak var profileImagButtonActivity: UIActivityIndicatorView!
     
-    var currentUser: CKRecord? { return AppDelegate.Cloud.Manager.currentUser }
+    var currentUser: CKUsers? { return CKUsers.currentUser }
 
     // MARK: - View Controller Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setBarSeparatorHidden(true)
-        startObserve()
+        startObserveCurrentUserHasChange()
         updateUI()
     }
     
-    // MARK: - KVO
-
-    deinit {
-        stopObserve()
-    }
-    
-    var cuhco:  NSObjectProtocol?
-    
-    func startObserve() {
-        cuhco =
-            NSNotificationCenter.defaultCenter().addObserverForName(Notification.CurrentUserHasChange.rawValue,
-                object: nil,
-                queue: NSOperationQueue.mainQueue()) { (_) in self.updateUI() }
-    }
-    
-    func stopObserve() {
-        if cuhco != nil { NSNotificationCenter.defaultCenter().removeObserver(cuhco!) }
-    }
-
+    deinit { stopObserveCurrentUserHasChange() }
     
     // MARK: - Update UI
     var profileImageURL: NSURL? {
-        return (AppDelegate.Cloud.Manager.currentUser?[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL
+        return currentUser?.profileImageAsset?.fileURL
     }
     
     
     func updateUI() {
         // Clear UI
         profileImagButton.setBackgroundImage(nil, forState: .Normal)
-        
-        // Reset UI
-        self.title = currentUser?[UsersKey.DisplayName] as? String ?? "Menu"
-        
-        guard let url = profileImageURL else { profileImagButtonActivity?.stopAnimating() ; return  }
-        
+        self.title = currentUser?.displayName ?? "Menu"
+        guard let url = profileImageURL else { return  }
         UIImage.getImageForURL(url) {
             guard url == self.profileImageURL else { return }
             self.profileImagButton.setBackgroundImage($0, forState: .Normal)
-            self.profileImagButtonActivity?.stopAnimating()
         }
 
     }
@@ -125,11 +102,12 @@ class MenuTableViewController: UITableViewController {
         guard let segueID = SegueID(rawValue: identifier) else { return }
         switch segueID {
         case .ShowUserDetail:
-            guard let udvc = segue.destinationViewController.contentViewController as? UserDetailViewController else { return }
-            udvc.user = AppDelegate.Cloud.Manager.currentUser
+            guard let udvc = segue.destinationViewController.contentViewController as? UserDetailViewController else { abort() }
+            udvc.user = CKUsers.currentUser
+            
         case .ShowAppDetail:
-        guard let advc = segue.destinationViewController.contentViewController as? AppDetailViewController else { return }
-        guard let ppc = advc.navigationController?.popoverPresentationController else { return }
+            guard let advc = segue.destinationViewController.contentViewController as? AppDetailViewController else { return }
+            guard let ppc = advc.navigationController?.popoverPresentationController else { return }
             ppc.backgroundColor = UIColor.whiteColor()
             ppc.delegate = self
         }
@@ -155,42 +133,5 @@ extension MenuTableViewController: UIPopoverPresentationControllerDelegate {
     }
 }
 
-extension MenuTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
-    
-    @IBAction func changeProfileImage(sender: UIButton) {
-        let ipc = UIImagePickerController()
-        ipc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        ipc.allowsEditing = true
-        ipc.delegate = self
-        presentViewController(ipc, animated: true, completion: nil)
-    }
-    
-
-    // MARK: - Image Picker Controller Delegate
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        let image = info[UIImagePickerControllerEditedImage] as? UIImage ?? info[UIImagePickerControllerOriginalImage] as! UIImage
-        let imageData = UIImageJPEGRepresentation(image, 0.2)!
-        let profileImageAsset = CKAsset(data: imageData)
-        let currentUser = AppDelegate.Cloud.Manager.currentUser!
-        currentUser[UsersKey.ProfileImageAsset] = profileImageAsset
-        self.profileImagButtonActivity?.startAnimating()
-        AppDelegate.Cloud.Manager.publicCloudDatabase.saveRecord(currentUser) { (_, error) in
-            guard error == nil else { print(error!.localizedDescription) ; abort() }
-            dispatch_async(dispatch_get_main_queue()) {
-                self.updateUI()
-            }
-        }
-        self.dismissViewControllerAnimated(true) {
-            UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: .Fade)
-        }
-        
-    }
-    
-        func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true) {
-            UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: .Fade)
-        }
-    }
-}
 
 

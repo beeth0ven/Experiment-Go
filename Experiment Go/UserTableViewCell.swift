@@ -9,25 +9,19 @@
 import UIKit
 import CloudKit
 
-class UserTableViewCell: RecordTableViewCell {
+class UserTableViewCell: CKItemTableViewCell {
     
     var user: CKUsers? {
-        get { return object as? CKUsers }
-        set { object = newValue }
+        get { return item as? CKUsers }
+        set { item = newValue }
     }
     
     var profileImage: UIImage? {
-        get {
-            return profileImageView.image
-        }
-        set {
-            profileImageView.image = newValue
-        }
+        get { return profileImageView.image }
+        set { profileImageView.image = newValue }
     }
     
-    var profileImageURL: NSURL? {
-        return user?.profileImageAsset?.fileURL
-    }
+    var profileImageURL: NSURL? { return user?.profileImageAsset?.fileURL }
     
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!

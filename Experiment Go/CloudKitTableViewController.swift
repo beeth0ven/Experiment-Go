@@ -9,262 +9,169 @@
 import CloudKit
 import CoreData
 
+
+
 @IBDesignable
 
-class CloudKitTableViewController: UITableViewController {
-
-    // MARK: - Public
+class CloudKitTableViewController: UITableViewController, TableViewControllerCellSelfSize {
     
-    // Require to be setted from storyboard
-    @IBInspectable
-    var recordType: String = ExperimentKey.RecordType
-    
-    @IBInspectable
-    var cellReusableIdentifier: String?
-    
-    @IBInspectable
-    var fetchType: String = FetchedRecordsController.FetchType.IncludeCreatorUser.rawValue {
-        didSet {
-            fetchedRecordsController.fetchType = FetchedRecordsController.FetchType(rawValue: fetchType)!
-        }
-    }
-    
-    @IBInspectable
-    var passCreatorUser: Bool = false
-
-    // Optional to be setted from storyboard
-    
-    var sortKey: String = "creationDate"
-    
-    var sortAscending: Bool = false
-    
-//    @IBInspectable
-    var recordsPerPage: Int = 20
-
-//    @IBInspectable
-    var includeCreatorUser: Bool = true
-    
-    @IBInspectable
-    var estimatedRowHeight: CGFloat = 80
-
-    var queryPredicate: NSPredicate = NSPredicate(value: true) { didSet { fetchedRecordsController.fetchedQuery = queryForTable() } }
-    
+    var items = [[CKItem]]()
     
     // MARK: - View Controller Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureTableView()
-        refresh()
-        startObserveIfNeeded()
+        enableCellSelfSize()
         showCloseBarButtonItemIfNeeded()
+        refresh()
     }
-    
-    deinit {
-       stopObserveIfNeeded()
-    }
-   
-    // MARK: - Key Value Observe
-    
-    var uno: NSObjectProtocol?
-    
-    private func startObserveIfNeeded() {
-        guard includeCreatorUser else { return }
-        uno =
-            NSNotificationCenter.defaultCenter().addObserverForName(Notification.CurrentUserHasChange.rawValue,
-                object: nil,
-                queue: NSOperationQueue.mainQueue(),
-                usingBlock: {
-                    (_) in
-                    self.updateVisibleCells()
-            })
-    }
-    
-    private func stopObserveIfNeeded() {
-        guard uno != nil else { return }
-        NSNotificationCenter.defaultCenter().removeObserver(uno!)
-    }
+
     
     // MARK: - @IBAction
-    
-    func refresh() {
-        refresh(refreshControl)
-    }
+
+    func refresh() { refresh(refreshControl) }
     
     @IBAction func refresh(sender: UIRefreshControl?) {
         refreshControl?.endRefreshing()
-        fetchedRecordsController.refreshData()
+        refreshData()
         tableView.reloadData()
     }
     
-    // MARK: - Update UI
+    func refreshData() {
+        guard !loading else { return }
+        loading = true
+        items.removeAll()
+        let refreshOp = refreshOperation
+        refreshOp.didGet = didGet
+        refreshOp.didFail = didFail
+        refreshOp.start()
+        
+    }
+    
+    func loadNextPage() {
+        guard let loadNextPageOp = loadNextPageOperation else { return }
+        guard !loading else { return }
+        loading = true
+        loadNextPageOp.didGet = didGet
+        loadNextPageOp.didFail = didFail
+        loadNextPageOp.start()
+    }
+    
+    func didGet(objects: [CKItem],cursor: CKQueryCursor?) {
+        loading = false
+        self.items.append(objects)
+        tableView.appendASection()
+        lastCursor = cursor
+    }
+    
+    func didFail(error: NSError) {
+        loading = false
+        handleFail(error)
+    }
+    
+    var refreshOperation: GetCKItemsOperation {
+        let query = CKQuery(recordType: RecordType.Experiment.rawValue )
+        return GetObjectsWithCreatorUserOperation(type: .Refresh(query))
+    }
+    
+    var loadNextPageOperation: GetCKItemsOperation? {
+        guard let cursor = lastCursor else { return nil }
+        return GetObjectsWithCreatorUserOperation(type: .GetNextPage(cursor))
+    }
+    
+    var lastCursor: CKQueryCursor?
+    var loading = false { didSet { loading ? beginRefresh() : endRefresh() } }
 
-    
-    func updateVisibleCells() {
-        for cell in self.tableView.visibleCells {
-            self.configureCell(cell, atIndexPath: self.tableView.indexPathForCell(cell)!)
-        }
-    }
-    
-    func configureTableView() {
-        tableView.estimatedRowHeight = estimatedRowHeight
-        tableView.rowHeight = UITableViewAutomaticDimension
-//        tableView.tableFooterView = UIView()
-    }
-    
-    
-    @IBOutlet weak var tableFooterActivityIndicatorView: UIActivityIndicatorView!
-    @IBOutlet weak var tableFooterAppIconImageView: UIImageView!
-    @IBOutlet weak var tableFooterLabel: UILabel!
-    
-    var loadingState: LoadingState = .Loading {
-        didSet {
-            switch loadingState {
-            case .Finish:
-                tableFooterAppIconImageView.hidden = false
-                tableFooterActivityIndicatorView.hidden = true
-                tableFooterLabel.hidden = true
-            case .Loading:
-                tableFooterActivityIndicatorView.hidden = false
-                tableFooterAppIconImageView.hidden = true
-                tableFooterLabel.hidden = true
-            case .Failed:
-                tableFooterLabel.hidden = false
-                tableFooterAppIconImageView.hidden = true
-                tableFooterActivityIndicatorView.hidden = true
-            }
-        }
-    }
-    
-
-    
     // MARK: - Table view data source
-    
+    @IBInspectable
+    var cellReusableIdentifier: String?
+
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return fetchedRecordsController.fetchedRecords.count
+        return items.count
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return fetchedRecordsController.fetchedRecords[section].count
+        return items[section].count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellReusableIdentifier!, forIndexPath: indexPath)
-        self.configureCell(cell, atIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellReusableIdentifier!, forIndexPath: indexPath) as! CKItemTableViewCell
+        cell.item = items[indexPath.section][indexPath.row]
         return cell
     }
     
-    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
-        let record = fetchedRecordsController.fetchedRecords[indexPath.section][indexPath.row]
-        guard let recordCell = cell as? RecordTableViewCell else { return }
-        recordCell.record = record
+    // MARK: - Table view delegate
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
-    
-    
-    
+
     // MARK: - Scroll View
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        guard fetchedRecordsController.moreComing else { return }
+        guard lastCursor != nil else { return }
         let tableBottomHeight = scrollView.contentOffset.y + scrollView.bounds.height
         let contentBottomHeight = scrollView.contentSize.height
         if contentBottomHeight - tableBottomHeight < scrollView.bounds.height/2 {
-            fetchedRecordsController.fetchNextPage()
+            loadNextPage()
         }
     }
 
     
-    // MARK: - Init
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
+    @IBOutlet weak var tableFooterActivityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var tableFooterAppIconImageView: UIImageView!
     
-    private func queryForTable() -> CKQuery {
-        guard let recordType = RecordType(rawValue: recordType) else { abort() }
-        let query = CKQuery(recordType: recordType.rawValue, predicate: queryPredicate)
-        query.sortDescriptors = [NSSortDescriptor(key: sortKey, ascending: sortAscending)]
-        return query
-    }
-    
-    var fetchedRecordsController: FetchedRecordsController {
-        if _fetchedRecordsController != nil { return _fetchedRecordsController! }
-        guard let fetchType  = FetchedRecordsController.FetchType(rawValue: fetchType) else { abort() }
-        _fetchedRecordsController = FetchedRecordsController(
-            fetchedQuery: queryForTable(),
-            recordsPerPage: recordsPerPage,
-            passCreatorUser: passCreatorUser,
-            fetchType: fetchType)
-        
-        _fetchedRecordsController!.delegate = self
-        return _fetchedRecordsController!
-    }
-    
-    var _fetchedRecordsController: FetchedRecordsController?
-    
-    
-    enum LoadingState {
-        case Finish
-        case Loading
-        case Failed
+    enum FetchType: String {
+        case ObjectsWithCreatorUser
     }
 }
 
-extension CloudKitTableViewController: FetchedRecordsControllerDelegate {
-    
-    // Refresh Data Delegate
-    func controllerWillRefreshData(controller: FetchedRecordsController) {
-        print("controller Will Refresh Data")
-        loadingState = .Loading
+extension UITableView {
+    func appendASection() {
+        insertSections(NSIndexSet(index: numberOfSections), withRowAnimation: .Fade)
     }
     
-    func controllerFailedToRefreshData(controller: FetchedRecordsController, error: NSError) {
-        print(error.localizedDescription) ; abort()
+    static var DefaultEstimatedRowHeight: CGFloat { return 66 }
+
+}
+
+extension CKQuery {
+    convenience init(recordType: String) {
+        self.init(recordType: RecordType(rawValue: recordType)!.rawValue, predicate: NSPredicate(value: true))
+        self.sortDescriptors = [NSSortDescriptor(key: RecordKey.creationDate.rawValue, ascending: false)]
     }
-    
-    func controllerDidRefreshData(controller: FetchedRecordsController) {
-        print("controller Did Refresh Data")
-        loadingState = .Finish
-    }
-    
-    // Fetch Next Page Delegate
-    func controllerWillFetchNextPage(controller: FetchedRecordsController) {
-        print("controller Will Fetch Next Page")
-        loadingState = .Loading
-    }
-    
-    func controllerFailedToFetchNextPage(controller: FetchedRecordsController, error: NSError) {
-        print(error.localizedDescription) ; abort()
-    }
-    
-    func controllerDidFetchNextPage(controller: FetchedRecordsController) {
-        print("controller Did Fetch Next Page")
-        loadingState = .Finish
-    }
-    
-    // Content Change Delegate
-    func controllerWillChangeContent(controller: FetchedRecordsController) {
-        print("controller Will Change Content")
-        tableView.beginUpdates()
-    }
-    
-    func controller(controller: FetchedRecordsController, didChangeSections sections: NSIndexSet, forChangeType type: NSFetchedResultsChangeType) {
-        print("controller Did Change Sections")
-        switch type {
-        case .Insert:
-            tableView.insertSections(sections, withRowAnimation: .Fade)
-        case .Delete:
-            tableView.deleteSections(sections, withRowAnimation: .Fade)
-        default: break
-        }
-    }
-    
-    func controllerDidChangeContent(controller: FetchedRecordsController) {
-        print("controller Did Change Content")
-        tableView.endUpdates()
+}
+
+protocol TableViewControllerCellSelfSize {
+    var tableView: UITableView! { get set }
+    func enableCellSelfSize()
+}
+
+extension TableViewControllerCellSelfSize {
+    func enableCellSelfSize(){
+        tableView.estimatedRowHeight = UITableView.DefaultEstimatedRowHeight
+        tableView.rowHeight = UITableViewAutomaticDimension
     }
 }
 
 
+protocol Refreshable {
+    func beginRefresh()
+    func endRefresh()
+}
 
+extension CloudKitTableViewController: Refreshable {
+    func beginRefresh() {
+        tableFooterActivityIndicatorView.hidden = false
+        tableFooterAppIconImageView.hidden = true
+    }
+    
+    func endRefresh() {
+        tableFooterActivityIndicatorView.hidden = true
+        tableFooterAppIconImageView.hidden = false
+    }
+}
 
+extension UITableView {
+    func updateVisibleCells() { reloadRowsAtIndexPaths(indexPathsForVisibleRows!, withRowAnimation: .Fade) }
+}
 

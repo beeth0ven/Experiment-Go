@@ -14,15 +14,14 @@ import CloudKit
 
 class AppDelegate: UIResponder, UIApplicationDelegate  {
     
-    struct Cloud { static let Manager = CloudManager() }
     struct Cache { static let Manager = CacheManager() }
-    
 
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         requestForRemoteNotifications()
         DefaultStyleController.applyStyle()
+//        CKUsers.updateCurrentUser()
         return true
     }
     

@@ -10,9 +10,9 @@ import UIKit
 import CloudKit
 
 
-class RecordTableViewCell: UITableViewCell {
+class CKItemTableViewCell: UITableViewCell {
     
-    var object: CKObject? { didSet { updateUI() } }
+    var item: CKItem? { didSet { updateUI() } }
     
     func updateUI() {}
     

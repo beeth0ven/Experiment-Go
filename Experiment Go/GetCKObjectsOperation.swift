@@ -1,5 +1,5 @@
 //
-//  GetCKObjectsOperation.swift
+//  GetCKItemsOperation.swift
 //  Experiment Go
 //
 //  Created by luojie on 9/21/15.
@@ -10,25 +10,32 @@ import Foundation
 
 import CloudKit
 
-class GetCKObjectsOperation: NSOperation {
-    var didGet: (([CKObject], CKQueryCursor?) -> Void)?
+class GetCKItemsOperation: NSOperation {
+    
+    var didGet: (([CKItem], CKQueryCursor?) -> Void)?
     var didFail: HandleFailed?
     
     var type: Type
     
     init(type: Type) {  self.type = type }
-    
+        
     enum Type {
         case Refresh(CKQuery)
-        case LoadNextPage(CKQueryCursor)
+        case GetNextPage(CKQueryCursor)
         
         var queryOperationToAttempt: CKQueryOperation {
             switch self {
             case .Refresh(let query):
                 return CKQueryOperation(query: query)
-            case .LoadNextPage(let cursor):
+            case .GetNextPage(let cursor):
                 return CKQueryOperation(cursor: cursor)
             }
         }
+    }
+}
+
+extension CKDatabaseOperation {
+    func begin() {
+        CKContainer.defaultContainer().publicCloudDatabase.addOperation(self)
     }
 }

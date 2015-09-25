@@ -13,10 +13,13 @@ class EditeTextTableViewController: UITableViewController {
     // MARK: - Properties
     
     var text: String? { didSet { updateUI() } }
+    var done: ((String?) -> ())?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         updateUI()
+        navigationItem.rightBarButtonItem = doneButtonItem
+        navigationItem.rightBarButtonItem?.enabled = false
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
@@ -24,28 +27,22 @@ class EditeTextTableViewController: UITableViewController {
         super.viewDidAppear(animated)
         bodyTextView.becomeFirstResponder()
     }
-
+    
+    override func doneClicked() {
+        bodyTextView.resignFirstResponder()
+        done?(text)
+        navigationController?.popViewControllerAnimated(true)
+    }
     
     // MARK: - View Configure
     @IBOutlet weak var bodyTextView: UITextView! { didSet { bodyTextView.delegate = self } }
     
-    func updateUI() {
-        bodyTextView?.text = text
-    }
-    
-    
-    var doneBlock: ((String?) -> ())?
-    
-    @IBAction func done(sender: UIBarButtonItem) {
-        bodyTextView.resignFirstResponder()
-        doneBlock?(text)
-        navigationController?.popViewControllerAnimated(true)
-    }
-    
+    func updateUI() { bodyTextView?.text = text }
 }
 
 extension EditeTextTableViewController: UITextViewDelegate {
     func textViewDidChange(textView: UITextView) {
         text = textView.text
+        navigationItem.rightBarButtonItem?.enabled = true
     }
 }

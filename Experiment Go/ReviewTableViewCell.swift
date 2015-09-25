@@ -9,7 +9,7 @@
 import UIKit
 import CloudKit
 
-class ReviewTableViewCell: RecordTableViewCell {
+class ReviewTableViewCell: CKItemTableViewCell {
     
 
     @IBOutlet weak var authorProfileImageButton: UIButton!

@@ -10,7 +10,7 @@ import UIKit
 import CloudKit
 
 
-class NotificationTableViewCell : RecordTableViewCell {
+class NotificationTableViewCell : CKItemTableViewCell {
     
     @IBOutlet weak var aboutMeLabel: UILabel!
     @IBOutlet weak var creationDateLabel: UILabel!
