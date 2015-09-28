@@ -12,7 +12,7 @@ import CloudKit
 class UserTableViewCell: CKItemTableViewCell {
     
     var user: CKUsers? {
-        get { return item as? CKUsers }
+        get { return item is CKUsers ? item as? CKUsers : item?.creatorUser }
         set { item = newValue }
     }
     

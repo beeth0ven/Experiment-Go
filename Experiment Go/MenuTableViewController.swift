@@ -10,29 +10,30 @@ import UIKit
 import CloudKit
 
 class MenuTableViewController: UITableViewController, CurrentUserHasChangeObserver {
-    
-    private struct Storyboard {
-        static let TableHeaderViewDefualtHeight: CGFloat = 150
+
+    @IBOutlet weak var tableHeaderContentViewHeightConstraint: NSLayoutConstraint! {
+        didSet { tableHeaderViewDefualtHeight = tableHeaderContentViewHeightConstraint.constant }
     }
     
-    @IBOutlet weak var tableHeaderContentViewHeightConstraint: NSLayoutConstraint!
-    
-    @IBOutlet weak var profileImagButton: UIButton!  {
+    @IBOutlet weak var profileImageView: UIImageView! {
         didSet {
             // Add border
-            profileImagButton.layer.borderColor = UIColor.whiteColor().CGColor
-            profileImagButton.layer.borderWidth = profileImagButton.bounds.size.height / 32
+            profileImageView.layer.borderColor = UIColor.whiteColor().CGColor
+            profileImageView.layer.borderWidth = profileImageView.bounds.size.height / 32
             // Add corner radius
-            profileImagButton.layer.cornerRadius = profileImagButton.bounds.size.height / 2
-            profileImagButton.layer.masksToBounds = true
+            profileImageView.layer.cornerRadius = profileImageView.bounds.size.height / 2
+            profileImageView.layer.masksToBounds = true
             
         }
     }
     
-    @IBOutlet weak var profileImagButtonActivity: UIActivityIndicatorView!
+    var profileImage: UIImage? {
+        get { return profileImageView.image }
+        set { profileImageView.image = newValue }
+    }
     
     var currentUser: CKUsers? { return CKUsers.currentUser }
-
+    
     // MARK: - View Controller Lifecycle
 
     override func viewDidLoad() {
@@ -52,12 +53,12 @@ class MenuTableViewController: UITableViewController, CurrentUserHasChangeObserv
     
     func updateUI() {
         // Clear UI
-        profileImagButton.setBackgroundImage(nil, forState: .Normal)
+        profileImage = nil
         self.title = currentUser?.displayName ?? "Menu"
         guard let url = profileImageURL else { return  }
         UIImage.getImageForURL(url) {
             guard url == self.profileImageURL else { return }
-            self.profileImagButton.setBackgroundImage($0, forState: .Normal)
+            self.profileImage = $0
         }
 
     }
@@ -76,10 +77,12 @@ class MenuTableViewController: UITableViewController, CurrentUserHasChangeObserv
     }
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        let height = Storyboard.TableHeaderViewDefualtHeight - scrollView.contentOffset.y
+        let height = tableHeaderViewDefualtHeight! - scrollView.contentOffset.y
         tableHeaderContentViewHeightConstraint.constant = max(40, height)
     }
     
+    private var tableHeaderViewDefualtHeight: CGFloat?
+
     // MARK: - About App Button
 
     @IBOutlet weak var aboutAppButton: UIButton!    {

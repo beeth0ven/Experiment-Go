@@ -20,71 +20,74 @@ typealias HandleFailed = NSError -> Void
 
 extension UIViewController {
     func handleFail(error: NSError) {
-        var message: String
-        if let errorCode = CKErrorCode(rawValue: error.code)  {
-            switch errorCode{
-            case .NetworkUnavailable:
-                message = "NetworkUnavailable"
-            case .NetworkFailure:
-                message = "NetworkFailure"
-            case .ServiceUnavailable:
-                message = "ServiceUnavailable"
-            case .RequestRateLimited:
-                message = "RequestRateLimited"
-            case .UnknownItem:
-                message = "UnknownItem"
-            case .InvalidArguments:
-                message = "InvalidArguments"
-            case .IncompatibleVersion:
-                message = "IncompatibleVersion"
-            case .BadContainer:
-                message = "BadContainer"
-            case .MissingEntitlement:
-                message = "MissingEntitlement"
-            case .PermissionFailure:
-                message = "PermissionFailure"
-            case .BadDatabase:
-                message = "BadDatabase"
-            case .AssetFileNotFound:
-                message = "AssetFileNotFound"
-            case .PartialFailure:
-                message = "PartialFailure"
-            case .QuotaExceeded:
-                message = "QuotaExceeded"
-            case .OperationCancelled:
-                message = "OperationCancelled"
-            case .NotAuthenticated:
-                message = "NotAuthenticated"
-            case .ResultsTruncated:
-                message = "ResultsTruncated"
-            case .ServerRecordChanged:
-                message = "ServerRecordChanged"
-            case .AssetFileModified:
-                message = "AssetFileModified"
-            case .ChangeTokenExpired:
-                message = "ChangeTokenExpired"
-            case .BatchRequestFailed:
-                message = "BatchRequestFailed"
-            case .ZoneBusy:
-                message = "ZoneBusy"
-            case .ZoneNotFound:
-                message = "ZoneNotFound"
-            case .LimitExceeded:
-                message = "LimitExceeded"
-            case .UserDeletedZone:
-                message = "UserDeletedZone"
-            case .InternalError:
-                message = "InternalError"
-            case .ServerRejectedRequest:
-                message = "ServerRejectedRequest"
-            case .ConstraintViolation:
-                message = "ConstraintViolation"
-            }
-        } else {
-            message =  error.localizedDescription
-        }
-        
-        let alert = UIAlertController(errorMessage: error.localizedDescription)
+//        let message: String
+//        if let errorCode = CKErrorCode(rawValue: error.code)  {
+//            switch errorCode{
+//            case .NetworkUnavailable:
+//                message = "NetworkUnavailable"
+//            case .NetworkFailure:
+//                message = "NetworkFailure"
+//            case .ServiceUnavailable:
+//                message = "ServiceUnavailable"
+//            case .RequestRateLimited:
+//                message = "RequestRateLimited"
+//            case .UnknownItem:
+//                message = "UnknownItem"
+//            case .InvalidArguments:
+//                message = "InvalidArguments"
+//            case .IncompatibleVersion:
+//                message = "IncompatibleVersion"
+//            case .BadContainer:
+//                message = "BadContainer"
+//            case .MissingEntitlement:
+//                message = "MissingEntitlement"
+//            case .PermissionFailure:
+//                message = "PermissionFailure"
+//            case .BadDatabase:
+//                message = "BadDatabase"
+//            case .AssetFileNotFound:
+//                message = "AssetFileNotFound"
+//            case .PartialFailure:
+//                message = "PartialFailure"
+//            case .QuotaExceeded:
+//                message = "QuotaExceeded"
+//            case .OperationCancelled:
+//                message = "OperationCancelled"
+//            case .NotAuthenticated:
+//                message = "NotAuthenticated"
+//            case .ResultsTruncated:
+//                message = "ResultsTruncated"
+//            case .ServerRecordChanged:
+//                message = "ServerRecordChanged"
+//            case .AssetFileModified:
+//                message = "AssetFileModified"
+//            case .ChangeTokenExpired:
+//                message = "ChangeTokenExpired"
+//            case .BatchRequestFailed:
+//                message = "BatchRequestFailed"
+//            case .ZoneBusy:
+//                message = "ZoneBusy"
+//            case .ZoneNotFound:
+//                message = "ZoneNotFound"
+//            case .LimitExceeded:
+//                message = "LimitExceeded"
+//            case .UserDeletedZone:
+//                message = "UserDeletedZone"
+//            case .InternalError:
+//                message = "InternalError"
+//            case .ServerRejectedRequest:
+//                message = "ServerRejectedRequest"
+//            case .ConstraintViolation:
+//                message = "ConstraintViolation"
+//            }
+//        } else {
+//            message =  error.localizedDescription
+//        }
+        showAlertWithMessage(error.localizedDescription)
+    }
+    
+    func showAlertWithMessage(message: String) {
+        let alert = UIAlertController(errorMessage: message)
         self.presentViewController(alert, animated: true, completion: nil)
     }
 }
@@ -130,7 +133,7 @@ extension UIImage {
                     AppDelegate.Cache.Manager.cacheAssetData(imageData!, forURL: url)
                     image = UIImage(data: imageData!)
                 } else {
-                    CKUsers.getCurrentUserProfileImageIfNeeded()
+                    CKUsers.updateCurrentUserIfNeeded()
                 }
                 dispatch_async(dispatch_get_main_queue()) {
                     didGet(image)
@@ -182,7 +185,10 @@ extension UIViewController {
         navigationController?.toolbar.setShadowImage(image, forToolbarPosition: .Any)
         navigationController?.toolbar.setBackgroundImage(image, forToolbarPosition: .Any, barMetrics: .Default)
         navigationController?.hidesBarsOnSwipe = hidden
-        if hidden == false { navigationController?.setNavigationBarHidden(false, animated: true) }
+        if hidden == false {
+            navigationController?.setNavigationBarHidden(false, animated: true)
+//            print("navigationController count: \(navigationController?.viewControllers.count)")
+        }
     }
     
     func showOrHideToolBarIfNeeded() {
@@ -191,15 +197,24 @@ extension UIViewController {
         navigationController?.setToolbarHidden(!show, animated: true)
     }
     
-    func showCloseBarButtonItemIfNeeded() {
-        //        print("navigationController count: \(navigationController?.viewControllers.count)")
+    func showBackwardBarButtonItemIfNeeded() {
+//        print("navigationController count: \(navigationController?.viewControllers.count)")
         navigationItem.leftItemsSupplementBackButton  = true
-        guard closeBarButtonItem != nil else { return }
-        guard navigationController?.viewControllers.first == self ||
-            navigationController?.viewControllers.count > 4 else { return }
-        navigationItem.leftBarButtonItems = [closeBarButtonItem!]
+        if navigationController?.viewControllers.first == self && presentingViewController != nil {
+            navigationItem.leftBarButtonItems = [closeBarButtonItem]
+        } else if navigationController?.viewControllers.count > 2 {
+            navigationItem.leftBarButtonItems = [rewindBarButtonItem]
+        }
     }
-
+    
+    var rewindBarButtonItem: UIBarButtonItem {
+        return UIBarButtonItem(title: "Rewind", style: .Plain, target: self, action: "rewindClicked")
+    }
+    
+    func rewindClicked() {
+        navigationController?.popToRootViewControllerAnimated(true)
+    }
+    
     
     var flexibleSpaceBarButtonItem: UIBarButtonItem  {
         return UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
@@ -215,10 +230,8 @@ extension UIViewController {
     }
     
     
-    var closeBarButtonItem: UIBarButtonItem? {
-        guard presentingViewController != nil else { return nil }
-        let reselt = UIBarButtonItem(title: "Close", style: .Done, target: self, action: "closeClicked")
-        return reselt
+    var closeBarButtonItem: UIBarButtonItem {
+        return UIBarButtonItem(title: "Close", style: .Done, target: self, action: "closeClicked")
     }
     
     func closeClicked() {
@@ -227,7 +240,7 @@ extension UIViewController {
     
     var cancelBarButtonItem: UIBarButtonItem? {
         let result = closeBarButtonItem
-        result?.title = "Cancel"
+        result.title = "Cancel"
         return result
     }
     

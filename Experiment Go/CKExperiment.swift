@@ -67,62 +67,58 @@ class CKExperiment: CKItem {
     }
     
     override var displayTitle: String? { return title }
-//    
-//    override subscript(key: String) -> AnyObject? {
-//        get {
-//            guard let experimentKey = ExperimentKey(rawValue: key) else { return super[key] }
-//
-//            switch experimentKey {
-//            case .title:
-//                return title
-//            case .tags:
-//                return tags
-//            case .purpose:
-//                return purpose
-//            case .principle:
-//                return principle
-//            case .content:
-//                return content
-//            case .steps:
-//                return steps
-//            case .results:
-//                return results
-//            case .conclusion:
-//                return conclusion
-//            case .footNote:
-//                return footNote
-//            }
-//        }
-//        
-//        set {
-//            guard let experimentKey = ExperimentKey(rawValue: key) else { return }
-//            switch experimentKey {
-//            case .title:
-//                title = newValue as? String
-//            case .tags:
-//                tags = newValue as? [String]
-//            case .purpose:
-//                purpose = newValue as? String
-//            case .principle:
-//                principle = newValue as? String
-//            case .content:
-//                content = newValue as? String
-//            case .steps:
-//                steps = newValue as? String
-//            case .results:
-//                results = newValue as? String
-//            case .conclusion:
-//                conclusion = newValue as? String
-//            case .footNote:
-//                footNote = newValue as? String
-//            }
-//        }
     
-
-//    }
-
+    // MARK: - CKQuery
+    
+    var reviewsQuery: CKQuery {
+        return CKQuery(recordType: .Link, predicate: reviewsQueryPredicate)
+    }
+    
+    private var reviewsQueryPredicate: NSPredicate {
+        let typePredicate = NSPredicate(format: "%K = %@", LinkKey.linkType.rawValue, LinkType.UserReviewToExperiment.rawValue)
+        let experimentPredicate = NSPredicate(format: "%K = %@", LinkKey.experimentRef.rawValue, recordID)
+        return NSCompoundPredicate(type: .AndPredicateType, subpredicates: [typePredicate, experimentPredicate])
+    }
+    
+    var fansQuery: CKQuery {
+        return CKQuery(recordType: .Link, predicate: fansQueryPredicate)
+    }
+    
+    private var fansQueryPredicate: NSPredicate {
+        let typePredicate = NSPredicate(format: "%K = %@", LinkKey.linkType.rawValue, LinkType.UserLikeExperiment.rawValue)
+        let experimentPredicate = NSPredicate(format: "%K = %@", LinkKey.experimentRef.rawValue, recordID)
+        return NSCompoundPredicate(type: .AndPredicateType, subpredicates: [typePredicate, experimentPredicate])
+    }
+    
+    static func QueryForSearchText(text: String?) -> CKQuery {
+        return CKQuery(recordType: .Experiment, predicate: PredicateForSearchText(text))
+    }
+    
+    static private func PredicateForSearchText(text: String?) -> NSPredicate {
+        let texts: [String] = String.isBlank(text) ? [] : text!.lowercaseString.componentsSeparatedByString(" ")
+        guard texts.count > 0 else { return NSPredicate(value: true) }
+        let tagsPredicates = texts.map { NSPredicate(format: "%K CONTAINS %@", ExperimentKey.tags.rawValue , $0) }
+        let tagsPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: tagsPredicates)
+//        let titlePredicates = texts.map { NSPredicate(format: "%K CONTAINS %@", ExperimentKey.title.rawValue , $0) }
+//        let titlePredicate = NSCompoundPredicate(andPredicateWithSubpredicates: titlePredicates)
+        return tagsPredicate
+//            NSCompoundPredicate(orPredicateWithSubpredicates: [tagsPredicate, titlePredicate])
+    }
 }
 
+extension CKQuery {
+    
+    convenience init(recordType: RecordType, predicate: NSPredicate) {
+        self.init(recordType: recordType.rawValue, predicate: predicate)
+        self.sortDescriptors = [NSSortDescriptor(key: RecordKey.creationDate.rawValue, ascending: false)]
+    }
+    
+    convenience init(recordType: String) {
+        self.init(recordType: RecordType(rawValue: recordType)!.rawValue, predicate: NSPredicate(value: true))
+        self.sortDescriptors = [NSSortDescriptor(key: RecordKey.creationDate.rawValue, ascending: false)]
+        
+    }
+}
 
 enum ExperimentKey: String {
     case title

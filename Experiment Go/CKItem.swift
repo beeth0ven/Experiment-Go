@@ -17,7 +17,7 @@ class CKItem: NSObject {
     
     var recordType: RecordType                  { return RecordType(rawValue: record.recordType)! }
     var recordID: CKRecordID                    { return record.recordID }
-    var creationDate: NSDate?                   { return record.creationDate }
+    var creationDate: NSDate                    { return record.creationDate ?? NSDate() }
     var creatorUserRecordID: CKRecordID?        { return record.creatorUserRecordID }
     var modificationDate: NSDate?               { return record.modificationDate }
     var lastModifiedUserRecordID: CKRecordID?   { return record.lastModifiedUserRecordID }
@@ -47,12 +47,12 @@ class CKItem: NSObject {
         case .Experiment:
             return CKExperiment(record: record)
         case .Link:
-            return CKLinks(record: record)
+            return CKLink(record: record)
         }
     }
     
     var displayTitle: String? { return nil }
-    
+
     convenience init(data: NSData) {
         self.init(record: NSKeyedUnarchiver.unarchiveObjectWithData(data) as! CKRecord)
     }
@@ -63,8 +63,10 @@ class CKItem: NSObject {
     }
     
     func saveInBackground(didSave didSave: (Void -> Void)? = nil ,didFail: ((NSError) -> Void)? = nil) {
+        print((self as! CKUsers).profileImageAsset!.fileURL)
         CKContainer.defaultContainer().publicCloudDatabase.saveRecord(record) {
-            (_, error) in
+            (user, error) in
+            print(CKUsers(record: user!).profileImageAsset!.fileURL)
             dispatch_async(dispatch_get_main_queue()) {
                 if let error = error { didFail?(error) ; return }
                 didSave?()

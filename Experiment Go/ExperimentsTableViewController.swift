@@ -8,23 +8,32 @@
 
 import CloudKit
 
-class ExperimentsTableViewController: CloudKitTableViewController, CurrentUserHasChangeObserver {
+class ExperimentsTableViewController: CloudKitTableViewController {
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        startObserveCurrentUserHasChange()
-    }
-    deinit { stopObserveCurrentUserHasChange() }
-    func updateUI() { self.tableView.updateVisibleCells() }
-
+    var queryType: QueryType?
+    
     override var refreshOperation: GetCKItemsOperation {
-        let query = CKQuery(recordType: RecordType.Experiment.rawValue )
-        return GetObjectsWithCreatorUserOperation(type: .Refresh(query))
+        switch queryType!{
+        case .PostedBy(let user):
+                return GetUserPostedExperimentsOperation(postedBy: user)
+        case .LikedBy(let user):
+            return GetUserLikedExperimentsOperation(likedBy: user)
+        }
     }
     
     override var loadNextPageOperation: GetCKItemsOperation? {
         guard let cursor = lastCursor else { return nil }
-        return GetObjectsWithCreatorUserOperation(type: .GetNextPage(cursor))
+        switch queryType!{
+        case .PostedBy(_):
+            return GetUserPostedExperimentsOperation(type: .GetNextPage(cursor))
+        case .LikedBy(_):
+            return GetUserLikedExperimentsOperation(type: .GetNextPage(cursor))
+        }
+    }
+    
+    enum QueryType {
+        case PostedBy(CKUsers)
+        case LikedBy(CKUsers)
     }
     
     // MARK: - Segue
@@ -43,6 +52,11 @@ class ExperimentsTableViewController: CloudKitTableViewController, CurrentUserHa
             let cell = sender as! ExperimentTableViewCell
             edvc.experiment = cell.experiment
             edvc.delete = deleteExperiment
+            
+        case .ShowUserDetail:
+            guard let udvc = segue.destinationViewController.contentViewController as? UserDetailViewController,
+            let cell = UITableViewCell.cellForView(sender as! UIButton) as? CKItemTableViewCell else { return }
+            udvc.user = cell.item?.creatorUser
         }
     }
     
@@ -89,8 +103,19 @@ class ExperimentsTableViewController: CloudKitTableViewController, CurrentUserHa
     private enum SegueID: String {
         case AddExperiment
         case ShowExperiment
+        case ShowUserDetail
     }
 
+}
+extension UITableViewCell {
+    class func cellForView(view: UIView) -> UITableViewCell? {
+        var superView = view.superview
+        while superView != nil {
+            if let cell = superView as? UITableViewCell { return cell }
+            superView = superView!.superview
+        }
+        return nil
+    }
 }
 
 extension UITableView {

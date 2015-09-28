@@ -33,9 +33,9 @@
 		45A0230E1BAFCBD500C6BB4B /* CKItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0230D1BAFCBD500C6BB4B /* CKItem.swift */; };
 		45A023111BAFE42600C6BB4B /* GetCKObjectsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A023101BAFE42600C6BB4B /* GetCKObjectsOperation.swift */; };
 		45A023181BB01B7700C6BB4B /* GetObjectsWithCreatorUserOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A023171BB01B7700C6BB4B /* GetObjectsWithCreatorUserOperation.swift */; };
-		45A0231A1BB148CF00C6BB4B /* CKLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A023191BB148CF00C6BB4B /* CKLinks.swift */; };
+		45A0231A1BB148CF00C6BB4B /* CKLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A023191BB148CF00C6BB4B /* CKLink.swift */; };
 		45A0231E1BB15D8700C6BB4B /* ExperimentDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0231D1BB15D8700C6BB4B /* ExperimentDetailViewController.swift */; };
-		45A023201BB161CC00C6BB4B /* ObjectDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0231F1BB161CC00C6BB4B /* ObjectDetailViewController.swift */; };
+		45A023201BB161CC00C6BB4B /* ItemDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0231F1BB161CC00C6BB4B /* ItemDetailViewController.swift */; };
 		45A2A2421B8AE224004BEF45 /* CloudKitTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */; };
 		45A2A2441B8D7EF5004BEF45 /* CKItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2A2431B8D7EF5004BEF45 /* CKItemTableViewCell.swift */; };
 		45AAB0A21B6E117200595467 /* ReviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */; };
@@ -44,10 +44,20 @@
 		45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */; };
 		45BC4E9E1B6DCDB800A9963F /* DefaultStyleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E9D1B6DCDB800A9963F /* DefaultStyleController.swift */; };
 		45C2FC2F1BA01BC4003B190C /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C2FC2E1BA01BC4003B190C /* NotificationTableViewCell.swift */; };
+		45C78D571BB94FF500D0DEC2 /* SearchExperimentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C78D561BB94FF500D0DEC2 /* SearchExperimentsTableViewController.swift */; };
+		45C78D5A1BB9513500D0DEC2 /* GetUserPostedExperimentsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C78D591BB9513500D0DEC2 /* GetUserPostedExperimentsOperation.swift */; };
+		45C78D5E1BB95D9B00D0DEC2 /* GetUserLikedExperimentsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C78D5D1BB95D9B00D0DEC2 /* GetUserLikedExperimentsOperation.swift */; };
 		45CBDF231B9BF9730060AB14 /* EGSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CBDF221B9BF9730060AB14 /* EGSplitViewController.swift */; };
 		45CBDF251B9C16410060AB14 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CBDF241B9C16410060AB14 /* StoreKit.framework */; };
 		45DDF5CD1BA536300006A269 /* HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DDF5CC1BA536300006A269 /* HistoryManager.swift */; };
-		45E1E21B1BB5316B00463B46 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E21A1BB5316B00463B46 /* ImagePickerController.swift */; };
+		45E1E21D1BB7AB8C00463B46 /* ReviewsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E21C1BB7AB8C00463B46 /* ReviewsTableViewController.swift */; };
+		45E1E21F1BB7AD3100463B46 /* GetReviewsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E21E1BB7AD3100463B46 /* GetReviewsOperation.swift */; };
+		45E1E2211BB7BC2800463B46 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E2201BB7BC2800463B46 /* ReviewViewController.swift */; };
+		45E1E2251BB7D2CD00463B46 /* GetExperimentFansOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E2241BB7D2CD00463B46 /* GetExperimentFansOperation.swift */; };
+		45E1E2271BB7D7D400463B46 /* FansTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E2261BB7D7D400463B46 /* FansTableViewController.swift */; };
+		45E1E2291BB7DE1D00463B46 /* SearchExperimentsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E2281BB7DE1D00463B46 /* SearchExperimentsOperation.swift */; };
+		45E1E22B1BB9147000463B46 /* EditeImageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E22A1BB9147000463B46 /* EditeImageTableViewController.swift */; };
+		45E1E22D1BB9182E00463B46 /* EditeValueTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E22C1BB9182E00463B46 /* EditeValueTableViewController.swift */; };
 		45F2E0891BA57F4100785F0B /* EditeTagsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F2E0881BA57F4100785F0B /* EditeTagsCollectionViewController.swift */; };
 		45FC5F771B6DD7080045F178 /* MenuItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */; };
 		AF79662E4748E3048A76116B /* Pods_Experiment_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2877209060858C580BC83B66 /* Pods_Experiment_Go.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -99,9 +109,9 @@
 		45A0230D1BAFCBD500C6BB4B /* CKItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CKItem.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45A023101BAFE42600C6BB4B /* GetCKObjectsOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GetCKObjectsOperation.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45A023171BB01B7700C6BB4B /* GetObjectsWithCreatorUserOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GetObjectsWithCreatorUserOperation.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		45A023191BB148CF00C6BB4B /* CKLinks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CKLinks.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		45A023191BB148CF00C6BB4B /* CKLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CKLink.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45A0231D1BB15D8700C6BB4B /* ExperimentDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentDetailViewController.swift; sourceTree = "<group>"; };
-		45A0231F1BB161CC00C6BB4B /* ObjectDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ObjectDetailViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		45A0231F1BB161CC00C6BB4B /* ItemDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ItemDetailViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CloudKitTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45A2A2431B8D7EF5004BEF45 /* CKItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CKItemTableViewCell.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ReviewTableViewCell.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -110,10 +120,20 @@
 		45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExperimentTableViewCell.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45BC4E9D1B6DCDB800A9963F /* DefaultStyleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultStyleController.swift; sourceTree = "<group>"; };
 		45C2FC2E1BA01BC4003B190C /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NotificationTableViewCell.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		45C78D561BB94FF500D0DEC2 /* SearchExperimentsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchExperimentsTableViewController.swift; sourceTree = "<group>"; };
+		45C78D591BB9513500D0DEC2 /* GetUserPostedExperimentsOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetUserPostedExperimentsOperation.swift; sourceTree = "<group>"; };
+		45C78D5D1BB95D9B00D0DEC2 /* GetUserLikedExperimentsOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetUserLikedExperimentsOperation.swift; sourceTree = "<group>"; };
 		45CBDF221B9BF9730060AB14 /* EGSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EGSplitViewController.swift; sourceTree = "<group>"; };
 		45CBDF241B9C16410060AB14 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		45DDF5CC1BA536300006A269 /* HistoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
-		45E1E21A1BB5316B00463B46 /* ImagePickerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
+		45E1E21C1BB7AB8C00463B46 /* ReviewsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewsTableViewController.swift; sourceTree = "<group>"; };
+		45E1E21E1BB7AD3100463B46 /* GetReviewsOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetReviewsOperation.swift; sourceTree = "<group>"; };
+		45E1E2201BB7BC2800463B46 /* ReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
+		45E1E2241BB7D2CD00463B46 /* GetExperimentFansOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetExperimentFansOperation.swift; sourceTree = "<group>"; };
+		45E1E2261BB7D7D400463B46 /* FansTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FansTableViewController.swift; sourceTree = "<group>"; };
+		45E1E2281BB7DE1D00463B46 /* SearchExperimentsOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchExperimentsOperation.swift; sourceTree = "<group>"; };
+		45E1E22A1BB9147000463B46 /* EditeImageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditeImageTableViewController.swift; sourceTree = "<group>"; };
+		45E1E22C1BB9182E00463B46 /* EditeValueTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditeValueTableViewController.swift; sourceTree = "<group>"; };
 		45F2E0881BA57F4100785F0B /* EditeTagsCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditeTagsCollectionViewController.swift; sourceTree = "<group>"; };
 		45FC5F761B6DD7080045F178 /* MenuItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItemTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -231,7 +251,7 @@
 				45419ACE1BA81C39006F8A83 /* AppDetailViewController.swift */,
 				45419ACB1BA7F974006F8A83 /* UISplitViewController */,
 				45A2A2451B8D907E004BEF45 /* CloudKitTableViewController */,
-				45BC4E9C1B6B5D1300A9963F /* ObjectDetailViewController */,
+				45BC4E9C1B6B5D1300A9963F /* ItemDetailViewController */,
 				45A2A2461B8D9095004BEF45 /* EditeTableViewController */,
 				45419ACC1BA7F9A2006F8A83 /* UISearchController */,
 			);
@@ -289,7 +309,7 @@
 				45A0230D1BAFCBD500C6BB4B /* CKItem.swift */,
 				45A023091BAFCBA600C6BB4B /* CKUsers.swift */,
 				45A0230B1BAFCBB400C6BB4B /* CKExperiment.swift */,
-				45A023191BB148CF00C6BB4B /* CKLinks.swift */,
+				45A023191BB148CF00C6BB4B /* CKLink.swift */,
 			);
 			name = CKObject;
 			sourceTree = "<group>";
@@ -299,6 +319,11 @@
 			children = (
 				45A023101BAFE42600C6BB4B /* GetCKObjectsOperation.swift */,
 				45A023171BB01B7700C6BB4B /* GetObjectsWithCreatorUserOperation.swift */,
+				45E1E21E1BB7AD3100463B46 /* GetReviewsOperation.swift */,
+				45E1E2241BB7D2CD00463B46 /* GetExperimentFansOperation.swift */,
+				45E1E2281BB7DE1D00463B46 /* SearchExperimentsOperation.swift */,
+				45C78D591BB9513500D0DEC2 /* GetUserPostedExperimentsOperation.swift */,
+				45C78D5D1BB95D9B00D0DEC2 /* GetUserLikedExperimentsOperation.swift */,
 			);
 			name = GetCKObjectsOperation;
 			sourceTree = "<group>";
@@ -307,7 +332,9 @@
 			isa = PBXGroup;
 			children = (
 				45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */,
-				45776E9F1BB2A16F002B9003 /* ExperimentsTableViewController.swift */,
+				45C78D581BB9500C00D0DEC2 /* ExperimentsTableViewController */,
+				45E1E21C1BB7AB8C00463B46 /* ReviewsTableViewController.swift */,
+				45E1E2261BB7D7D400463B46 /* FansTableViewController.swift */,
 			);
 			name = CloudKitTableViewController;
 			sourceTree = "<group>";
@@ -315,9 +342,10 @@
 		45A2A2461B8D9095004BEF45 /* EditeTableViewController */ = {
 			isa = PBXGroup;
 			children = (
+				45E1E22C1BB9182E00463B46 /* EditeValueTableViewController.swift */,
 				4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */,
 				45F2E0881BA57F4100785F0B /* EditeTagsCollectionViewController.swift */,
-				45E1E21A1BB5316B00463B46 /* ImagePickerController.swift */,
+				45E1E22A1BB9147000463B46 /* EditeImageTableViewController.swift */,
 			);
 			name = EditeTableViewController;
 			sourceTree = "<group>";
@@ -334,15 +362,25 @@
 			name = ItemTableViewCell;
 			sourceTree = "<group>";
 		};
-		45BC4E9C1B6B5D1300A9963F /* ObjectDetailViewController */ = {
+		45BC4E9C1B6B5D1300A9963F /* ItemDetailViewController */ = {
 			isa = PBXGroup;
 			children = (
-				45A0231F1BB161CC00C6BB4B /* ObjectDetailViewController.swift */,
+				45A0231F1BB161CC00C6BB4B /* ItemDetailViewController.swift */,
 				45A0231D1BB15D8700C6BB4B /* ExperimentDetailViewController.swift */,
 				45776EA11BB2BC22002B9003 /* ExperimentAddedDVC.swift */,
 				45776EA51BB5156B002B9003 /* UserDetailViewController.swift */,
+				45E1E2201BB7BC2800463B46 /* ReviewViewController.swift */,
 			);
-			name = ObjectDetailViewController;
+			name = ItemDetailViewController;
+			sourceTree = "<group>";
+		};
+		45C78D581BB9500C00D0DEC2 /* ExperimentsTableViewController */ = {
+			isa = PBXGroup;
+			children = (
+				45776E9F1BB2A16F002B9003 /* ExperimentsTableViewController.swift */,
+				45C78D561BB94FF500D0DEC2 /* SearchExperimentsTableViewController.swift */,
+			);
+			name = ExperimentsTableViewController;
 			sourceTree = "<group>";
 		};
 		45CBDF201B998E400060AB14 /* UITableViewCell */ = {
@@ -539,41 +577,51 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45E1E22B1BB9147000463B46 /* EditeImageTableViewController.swift in Sources */,
+				45E1E2271BB7D7D400463B46 /* FansTableViewController.swift in Sources */,
 				4537CB191B959EF9004378C3 /* SubTitleTableViewCell.swift in Sources */,
 				45A0230A1BAFCBA600C6BB4B /* CKUsers.swift in Sources */,
+				45E1E2211BB7BC2800463B46 /* ReviewViewController.swift in Sources */,
 				45C2FC2F1BA01BC4003B190C /* NotificationTableViewCell.swift in Sources */,
 				4537CB131B944765004378C3 /* ImageTableViewCell.swift in Sources */,
 				45419AC91BA58B9E006F8A83 /* TagsTableViewCell.swift in Sources */,
 				45DDF5CD1BA536300006A269 /* HistoryManager.swift in Sources */,
-				45A023201BB161CC00C6BB4B /* ObjectDetailViewController.swift in Sources */,
+				45A023201BB161CC00C6BB4B /* ItemDetailViewController.swift in Sources */,
 				45BC4E931B6A145F00A9963F /* UserTableViewCell.swift in Sources */,
 				45CBDF231B9BF9730060AB14 /* EGSplitViewController.swift in Sources */,
 				45419AC71BA57F96006F8A83 /* TagCollectionViewCell.swift in Sources */,
 				45FC5F771B6DD7080045F178 /* MenuItemTableViewCell.swift in Sources */,
+				45E1E21D1BB7AB8C00463B46 /* ReviewsTableViewController.swift in Sources */,
 				45AAB0A21B6E117200595467 /* ReviewTableViewCell.swift in Sources */,
+				45C78D5A1BB9513500D0DEC2 /* GetUserPostedExperimentsOperation.swift in Sources */,
 				45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */,
 				45776EA01BB2A16F002B9003 /* ExperimentsTableViewController.swift in Sources */,
 				4511B2851B4FB7CF0046DF76 /* AppDelegate.swift in Sources */,
 				45419ACF1BA81C39006F8A83 /* AppDetailViewController.swift in Sources */,
 				4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */,
+				45E1E22D1BB9182E00463B46 /* EditeValueTableViewController.swift in Sources */,
 				45776EA41BB3DF60002B9003 /* OperatorProtocol.swift in Sources */,
 				45A0230E1BAFCBD500C6BB4B /* CKItem.swift in Sources */,
-				45E1E21B1BB5316B00463B46 /* ImagePickerController.swift in Sources */,
 				45A0231E1BB15D8700C6BB4B /* ExperimentDetailViewController.swift in Sources */,
 				45A0230C1BAFCBB400C6BB4B /* CKExperiment.swift in Sources */,
 				45776EA61BB5156B002B9003 /* UserDetailViewController.swift in Sources */,
+				45E1E2291BB7DE1D00463B46 /* SearchExperimentsOperation.swift in Sources */,
+				45C78D5E1BB95D9B00D0DEC2 /* GetUserLikedExperimentsOperation.swift in Sources */,
 				45A2A2421B8AE224004BEF45 /* CloudKitTableViewController.swift in Sources */,
 				45A2A2441B8D7EF5004BEF45 /* CKItemTableViewCell.swift in Sources */,
+				45E1E21F1BB7AD3100463B46 /* GetReviewsOperation.swift in Sources */,
 				458713BB1B859751004808A3 /* CacheManager.swift in Sources */,
 				45B6FB6C1BA548040089AC15 /* SearchResultsController.swift in Sources */,
 				45983D0F1B71CB1000ABCF38 /* SwitchBarButtonItem.swift in Sources */,
 				45A023181BB01B7700C6BB4B /* GetObjectsWithCreatorUserOperation.swift in Sources */,
-				45A0231A1BB148CF00C6BB4B /* CKLinks.swift in Sources */,
+				45A0231A1BB148CF00C6BB4B /* CKLink.swift in Sources */,
 				45BC4E9E1B6DCDB800A9963F /* DefaultStyleController.swift in Sources */,
+				45E1E2251BB7D2CD00463B46 /* GetExperimentFansOperation.swift in Sources */,
 				45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */,
 				45776EA21BB2BC22002B9003 /* ExperimentAddedDVC.swift in Sources */,
 				45F2E0891BA57F4100785F0B /* EditeTagsCollectionViewController.swift in Sources */,
 				4537CB151B95680E004378C3 /* EditeTextTableViewController.swift in Sources */,
+				45C78D571BB94FF500D0DEC2 /* SearchExperimentsTableViewController.swift in Sources */,
 				45A023111BAFE42600C6BB4B /* GetCKObjectsOperation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

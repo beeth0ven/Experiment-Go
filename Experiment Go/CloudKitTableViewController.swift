@@ -13,7 +13,7 @@ import CoreData
 
 @IBDesignable
 
-class CloudKitTableViewController: UITableViewController, TableViewControllerCellSelfSize {
+class CloudKitTableViewController: UITableViewController, TableViewControllerCellSelfSize, CurrentUserHasChangeObserver {
     
     var items = [[CKItem]]()
     
@@ -21,12 +21,24 @@ class CloudKitTableViewController: UITableViewController, TableViewControllerCel
     override func viewDidLoad() {
         super.viewDidLoad()
         enableCellSelfSize()
-        showCloseBarButtonItemIfNeeded()
+        startObserveCurrentUserHasChange()
         refresh()
+
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        setBarSeparatorHidden(false)
+        showOrHideToolBarIfNeeded()
+        showBackwardBarButtonItemIfNeeded()
+    }
+    
+    deinit { stopObserveCurrentUserHasChange() }
 
     
     // MARK: - @IBAction
+    
+    func updateUI() { self.tableView.updateVisibleCells() }
 
     func refresh() { refresh(refreshControl) }
     
@@ -134,12 +146,6 @@ extension UITableView {
 
 }
 
-extension CKQuery {
-    convenience init(recordType: String) {
-        self.init(recordType: RecordType(rawValue: recordType)!.rawValue, predicate: NSPredicate(value: true))
-        self.sortDescriptors = [NSSortDescriptor(key: RecordKey.creationDate.rawValue, ascending: false)]
-    }
-}
 
 protocol TableViewControllerCellSelfSize {
     var tableView: UITableView! { get set }

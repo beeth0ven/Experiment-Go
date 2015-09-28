@@ -10,7 +10,7 @@ import Foundation
 import CloudKit
 
 
-class ExperimentDetailViewController: ObjectDetailViewController {
+class ExperimentDetailViewController: ItemDetailViewController {
     
     var experiment: CKExperiment? {
         get { return item as? CKExperiment }
@@ -20,7 +20,7 @@ class ExperimentDetailViewController: ObjectDetailViewController {
     var delete: ((CKExperiment) -> Void)?
 
     override func configureBarButtons() {
-        showCloseBarButtonItemIfNeeded()
+        showBackwardBarButtonItemIfNeeded()
         if experiment?.createdByMe == true {
             // createdByMe
             navigationItem.rightBarButtonItem = editButtonItem()
@@ -45,7 +45,7 @@ class ExperimentDetailViewController: ObjectDetailViewController {
             
         case .creationDate:
             cell.title = "Date"
-            cell.subTitle = (experiment?.creationDate ?? NSDate()).string
+            cell.subTitle = experiment?.creationDate.string
             
         case .tags:
             let collectionCell = cell as! TagsTableViewCell
@@ -59,7 +59,7 @@ class ExperimentDetailViewController: ObjectDetailViewController {
             cell.accessoryType = editing ? .DisclosureIndicator : .None
 
         case .reviews, .fans:
-            cell.textLabel?.text = key.capitalizedString
+            cell.title = key.capitalizedString
             
         case .author:
             let userCell = cell as! UserTableViewCell
@@ -144,13 +144,29 @@ class ExperimentDetailViewController: ObjectDetailViewController {
         guard let identifier = segue.identifier else { return }
         guard let segueID = SegueID(rawValue: identifier) else { return }
         switch segueID {
+        case .ShowUserDetail:
+            guard let udvc = segue.destinationViewController.contentViewController as? UserDetailViewController else { return }
+            udvc.user = experiment?.creatorUser
+
+        case .ShowReviews:
+            guard let rtvc = segue.destinationViewController.contentViewController as? ReviewsTableViewController else { return }
+            rtvc.reviewTo = experiment
+            
+        case .ShowFans:
+            guard let ftvc = segue.destinationViewController.contentViewController as? FansTableViewController else { return }
+            ftvc.experiment = experiment
+            
+        case .ShowExperimentsByTag:
+            guard let setvc = segue.destinationViewController.contentViewController as? SearchExperimentsTableViewController else { return }
+            setvc.searchText = (sender as! UIButton).currentTitle
+            setvc.title = setvc.searchText
+            
         case .EditeText:
             guard let ettvc = segue.destinationViewController.contentViewController as? EditeTextTableViewController else { return }
             let cell = sender as! UITableViewCell
             let indexPath = tableView.indexPathForCell(cell)! ; let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
             ettvc.title = cell.title
             ettvc.text = cell.subTitle?.stringByTrimmingWhitespace
-            
             
             ettvc.done = {
                 (text) in
@@ -171,7 +187,7 @@ class ExperimentDetailViewController: ObjectDetailViewController {
                 self.experiment?.tags = tags
                 self.tableView.reloadCell(tagsTableViewCell)
             }
-        default: break
+            
         }
     }
     
@@ -277,13 +293,13 @@ extension NSDate {
     var smartString: String {
         let absTimeIntervalSinceNow = -timeIntervalSinceNow
         switch absTimeIntervalSinceNow {
-        case let x where x < NSDate.OneMinute:
+        case 0..<NSDate.OneMinute:
             return "Now"
-        case let x where x < NSDate.OneHour:
+        case NSDate.OneMinute..<NSDate.OneHour:
             // eg. 10 Minutes
             let minutes = Int(absTimeIntervalSinceNow / NSDate.OneMinute)
             return "\(minutes) minutes ago"
-        case let x where x < NSDate.OneDay:
+        case NSDate.OneHour..<NSDate.OneDay:
             // eg. 10 Hours
             let hours = Int(absTimeIntervalSinceNow / NSDate.OneHour)
             return "\(hours) hours ago"

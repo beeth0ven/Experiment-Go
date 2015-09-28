@@ -11,11 +11,12 @@ import CloudKit
 
 class GetObjectsWithCreatorUserOperation: GetCKItemsOperation {
     
-    private var currentPageItems  = [CKItem]()
-    
+    var currentPageItems  = [CKItem]()
     
     override func main() {
         let getObjectsOperation = type.queryOperationToAttempt
+        getObjectsOperation.resultsLimit = CKQueryOperation.DafaultResultsLimit
+        
         getObjectsOperation.recordFetchedBlock = {
             let object = CKItem.parseRecord($0)
             self.currentPageItems.append(object)
@@ -35,7 +36,7 @@ class GetObjectsWithCreatorUserOperation: GetCKItemsOperation {
     
     
     
-    private func getUsersFormItems(items: [CKItem], cursor: CKQueryCursor?) {
+    func getUsersFormItems(items: [CKItem], cursor: CKQueryCursor?) {
         
         let userRecordIDs = items.flatMap { $0.createdByMe ? nil : $0.creatorUserRecordID!  }
     
@@ -58,4 +59,8 @@ class GetObjectsWithCreatorUserOperation: GetCKItemsOperation {
         
         fetchUsersOperation.begin()
     }
+}
+
+extension CKQueryOperation {
+    static var DafaultResultsLimit: Int { return 30 }
 }

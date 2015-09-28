@@ -29,7 +29,7 @@ extension CurrentUserHasChangeObserver {
     
 }
 
-class UserDetailViewController: ObjectDetailViewController, CurrentUserHasChangeObserver {
+class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeObserver {
     
     var user: CKUsers? {
         get { return item as? CKUsers }
@@ -46,7 +46,7 @@ class UserDetailViewController: ObjectDetailViewController, CurrentUserHasChange
     }
     
     override func configureBarButtons() {
-        showCloseBarButtonItemIfNeeded()
+        showBackwardBarButtonItemIfNeeded()
         if user?.isMe == true {
             navigationItem.rightBarButtonItem = editButtonItem()
             toolbarItems = nil
@@ -65,18 +65,17 @@ class UserDetailViewController: ObjectDetailViewController, CurrentUserHasChange
             cell.accessoryType = editing ? .DisclosureIndicator : .None
             
         case .displayName:
-            cell.textLabel?.text = "Display Name"
-            cell.detailTextLabel?.text = user?.displayName ?? " "
+            cell.title = "Display Name"
+            cell.subTitle = user?.displayName
             cell.accessoryType = editing ? .DisclosureIndicator : .None
 
         case .aboutMe:
-            let subTitleTableViewCell = cell as! SubTitleTableViewCell
-            subTitleTableViewCell.titleLabel.text = "About me"
-            subTitleTableViewCell.subTttleLabel.text = user?.aboutMe ?? " "
+            cell.title = "About me"
+            cell.subTitle = user?.aboutMe
             cell.accessoryType = editing ? .DisclosureIndicator : .None
 
         case .posted, .liked, .following, .follower:
-            cell.textLabel?.text = key.capitalizedString
+            cell.title = key.capitalizedString
             
         }
     }
@@ -87,7 +86,7 @@ class UserDetailViewController: ObjectDetailViewController, CurrentUserHasChange
     }
     
     private var sectionInfos: [(title: String, reusableCellInfos: [ReusableCellInfo])] {
-        return allSectionInfos
+        return allSectionInfos.map { (title: $0.title, reusableCellInfos: $0.reusableCellInfos.filter { !(RowInfo.aboutMe.rawValue == $0.key && String.isBlank(self.user?.aboutMe)) }) }
     }
     
     private var sectionInfosWhileEditing: [(title: String, reusableCellInfos: [ReusableCellInfo])] {
@@ -121,7 +120,6 @@ class UserDetailViewController: ObjectDetailViewController, CurrentUserHasChange
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
         if let segueID = !editing ? rowInfo.segueID : rowInfo.segueIDWhileEditing {
-            if case .EditeImage = segueID { changeProfileImageFromSender(tableView.cellForRowAtIndexPath(indexPath)!) ; return }
             performSegueWithIdentifier(segueID.rawValue, sender: tableView.cellForRowAtIndexPath(indexPath))
         }
     }
@@ -132,6 +130,19 @@ class UserDetailViewController: ObjectDetailViewController, CurrentUserHasChange
         guard let identifier = segue.identifier else { return }
         guard let segueID = SegueID(rawValue: identifier) else { return }
         switch segueID {
+        case .EditeImage:
+            guard let ditvc = segue.destinationViewController.contentViewController as? EditeImageTableViewController else { return }
+            let imageTableViewCell = sender as! ImageTableViewCell
+            ditvc.title = "Profile Image"
+            ditvc.image = imageTableViewCell.profileImge
+            
+            ditvc.done = {
+                image in
+                let imageData = UIImageJPEGRepresentation(image, 0.5)!
+                let profileImageAsset = CKAsset(data: imageData)
+                self.user?.profileImageAsset = profileImageAsset
+                self.tableView.reloadCell(imageTableViewCell)
+            }
             
         case .EditeText:
             guard let ettvc = segue.destinationViewController.contentViewController as? EditeTextTableViewController else { return }
@@ -139,7 +150,6 @@ class UserDetailViewController: ObjectDetailViewController, CurrentUserHasChange
             let indexPath = tableView.indexPathForCell(cell)! ; let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
             ettvc.title = cell.title
             ettvc.text = cell.subTitle?.stringByTrimmingWhitespace
-            
             
             ettvc.done = {
                 (text) in
@@ -152,31 +162,18 @@ class UserDetailViewController: ObjectDetailViewController, CurrentUserHasChange
                 }
                 self.tableView.reloadCell(cell)
             }
-
-            default: break
+            
+        case .ShowPostedExperiments:
+            guard let etvc = segue.destinationViewController.contentViewController as? ExperimentsTableViewController else { return }
+            etvc.title = (sender as! UITableViewCell).title
+            etvc.queryType = .PostedBy(user!)
+            
+        default: break
         }
         
         
     }
-    
-    
-    private func changeProfileImageFromSender(sender: UITableViewCell) {
-        
-        let ipc = ImagePickerController(
-            done: {
-                image in
-                let imageData = UIImageJPEGRepresentation(image, 0.5)!
-                let profileImageAsset = CKAsset(data: imageData)
-                self.user?.profileImageAsset = profileImageAsset
-                self.tableView.reloadCell(sender)
-            }
-        )
-        
-        presentViewController(ipc, animated: true, completion: nil)
-       
-    }
-    
-      
+
     private enum SegueID: String {
         case EditeImage
         case EditeText
@@ -184,6 +181,7 @@ class UserDetailViewController: ObjectDetailViewController, CurrentUserHasChange
         case ShowLikedExperiments
         case ShowFollowingUsers
         case ShowFollower
+        
     }
     
     private enum RowInfo: String, ReusableCellInfo {

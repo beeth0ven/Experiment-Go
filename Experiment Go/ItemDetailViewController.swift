@@ -1,5 +1,5 @@
 //
-//  ObjectDetailViewController.swift
+//  ItemDetailViewController.swift
 //  Experiment Go
 //
 //  Created by luojie on 9/22/15.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ObjectDetailViewController: UIViewController,  UITableViewDataSource, UITableViewDelegate, TableViewControllerCellSelfSize  {
+class ItemDetailViewController: UIViewController,  UITableViewDataSource, UITableViewDelegate, TableViewControllerCellSelfSize  {
     
     var item: CKItem? { didSet { title = item?.displayTitle } }
     

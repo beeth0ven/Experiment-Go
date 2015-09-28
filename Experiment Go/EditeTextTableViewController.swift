@@ -8,21 +8,17 @@
 
 import UIKit
 
-class EditeTextTableViewController: UITableViewController {
+class EditeTextTableViewController: EditeValueTableViewController {
     
     // MARK: - Properties
     
-    var text: String? { didSet { updateUI() } }
-    var done: ((String?) -> ())?
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        updateUI()
-        navigationItem.rightBarButtonItem = doneButtonItem
-        navigationItem.rightBarButtonItem?.enabled = false
-        navigationController?.setNavigationBarHidden(false, animated: true)
+    var text: String? {
+        get { return value as? String }
+        set { value = newValue }
     }
     
+    var done: ((String?) -> ())?
+
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         bodyTextView.becomeFirstResponder()
@@ -37,7 +33,7 @@ class EditeTextTableViewController: UITableViewController {
     // MARK: - View Configure
     @IBOutlet weak var bodyTextView: UITextView! { didSet { bodyTextView.delegate = self } }
     
-    func updateUI() { bodyTextView?.text = text }
+    override func updateUI() { bodyTextView?.text = text }
 }
 
 extension EditeTextTableViewController: UITextViewDelegate {

@@ -1,5 +1,5 @@
 //
-//  CKLinks.swift
+//  CKLink.swift
 //  Experiment Go
 //
 //  Created by luojie on 9/22/15.
@@ -9,10 +9,24 @@
 import Foundation
 import CloudKit
 
-class CKLinks: CKItem {
+class CKLink: CKItem {
     
-    var type: Type? {
-        get { return linkType == nil ? nil : Type(rawValue: linkType!) }
+    convenience init(reviewTo experiment: CKExperiment) {
+        let record = CKRecord(recordType: RecordType.Link.rawValue)
+        self.init(record: record)
+        self.creatorUser = CKUsers.currentUser
+        self.type = .UserReviewToExperiment
+        self.experiment = experiment
+        self.experimentRef = CKReference(recordID: experiment.recordID, action: .DeleteSelf)
+        self.toUserRef =
+//            CKReference(record: experiment.creatorUser!.record, action: .DeleteSelf)
+            CKReference(recordID: experiment.creatorUserRecordID!, action: .DeleteSelf)
+        print(experiment.creatorUserRecordID!.recordName)
+        
+    }
+    
+    var type: LinkType? {
+        get { return linkType == nil ? nil : LinkType(rawValue: linkType!) }
         set { linkType = newValue?.rawValue }
     }
     
@@ -34,18 +48,26 @@ class CKLinks: CKItem {
     var experiment: CKExperiment?
     var toUser: CKUsers?
 
-    
+    override var displayTitle: String? {
+        switch type! {
+        case .UserReviewToExperiment:
+            return "Review"
+        default: return nil
+        }
+    }
+
     private var linkType: String? {
         get { return record[LinkKey.linkType.rawValue] as? String }
         set { record[LinkKey.linkType.rawValue] = newValue }
     }
     
-    enum Type: String {
-        case UserReviewToExperiment
-        case UserLikeExperiment
-        case UserFollowUser
-        case UserDisplayName
-    }
+
+}
+
+enum LinkType: String {
+    case UserReviewToExperiment
+    case UserLikeExperiment
+    case UserFollowUser
 }
 
 enum LinkKey: String {

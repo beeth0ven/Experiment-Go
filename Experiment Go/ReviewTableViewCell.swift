@@ -11,6 +11,10 @@ import CloudKit
 
 class ReviewTableViewCell: CKItemTableViewCell {
     
+    var review: CKLink? {
+        get { return item as? CKLink }
+        set { item = newValue }
+    }
 
     @IBOutlet weak var authorProfileImageButton: UIButton!
     @IBOutlet weak var authorLabel: UILabel!
@@ -19,33 +23,30 @@ class ReviewTableViewCell: CKItemTableViewCell {
     
     override func updateUI() {
         
-//        authorProfileImage = nil
-//        
-//        let review = record!
-//        let reviewBy = review.createdBy!
-//        
-//        bodyabel.text = review[ReviewKey.Body] as? String
-//        authorLabel.text = reviewBy[UsersKey.DisplayName] as? String
-//        creationDateLabel.text = review.smartStringForCreationDate
-//        
-//        guard let url = profileImageURL else { return }
-//        
-//        UIImage.getImageForURL(url) {
-//            guard url == self.profileImageURL else { return }
-//            self.authorProfileImage = $0
-//        }
+        authorProfileImage = nil
+
+        bodyabel.text = review?.content
+        authorLabel.text = review?.creatorUser?.displayName
+        creationDateLabel.text = review?.creationDate.smartString
+        
+        guard let url = profileImageURL else { return }
+        
+        UIImage.getImageForURL(url) {
+            guard url == self.profileImageURL else { return }
+            self.authorProfileImage = $0
+        }
         
     }
     
 
     
-//    var authorProfileImage: UIImage? {
-//        get { return authorProfileImageButton.backgroundImageForState(.Normal) }
-//        set { authorProfileImageButton.setBackgroundImage(newValue, forState: .Normal) }
-//    }
-//    
-//    var profileImageURL: NSURL? {
-//        return (record?.createdBy?[UsersKey.ProfileImageAsset] as? CKAsset)?.fileURL
-//    }
+    var authorProfileImage: UIImage? {
+        get { return authorProfileImageButton.backgroundImageForState(.Normal) }
+        set { authorProfileImageButton.setBackgroundImage(newValue, forState: .Normal) }
+    }
+    
+    var profileImageURL: NSURL? {
+        return review?.creatorUser?.profileImageAsset?.fileURL
+    }
     
 }
