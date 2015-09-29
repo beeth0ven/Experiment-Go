@@ -32,7 +32,7 @@ class MenuTableViewController: UITableViewController, CurrentUserHasChangeObserv
         set { profileImageView.image = newValue }
     }
     
-    var currentUser: CKUsers? { return CKUsers.currentUser }
+    var currentUser: CKUsers? { return CKUsers.CurrentUser }
     
     // MARK: - View Controller Lifecycle
 
@@ -106,7 +106,7 @@ class MenuTableViewController: UITableViewController, CurrentUserHasChangeObserv
         switch segueID {
         case .ShowUserDetail:
             guard let udvc = segue.destinationViewController.contentViewController as? UserDetailViewController else { abort() }
-            udvc.user = CKUsers.currentUser
+            udvc.user = CKUsers.CurrentUser
             
         case .ShowAppDetail:
             guard let advc = segue.destinationViewController.contentViewController as? AppDetailViewController else { return }

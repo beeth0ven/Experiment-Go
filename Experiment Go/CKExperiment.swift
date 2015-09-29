@@ -14,7 +14,7 @@ class CKExperiment: CKItem {
     convenience init() {
         let record = CKRecord(recordType: RecordType.Experiment.rawValue)
         self.init(record: record)
-        self.creatorUser = CKUsers.currentUser
+        self.creatorUser = CKUsers.CurrentUser
         title = "Haha WU han."
         tags = ["ds", "game"]
         purpose = "go anyway"

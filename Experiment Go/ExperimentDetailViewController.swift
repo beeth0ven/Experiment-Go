@@ -153,8 +153,8 @@ class ExperimentDetailViewController: ItemDetailViewController {
             rtvc.reviewTo = experiment
             
         case .ShowFans:
-            guard let ftvc = segue.destinationViewController.contentViewController as? FansTableViewController else { return }
-            ftvc.experiment = experiment
+            guard let utvc = segue.destinationViewController.contentViewController as? UsersTableViewController else { return }
+            utvc.queryType = .FansBy(experiment!)
             
         case .ShowExperimentsByTag:
             guard let setvc = segue.destinationViewController.contentViewController as? SearchExperimentsTableViewController else { return }
@@ -270,12 +270,31 @@ extension ExperimentDetailViewController {
         let result = SwitchBarButtonItem(title: "", style: .Plain, target: self, action: "likeClicked:")
         result.onStateTitle = "Liking"
         result.offStateTitle = "Like"
-        result.on = false
+        result.on = CKUsers.AmILikingThisExperiment(experiment!)
         return result
     }
     
     func likeClicked(sender: SwitchBarButtonItem) {
-        
+        !sender.on ? doLike(sender) : doUnlike(sender)
+        sender.on = !sender.on
+    }
+    
+    private func doLike(sender: SwitchBarButtonItem) {
+        CKUsers.LikeExperiment(experiment!,
+            didFail: {
+                self.handleFail($0)
+                sender.on = !sender.on
+            }
+        )
+    }
+    
+    private func doUnlike(sender: SwitchBarButtonItem) {
+        CKUsers.UnlikeExperiment(experiment!,
+            didFail: {
+                self.handleFail($0)
+                sender.on = !sender.on
+            }
+        )
     }
     
     var deleteBarButtonItem: UIBarButtonItem {

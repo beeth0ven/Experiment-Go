@@ -11,18 +11,37 @@ import CloudKit
 
 class CKLink: CKItem {
     
+    
+    
     convenience init(reviewTo experiment: CKExperiment) {
         let record = CKRecord(recordType: RecordType.Link.rawValue)
         self.init(record: record)
-        self.creatorUser = CKUsers.currentUser
         self.type = .UserReviewToExperiment
         self.experiment = experiment
         self.experimentRef = CKReference(recordID: experiment.recordID, action: .DeleteSelf)
-        self.toUserRef =
-//            CKReference(record: experiment.creatorUser!.record, action: .DeleteSelf)
-            CKReference(recordID: experiment.creatorUserRecordID!, action: .DeleteSelf)
-        print(experiment.creatorUserRecordID!.recordName)
-        
+        self.toUserRef = CKReference(recordID: experiment.creatorUserRecordID!, action: .DeleteSelf)
+        self.creatorUser = CKUsers.CurrentUser
+    }
+    
+    convenience init(followTo user: CKUsers) {
+        let recordID = CKUsers.CurrentUser!.recordIDForFollowingUser(user)
+        let record = CKRecord(recordType: RecordType.Link.rawValue, recordID: recordID)
+        self.init(record: record)
+        self.type = .UserFollowUser
+        self.toUser = user
+        self.toUserRef = CKReference(recordID: user.recordID, action: .DeleteSelf)
+        self.creatorUser = CKUsers.CurrentUser
+    }
+    
+    convenience init(like experiment: CKExperiment) {
+        let recordID = CKUsers.CurrentUser!.recordIDForLikingExperiment(experiment)
+        let record = CKRecord(recordType: RecordType.Link.rawValue, recordID: recordID)
+        self.init(record: record)
+        self.type = .UserLikeExperiment
+        self.experiment = experiment
+        self.experimentRef = CKReference(recordID: experiment.recordID, action: .DeleteSelf)
+        self.toUserRef = CKReference(recordID: experiment.creatorUserRecordID!, action: .DeleteSelf)
+        self.creatorUser = CKUsers.CurrentUser
     }
     
     var type: LinkType? {
@@ -47,7 +66,14 @@ class CKLink: CKItem {
     
     var experiment: CKExperiment?
     var toUser: CKUsers?
-
+    
+    var toMe: Bool {
+        guard let recordName = toUserRef?.recordID.recordName else { return false }
+        let result = recordName == CKOwnerDefaultName || recordName == CKUsers.CurrentUser?.recordID.recordName
+        if result == true  { toUser = CKUsers.CurrentUser }
+        return result
+    }
+    
     override var displayTitle: String? {
         switch type! {
         case .UserReviewToExperiment:

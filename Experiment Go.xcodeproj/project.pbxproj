@@ -12,6 +12,8 @@
 		4511B2941B4FB7CF0046DF76 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4511B2921B4FB7CF0046DF76 /* LaunchScreen.xib */; };
 		4511B2A01B4FB7CF0046DF76 /* Experiment_GoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511B29F1B4FB7CF0046DF76 /* Experiment_GoTests.swift */; };
 		4511B2AC1B4FBA320046DF76 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4511B2AB1B4FBA320046DF76 /* Images.xcassets */; };
+		451A6A961BBA4F2500544DFF /* GetFollowingUsersOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451A6A951BBA4F2500544DFF /* GetFollowingUsersOperation.swift */; };
+		451A6A981BBA686200544DFF /* GetFollowersOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451A6A971BBA686200544DFF /* GetFollowersOperation.swift */; };
 		4537CB131B944765004378C3 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB121B944765004378C3 /* ImageTableViewCell.swift */; };
 		4537CB151B95680E004378C3 /* EditeTextTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */; };
 		4537CB191B959EF9004378C3 /* SubTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */; };
@@ -54,7 +56,7 @@
 		45E1E21F1BB7AD3100463B46 /* GetReviewsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E21E1BB7AD3100463B46 /* GetReviewsOperation.swift */; };
 		45E1E2211BB7BC2800463B46 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E2201BB7BC2800463B46 /* ReviewViewController.swift */; };
 		45E1E2251BB7D2CD00463B46 /* GetExperimentFansOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E2241BB7D2CD00463B46 /* GetExperimentFansOperation.swift */; };
-		45E1E2271BB7D7D400463B46 /* FansTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E2261BB7D7D400463B46 /* FansTableViewController.swift */; };
+		45E1E2271BB7D7D400463B46 /* UsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E2261BB7D7D400463B46 /* UsersTableViewController.swift */; };
 		45E1E2291BB7DE1D00463B46 /* SearchExperimentsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E2281BB7DE1D00463B46 /* SearchExperimentsOperation.swift */; };
 		45E1E22B1BB9147000463B46 /* EditeImageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E22A1BB9147000463B46 /* EditeImageTableViewController.swift */; };
 		45E1E22D1BB9182E00463B46 /* EditeValueTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1E22C1BB9182E00463B46 /* EditeValueTableViewController.swift */; };
@@ -86,6 +88,8 @@
 		4511B29F1B4FB7CF0046DF76 /* Experiment_GoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Experiment_GoTests.swift; sourceTree = "<group>"; };
 		4511B2AB1B4FBA320046DF76 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4511B2B01B4FBACA0046DF76 /* Experiment Go-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Experiment Go-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		451A6A951BBA4F2500544DFF /* GetFollowingUsersOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetFollowingUsersOperation.swift; sourceTree = "<group>"; };
+		451A6A971BBA686200544DFF /* GetFollowersOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetFollowersOperation.swift; sourceTree = "<group>"; };
 		4537CB121B944765004378C3 /* ImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
 		4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditeTextTableViewController.swift; sourceTree = "<group>"; };
 		4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubTitleTableViewCell.swift; sourceTree = "<group>"; };
@@ -130,7 +134,7 @@
 		45E1E21E1BB7AD3100463B46 /* GetReviewsOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetReviewsOperation.swift; sourceTree = "<group>"; };
 		45E1E2201BB7BC2800463B46 /* ReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		45E1E2241BB7D2CD00463B46 /* GetExperimentFansOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetExperimentFansOperation.swift; sourceTree = "<group>"; };
-		45E1E2261BB7D7D400463B46 /* FansTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FansTableViewController.swift; sourceTree = "<group>"; };
+		45E1E2261BB7D7D400463B46 /* UsersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsersTableViewController.swift; sourceTree = "<group>"; };
 		45E1E2281BB7DE1D00463B46 /* SearchExperimentsOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchExperimentsOperation.swift; sourceTree = "<group>"; };
 		45E1E22A1BB9147000463B46 /* EditeImageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditeImageTableViewController.swift; sourceTree = "<group>"; };
 		45E1E22C1BB9182E00463B46 /* EditeValueTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditeValueTableViewController.swift; sourceTree = "<group>"; };
@@ -324,6 +328,8 @@
 				45E1E2281BB7DE1D00463B46 /* SearchExperimentsOperation.swift */,
 				45C78D591BB9513500D0DEC2 /* GetUserPostedExperimentsOperation.swift */,
 				45C78D5D1BB95D9B00D0DEC2 /* GetUserLikedExperimentsOperation.swift */,
+				451A6A951BBA4F2500544DFF /* GetFollowingUsersOperation.swift */,
+				451A6A971BBA686200544DFF /* GetFollowersOperation.swift */,
 			);
 			name = GetCKObjectsOperation;
 			sourceTree = "<group>";
@@ -334,7 +340,7 @@
 				45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */,
 				45C78D581BB9500C00D0DEC2 /* ExperimentsTableViewController */,
 				45E1E21C1BB7AB8C00463B46 /* ReviewsTableViewController.swift */,
-				45E1E2261BB7D7D400463B46 /* FansTableViewController.swift */,
+				45E1E2261BB7D7D400463B46 /* UsersTableViewController.swift */,
 			);
 			name = CloudKitTableViewController;
 			sourceTree = "<group>";
@@ -578,7 +584,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				45E1E22B1BB9147000463B46 /* EditeImageTableViewController.swift in Sources */,
-				45E1E2271BB7D7D400463B46 /* FansTableViewController.swift in Sources */,
+				45E1E2271BB7D7D400463B46 /* UsersTableViewController.swift in Sources */,
 				4537CB191B959EF9004378C3 /* SubTitleTableViewCell.swift in Sources */,
 				45A0230A1BAFCBA600C6BB4B /* CKUsers.swift in Sources */,
 				45E1E2211BB7BC2800463B46 /* ReviewViewController.swift in Sources */,
@@ -590,6 +596,7 @@
 				45BC4E931B6A145F00A9963F /* UserTableViewCell.swift in Sources */,
 				45CBDF231B9BF9730060AB14 /* EGSplitViewController.swift in Sources */,
 				45419AC71BA57F96006F8A83 /* TagCollectionViewCell.swift in Sources */,
+				451A6A961BBA4F2500544DFF /* GetFollowingUsersOperation.swift in Sources */,
 				45FC5F771B6DD7080045F178 /* MenuItemTableViewCell.swift in Sources */,
 				45E1E21D1BB7AB8C00463B46 /* ReviewsTableViewController.swift in Sources */,
 				45AAB0A21B6E117200595467 /* ReviewTableViewCell.swift in Sources */,
@@ -612,6 +619,7 @@
 				45E1E21F1BB7AD3100463B46 /* GetReviewsOperation.swift in Sources */,
 				458713BB1B859751004808A3 /* CacheManager.swift in Sources */,
 				45B6FB6C1BA548040089AC15 /* SearchResultsController.swift in Sources */,
+				451A6A981BBA686200544DFF /* GetFollowersOperation.swift in Sources */,
 				45983D0F1B71CB1000ABCF38 /* SwitchBarButtonItem.swift in Sources */,
 				45A023181BB01B7700C6BB4B /* GetObjectsWithCreatorUserOperation.swift in Sources */,
 				45A0231A1BB148CF00C6BB4B /* CKLink.swift in Sources */,

@@ -15,6 +15,10 @@ class GetCKItemsOperation: NSOperation {
     var didGet: (([CKItem], CKQueryCursor?) -> Void)?
     var didFail: HandleFailed?
     
+    var currentPageItems  = [CKItem]()
+    var currentPageCallBackItems: [CKItem] { return currentPageItems }
+    
+    
     var type: Type
     
     init(type: Type) {  self.type = type }

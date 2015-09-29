@@ -22,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, iCloudKeyValueStoreHasCha
         requestForRemoteNotifications()
         DefaultStyleController.applyStyle()
         startObserveiCloudKeyValueStoreHasChange()
+//        CKUsers.UpdateCurrentUser()
         return true
     }
     
@@ -51,8 +52,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, iCloudKeyValueStoreHasCha
     
     func iCloudKeyValueStoreHasChange(notification: NSNotification) {
         guard let changedKeys = (notification.userInfo as! Dictionary<String,AnyObject>)[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String] else { return }
-        guard changedKeys.contains(CKUsers.Key.currentUser.rawValue) else { return }
-        CKUsers.updateCurrentUserFromiCloudKVS()
+        guard changedKeys.contains(CKUsers.Key.CurrentUser.rawValue) else { return }
+        CKUsers.UpdateCurrentUserFromiCloudKVS()
     }
 }
 

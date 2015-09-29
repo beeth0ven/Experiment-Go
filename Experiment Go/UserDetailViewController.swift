@@ -129,10 +129,11 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         guard let identifier = segue.identifier else { return }
         guard let segueID = SegueID(rawValue: identifier) else { return }
+        let cell = sender as! UITableViewCell
         switch segueID {
         case .EditeImage:
             guard let ditvc = segue.destinationViewController.contentViewController as? EditeImageTableViewController else { return }
-            let imageTableViewCell = sender as! ImageTableViewCell
+            let imageTableViewCell = cell as! ImageTableViewCell
             ditvc.title = "Profile Image"
             ditvc.image = imageTableViewCell.profileImge
             
@@ -146,7 +147,6 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
             
         case .EditeText:
             guard let ettvc = segue.destinationViewController.contentViewController as? EditeTextTableViewController else { return }
-            let cell = sender as! UITableViewCell
             let indexPath = tableView.indexPathForCell(cell)! ; let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
             ettvc.title = cell.title
             ettvc.text = cell.subTitle?.stringByTrimmingWhitespace
@@ -165,10 +165,25 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
             
         case .ShowPostedExperiments:
             guard let etvc = segue.destinationViewController.contentViewController as? ExperimentsTableViewController else { return }
-            etvc.title = (sender as! UITableViewCell).title
+            etvc.title = cell.title
             etvc.queryType = .PostedBy(user!)
             
-        default: break
+        case .ShowLikedExperiments:
+            guard let etvc = segue.destinationViewController.contentViewController as? ExperimentsTableViewController else { return }
+            etvc.title = cell.title
+            etvc.queryType = .LikedBy(user!)
+            
+        case .ShowFollowingUsers:
+            guard let utvc = segue.destinationViewController.contentViewController as? UsersTableViewController else { return }
+            utvc.title = cell.title
+            utvc.queryType = .FollowingFrom(user!)
+
+        case .ShowFollower:
+            guard let utvc = segue.destinationViewController.contentViewController as? UsersTableViewController else { return }
+            utvc.title = cell.title
+            utvc.queryType = .FollowerFrom(user!)
+            
+
         }
         
         
@@ -252,11 +267,31 @@ extension UserDetailViewController {
         let result = SwitchBarButtonItem(title: "", style: .Plain, target: self, action: "followClicked:")
         result.onStateTitle = "Following"
         result.offStateTitle = "Follow"
-        result.on = false
+        result.on = CKUsers.AmIFollowingTo(user!)
         return result
     }
     
-    func follewClicked(sender: SwitchBarButtonItem) {
+    func followClicked(sender: SwitchBarButtonItem) {
+        !sender.on ? doFollow(sender) : doUnfollow(sender)
+        sender.on = !sender.on
+    }
+    
+    private func doFollow(sender: SwitchBarButtonItem) {
+        CKUsers.FollowUser(user!,
+            didFail: {
+                self.handleFail($0)
+                sender.on = !sender.on
+            }
+        )
+    }
+    
+    private func doUnfollow(sender: SwitchBarButtonItem) {
+        CKUsers.UnfollowUser(user!,
+            didFail: {
+                self.handleFail($0)
+                sender.on = !sender.on
+            }
+        )
         
     }
     

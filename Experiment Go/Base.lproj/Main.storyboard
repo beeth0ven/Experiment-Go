@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9046" systemVersion="15A204h" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9046" systemVersion="15A216g" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9035"/>
@@ -1389,13 +1389,6 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Experiment" id="dZJ-hb-gcy"/>
-                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="d3U-RF-cNJ">
-                        <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
-                        <connections>
-                            <action selector="refresh:" destination="RRH-RP-CTl" eventType="valueChanged" id="uhs-It-MFc"/>
-                        </connections>
-                    </refreshControl>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="cellReusableIdentifier" value="ExperimentCell"/>
                     </userDefinedRuntimeAttributes>
@@ -1583,7 +1576,7 @@
         <!--Fans-->
         <scene sceneID="Vkx-kq-SgE">
             <objects>
-                <tableViewController title="Fans" clearsSelectionOnViewWillAppear="NO" id="PeT-ND-Ndy" customClass="FansTableViewController" customModule="Experiment_Go" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Fans" clearsSelectionOnViewWillAppear="NO" id="PeT-ND-Ndy" customClass="UsersTableViewController" customModule="Experiment_Go" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="EhI-cp-eLF">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1694,7 +1687,7 @@
                                 <connections>
                                     <outlet property="nameLabel" destination="cYV-8c-BxB" id="hnR-Kz-RnK"/>
                                     <outlet property="profileImageView" destination="yHm-hc-e1O" id="1Fs-XQ-Vl7"/>
-                                    <segue destination="2AW-Iq-AeF" kind="show" identifier="ShowRecord" id="FIU-ja-Cyf"/>
+                                    <segue destination="2AW-Iq-AeF" kind="show" identifier="ShowUserDetail" id="FIU-ja-Cyf"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -3266,13 +3259,13 @@ Please tap on the gold color row :</string>
         <image name="Banner" width="280" height="200"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="leS-CF-ZjH"/>
+        <segue reference="5eT-sP-w2s"/>
         <segue reference="vle-td-OGp"/>
         <segue reference="Cj7-ss-bvJ"/>
         <segue reference="SmB-Nk-bBe"/>
         <segue reference="vFu-SH-qS2"/>
-        <segue reference="5eT-sP-w2s"/>
         <segue reference="QGV-Ef-3gP"/>
-        <segue reference="leS-CF-ZjH"/>
         <segue reference="mtJ-QP-k77"/>
         <segue reference="oYy-Zc-W8o"/>
     </inferredMetricsTieBreakers>

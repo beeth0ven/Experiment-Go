@@ -27,8 +27,8 @@ class CKItem: NSObject {
     var creatorUser: CKUsers?
     
     var createdByMe: Bool {
-        let byMe = creatorUserRecordID!.recordName == CKOwnerDefaultName || creatorUserRecordID!.recordName == CKUsers.currentUser?.recordID.recordName
-        if byMe && creatorUser == nil && CKUsers.currentUser != nil { creatorUser = CKUsers.currentUser! }
+        let byMe = creatorUserRecordID!.recordName == CKOwnerDefaultName || creatorUserRecordID!.recordName == CKUsers.CurrentUser?.recordID.recordName
+        if byMe && creatorUser == nil && CKUsers.CurrentUser != nil { creatorUser = CKUsers.CurrentUser! }
         return byMe
     }
     
@@ -63,13 +63,21 @@ class CKItem: NSObject {
     }
     
     func saveInBackground(didSave didSave: (Void -> Void)? = nil ,didFail: ((NSError) -> Void)? = nil) {
-        print((self as! CKUsers).profileImageAsset!.fileURL)
         CKContainer.defaultContainer().publicCloudDatabase.saveRecord(record) {
-            (user, error) in
-            print(CKUsers(record: user!).profileImageAsset!.fileURL)
+            (_, error) in
             dispatch_async(dispatch_get_main_queue()) {
                 if let error = error { didFail?(error) ; return }
                 didSave?()
+            }
+        }
+    }
+    
+    func deleteInBackground(didDelete didDelete: (Void -> Void)? = nil ,didFail: ((NSError) -> Void)? = nil) {
+        CKContainer.defaultContainer().publicCloudDatabase.deleteRecordWithID(recordID) {
+            (_, error) in
+            dispatch_async(dispatch_get_main_queue()) {
+                if let error = error { didFail?(error) ; return }
+                didDelete?()
             }
         }
     }

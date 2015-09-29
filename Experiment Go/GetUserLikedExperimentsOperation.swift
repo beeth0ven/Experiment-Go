@@ -11,11 +11,13 @@ import CloudKit
 
 class GetUserLikedExperimentsOperation: GetObjectsWithCreatorUserOperation {
     
-    convenience init(likedBy: CKUsers) {
-        self.init(type: .Refresh(likedBy.likedExperimentsQuery))
+    convenience init(likedBy user: CKUsers) {
+        self.init(type: .Refresh(user.likedExperimentsQuery))
     }
     
-    private var currentPageLinks  = [CKLink]()
+    private var currentPageLinks: [CKLink] { return (currentPageItems as? [CKLink]) ?? [CKLink]() }
+    override var currentPageCallBackItems: [CKItem] { return currentPageLinks.flatMap { $0.experiment } }
+
     
     override func main() {
         let getLinksOperation = type.queryOperationToAttempt
@@ -23,7 +25,7 @@ class GetUserLikedExperimentsOperation: GetObjectsWithCreatorUserOperation {
         
         getLinksOperation.recordFetchedBlock = {
             let object = CKItem.parseRecord($0) as! CKLink
-            self.currentPageLinks.append(object)
+            self.currentPageItems.append(object)
         }
         
         getLinksOperation.queryCompletionBlock = {
@@ -47,16 +49,15 @@ class GetUserLikedExperimentsOperation: GetObjectsWithCreatorUserOperation {
         getExperimentsOperation.perRecordCompletionBlock = {
             (experimentRecord, _, _) in
             let experiment = CKItem.parseRecord(experimentRecord!) as! CKExperiment
-            self.currentPageItems.append(experiment)
+            for link in links { if link.experimentRef?.recordID == experiment.recordID { link.experiment = experiment } }
         }
         
         getExperimentsOperation.fetchRecordsCompletionBlock = {
             (_, error) in
             dispatch_async(dispatch_get_main_queue()) {
                 if let error = error { self.didFail?(error) ; return }
-                self.getUsersFormItems(self.currentPageItems, cursor: cursor)
+                self.getUsersFormItems(self.currentPageLinks.flatMap { $0.experiment }, cursor: cursor)
             }
-            
         }
         
         getExperimentsOperation.begin()

@@ -80,15 +80,13 @@ class ExperimentsTableViewController: CloudKitTableViewController {
         items[indexPath.section].removeAtIndex(indexPath.row)
         tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         
-
-//        experiment.saveInBackground(
-//            didFail: {
-//                self.handleFail($0)
-        //        items[indexPath.section].insert(experiment, atIndex: indexPath.row)
-        //        tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        
-//            }
-//        )
+        experiment.deleteInBackground(
+            didFail: {
+                self.handleFail($0)
+                self.items[indexPath.section].insert(experiment, atIndex: indexPath.row)
+                self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            }
+        )
     }
     
     private func indexPathForExperiment(experiment: CKExperiment) -> NSIndexPath? {

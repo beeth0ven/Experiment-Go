@@ -11,8 +11,8 @@ import CloudKit
 
 class GetUserPostedExperimentsOperation: GetObjectsWithCreatorUserOperation {
     
-    convenience init(postedBy: CKUsers) {
-        self.init(type: .Refresh(postedBy.postedExperimentsQuery))
+    convenience init(postedBy user: CKUsers) {
+        self.init(type: .Refresh(user.postedExperimentsQuery))
     }
 
 }

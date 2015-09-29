@@ -12,7 +12,7 @@ import CloudKit
 
 class GetExperimentFansOperation: GetObjectsWithCreatorUserOperation {
     
-    convenience init(experiment: CKExperiment) {
+    convenience init(to experiment: CKExperiment) {
         self.init(type: .Refresh(experiment.fansQuery))
     }
     

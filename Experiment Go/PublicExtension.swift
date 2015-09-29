@@ -121,7 +121,7 @@ extension CGRect {
 }
 
 extension UIImage {
-    class func getImageForURL(url: NSURL, didGet:((UIImage?)->())) {
+    static func getImageForURL(url: NSURL, didGet:((UIImage?) -> Void)) {
         if let imageData = AppDelegate.Cache.Manager.assetDataForURL(url) {
             didGet(UIImage(data: imageData))
         } else {
@@ -133,7 +133,7 @@ extension UIImage {
                     AppDelegate.Cache.Manager.cacheAssetData(imageData!, forURL: url)
                     image = UIImage(data: imageData!)
                 } else {
-                    CKUsers.updateCurrentUserIfNeeded()
+                    CKUsers.UpdateCurrentUserIfNeeded()
                 }
                 dispatch_async(dispatch_get_main_queue()) {
                     didGet(image)
