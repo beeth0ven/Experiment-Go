@@ -18,6 +18,8 @@ class ExperimentsTableViewController: CloudKitTableViewController {
                 return GetUserPostedExperimentsOperation(postedBy: user)
         case .LikedBy(let user):
             return GetUserLikedExperimentsOperation(likedBy: user)
+        case .InteretedByCurrentUser:
+            return GetCurrentUserInteretedExperimentsOperation()
         }
     }
     
@@ -28,12 +30,15 @@ class ExperimentsTableViewController: CloudKitTableViewController {
             return GetUserPostedExperimentsOperation(type: .GetNextPage(cursor))
         case .LikedBy(_):
             return GetUserLikedExperimentsOperation(type: .GetNextPage(cursor))
+        case .InteretedByCurrentUser:
+            return GetCurrentUserInteretedExperimentsOperation(type: .GetNextPage(cursor))
         }
     }
     
     enum QueryType {
         case PostedBy(CKUsers)
         case LikedBy(CKUsers)
+        case InteretedByCurrentUser
     }
     
     // MARK: - Segue

@@ -243,6 +243,27 @@ class CKUsers: CKItem {
         let userPredicate = NSPredicate(format: "%K = %@", RecordKey.creatorUserRecordID.rawValue, recordID)
         return NSCompoundPredicate(type: .AndPredicateType, subpredicates: [userPredicate, typePredicate])
     }
+    
+    static var CurrentUserInteretedExperimentsQuery: CKQuery {
+        return CKQuery(recordType: .Experiment, predicate: CurrentUserInteretedExperimentsQueryPredicate)
+    }
+    
+    static private var CurrentUserInteretedExperimentsQueryPredicate: NSPredicate {
+        guard let currentUser = CKUsers.CurrentUser else { return NSPredicate(value: false) }
+        let userRecordNames: [String] = FollowingUsers + [currentUser.recordID.recordName]
+        let recordRefs = userRecordNames.map {  CKReference(recordID: CKRecordID(recordName: $0), action: .DeleteSelf)  }
+        return NSPredicate(format: "%K IN %@", RecordKey.creatorUserRecordID.rawValue ,recordRefs)
+    }
+    
+    static var NotificationLinksQuery: CKQuery {
+        return CKQuery(recordType: .Link, predicate: NotificationLinksQueryPredicate)
+    }
+    
+    static private var NotificationLinksQueryPredicate: NSPredicate {
+        guard let currentUser = CKUsers.CurrentUser else { return NSPredicate(value: false) }
+        return NSPredicate(format: "%K == %@", LinkKey.toUserRef.rawValue, currentUser.recordID)
+    }
+
    
     var followingUsersQuery: CKQuery {
         return CKQuery(recordType: .Link, predicate: followingUsersQueryPredicate)

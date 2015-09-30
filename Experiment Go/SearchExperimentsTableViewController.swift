@@ -54,6 +54,7 @@ class SearchExperimentsTableViewController: ExperimentsTableViewController {
         // SearchBar
         result.searchBar.delegate = searchResultsController
         result.searchBar.text = self.searchText
+        result.searchBar.placeholder = "Search by tag"
         result.searchBar.searchBarStyle = .Minimal
         result.searchBar.backgroundColor = UIColor.whiteColor()
         result.searchBar.sizeToFit()

@@ -99,10 +99,7 @@ class CKExperiment: CKItem {
         guard texts.count > 0 else { return NSPredicate(value: true) }
         let tagsPredicates = texts.map { NSPredicate(format: "%K CONTAINS %@", ExperimentKey.tags.rawValue , $0) }
         let tagsPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: tagsPredicates)
-//        let titlePredicates = texts.map { NSPredicate(format: "%K CONTAINS %@", ExperimentKey.title.rawValue , $0) }
-//        let titlePredicate = NSCompoundPredicate(andPredicateWithSubpredicates: titlePredicates)
         return tagsPredicate
-//            NSCompoundPredicate(orPredicateWithSubpredicates: [tagsPredicate, titlePredicate])
     }
 }
 

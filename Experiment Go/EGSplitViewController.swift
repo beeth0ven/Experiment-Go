@@ -47,7 +47,7 @@ class EGSplitViewController: UISplitViewController, UISplitViewControllerDelegat
     
     private enum DetailViewControllerType: String {
         case Home
-        case Search
+        case Attension
         case Notification
         
         var viewController: UIViewController {
@@ -55,8 +55,12 @@ class EGSplitViewController: UISplitViewController, UISplitViewControllerDelegat
             switch self {
             case .Home:
                 return storyboard.instantiateViewControllerWithIdentifier("HomeNav")
-            case .Search:
-                return storyboard.instantiateViewControllerWithIdentifier("SearchNav")
+            case .Attension:
+                let nav = storyboard.instantiateViewControllerWithIdentifier("AttensionNav")
+                let etvc = nav.contentViewController as! ExperimentsTableViewController
+                etvc.queryType = .InteretedByCurrentUser
+                etvc.refreshControl = UIRefreshControl(target: etvc, action: "refresh:")
+                return nav
             case .Notification:
                 return storyboard.instantiateViewControllerWithIdentifier("NotificationNav")
             }
@@ -65,13 +69,19 @@ class EGSplitViewController: UISplitViewController, UISplitViewControllerDelegat
         static var allTypes: [DetailViewControllerType] {
             return [
                 DetailViewControllerType.Home,
-                DetailViewControllerType.Search,
+                DetailViewControllerType.Attension,
                 DetailViewControllerType.Notification
             ]
         }
-        
-        
     }
     
     
+}
+
+extension UIRefreshControl {
+    convenience init(target: AnyObject?, action: Selector) {
+        self.init()
+        self.addTarget(target, action: action, forControlEvents: .ValueChanged)
+        self.endRefreshing()
+    }
 }

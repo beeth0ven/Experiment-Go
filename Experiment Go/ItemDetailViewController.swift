@@ -77,10 +77,6 @@ class ItemDetailViewController: UIViewController,  UITableViewDataSource, UITabl
     
     func configureCell(cell: UITableViewCell, forKey key: String) { }
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sections[section].title
-    }
-    
     // MARK: - Table View Editing
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return false

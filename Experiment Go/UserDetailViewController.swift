@@ -80,6 +80,7 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
         }
     }
     
+    
     override func setupSections() -> [SectionInfo] {
         let infos = !editing ? sectionInfos : sectionInfosWhileEditing
         return  infos.map { SectionInfo(title: $0.title, rows: $0.reusableCellInfos) }

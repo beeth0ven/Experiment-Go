@@ -67,6 +67,10 @@ class ExperimentDetailViewController: ItemDetailViewController {
         }
     }
     
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return sections[section].title == "Author" ? "Author" : nil
+    }
+    
     override func setupSections() -> [SectionInfo] {
         let infos = !editing ? sectionInfos : sectionInfosWhileEditing
         return  infos.map { SectionInfo(title: $0.title, rows: $0.reusableCellInfos) }
