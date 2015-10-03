@@ -140,7 +140,7 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
             
             ditvc.done = {
                 image in
-                let imageData = UIImageJPEGRepresentation(image, 0.5)!
+                let imageData = UIImageJPEGRepresentation(image, 0.1)!
                 let profileImageAsset = CKAsset(data: imageData)
                 self.user?.profileImageAsset = profileImageAsset
                 self.tableView.reloadCell(imageTableViewCell)

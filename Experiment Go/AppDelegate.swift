@@ -23,7 +23,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, iCloudKeyValueStoreHasCha
         DefaultStyleController.applyStyle()
         startObserveiCloudKeyValueStoreHasChange()
 //        CKUsers.UpdateCurrentUser()
+        
         return true
+    }
+    
+    func requestApplicationPermission() {
+        getDiscoverabilityPermission(
+            didGet: { _ in CKUsers.UpdateCurrentUser() },
+            didFail: nil
+        )
+    }
+    
+    func getDiscoverabilityPermission(didGet didGet: (Bool) -> (), didFail: ((NSError) -> ())?) {
+        CKContainer.defaultContainer().requestApplicationPermission(.UserDiscoverability) { (applicationPermissionStatus, error) -> Void in
+            dispatch_async(dispatch_get_main_queue()) {
+                guard  error == nil else { didFail?(error!) ; return }
+                didGet( applicationPermissionStatus == .Granted )
+            }
+        }
     }
     
     func requestForRemoteNotifications() {

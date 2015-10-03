@@ -36,6 +36,24 @@ class UsersTableViewController: CloudKitTableViewController {
         }        
     }
     
+    @IBInspectable
+    var followUserCellReusableIdentifier: String?
+
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellReusableIdentifierAtIndexPath(indexPath), forIndexPath: indexPath) as! CKItemTableViewCell
+        cell.item = items[indexPath.section][indexPath.row]
+        if let followUserTableViewCell = cell as? FollowUserTableViewCell { followUserTableViewCell.handleFail = handleFail }
+        return cell
+    }
+    
+    
+    func cellReusableIdentifierAtIndexPath(indexPath: NSIndexPath) -> String {
+        if case .FollowingFrom(let user) = queryType! {
+            if user.isMe { return followUserCellReusableIdentifier! }
+        }
+        return cellReusableIdentifier!
+    }
+    
     // MARK: - Segue
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         guard let identifier = segue.identifier else { return }

@@ -1589,7 +1589,7 @@
                         <animations/>
                         <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="3Fg-6g-oXj">
-                            <rect key="frame" x="0.0" y="87" width="600" height="44"/>
+                            <rect key="frame" x="0.0" y="152" width="600" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AJ3-xU-qh8">
@@ -1627,11 +1627,11 @@
                             </constraints>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="UserCell" rowHeight="65" id="LjN-rP-Hye" customClass="UserTableViewCell" customModule="Experiment_Go" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="UserCell" rowHeight="65" id="LjN-rP-Hye" customClass="UserTableViewCell" customModule="Experiment_Go" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="22" width="600" height="65"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LjN-rP-Hye" id="Cmy-SP-Bzw">
-                                    <rect key="frame" x="0.0" y="0.0" width="567" height="64"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="64"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yHm-hc-e1O">
@@ -1696,6 +1696,99 @@
                                     <segue destination="2AW-Iq-AeF" kind="show" identifier="ShowUserDetail" id="FIU-ja-Cyf"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FollowUserCell" rowHeight="65" id="bLt-8t-JNj" customClass="FollowUserTableViewCell" customModule="Experiment_Go" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="87" width="600" height="65"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bLt-8t-JNj" id="kSq-Xp-dLz">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="64"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="39e-00-ZAz">
+                                            <rect key="frame" x="15" y="8" width="48" height="48"/>
+                                            <animations/>
+                                            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="64" id="G8s-H4-kmP"/>
+                                                <constraint firstAttribute="height" constant="48" id="cid-2P-cJb"/>
+                                                <constraint firstAttribute="width" secondItem="39e-00-ZAz" secondAttribute="height" multiplier="1:1" id="kHF-Ve-CeZ"/>
+                                            </constraints>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="24"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                            </userDefinedRuntimeAttributes>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="G8s-H4-kmP"/>
+                                                </mask>
+                                            </variation>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" text="User Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Re-ur-oHh">
+                                            <rect key="frame" x="71" y="22" width="440" height="20"/>
+                                            <animations/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B69-d0-nuT" customClass="SwitchButton" customModule="Experiment_Go" customModuleProvider="target">
+                                            <rect key="frame" x="519" y="17" width="65" height="30"/>
+                                            <animations/>
+                                            <state key="normal" title="Following"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="onStateTitle" value="Following"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="offStateTitle" value="Follow"/>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="5"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="followClicked:" destination="bLt-8t-JNj" eventType="touchUpInside" id="eLJ-k7-1gb"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <animations/>
+                                    <constraints>
+                                        <constraint firstAttribute="trailingMargin" secondItem="B69-d0-nuT" secondAttribute="trailing" constant="8" id="1ne-Zx-1eg"/>
+                                        <constraint firstItem="6Re-ur-oHh" firstAttribute="leading" secondItem="39e-00-ZAz" secondAttribute="trailing" constant="8" symbolic="YES" id="2YP-Nv-LId"/>
+                                        <constraint firstItem="6Re-ur-oHh" firstAttribute="leading" secondItem="39e-00-ZAz" secondAttribute="trailing" constant="8" symbolic="YES" id="3mE-S7-wEC"/>
+                                        <constraint firstItem="39e-00-ZAz" firstAttribute="leading" secondItem="kSq-Xp-dLz" secondAttribute="leadingMargin" constant="7" id="57k-m9-Lc9"/>
+                                        <constraint firstItem="6Re-ur-oHh" firstAttribute="centerY" secondItem="39e-00-ZAz" secondAttribute="centerY" id="Lrh-fC-2h4"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="39e-00-ZAz" secondAttribute="bottom" id="P2l-rf-K4V"/>
+                                        <constraint firstItem="B69-d0-nuT" firstAttribute="leading" secondItem="6Re-ur-oHh" secondAttribute="trailing" constant="8" symbolic="YES" id="Qmy-1m-KhP"/>
+                                        <constraint firstItem="6Re-ur-oHh" firstAttribute="leading" secondItem="kSq-Xp-dLz" secondAttribute="leadingMargin" id="aD2-zF-ujK"/>
+                                        <constraint firstItem="6Re-ur-oHh" firstAttribute="centerX" secondItem="kSq-Xp-dLz" secondAttribute="centerX" id="bGH-Yl-xyk"/>
+                                        <constraint firstItem="B69-d0-nuT" firstAttribute="baseline" secondItem="6Re-ur-oHh" secondAttribute="baseline" id="cOP-6s-TOB"/>
+                                        <constraint firstItem="39e-00-ZAz" firstAttribute="centerY" secondItem="kSq-Xp-dLz" secondAttribute="centerY" id="g7S-iz-S8c"/>
+                                        <constraint firstAttribute="topMargin" secondItem="39e-00-ZAz" secondAttribute="top" id="jpG-NP-BmW"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="6Re-ur-oHh" secondAttribute="trailing" id="wao-34-C4o"/>
+                                    </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="g7S-iz-S8c"/>
+                                            <exclude reference="2YP-Nv-LId"/>
+                                            <exclude reference="aD2-zF-ujK"/>
+                                            <exclude reference="bGH-Yl-xyk"/>
+                                            <exclude reference="wao-34-C4o"/>
+                                        </mask>
+                                    </variation>
+                                </tableViewCellContentView>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstItem="6Re-ur-oHh" firstAttribute="centerX" secondItem="bLt-8t-JNj" secondAttribute="centerX" id="wAM-WQ-6ZV"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="wAM-WQ-6ZV"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <outlet property="followButton" destination="B69-d0-nuT" id="SdN-ZB-ad2"/>
+                                    <outlet property="nameLabel" destination="6Re-ur-oHh" id="i8l-nQ-HaI"/>
+                                    <outlet property="profileImageView" destination="39e-00-ZAz" id="KvD-hi-XLx"/>
+                                </connections>
+                            </tableViewCell>
                         </prototypes>
                         <sections/>
                         <connections>
@@ -1708,6 +1801,7 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="cellReusableIdentifier" value="UserCell"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="followUserCellReusableIdentifier" value="FollowUserCell"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="tableFooterActivityIndicatorView" destination="MYr-3L-OWN" id="8Z3-gp-CgQ"/>
@@ -1898,7 +1992,7 @@
                                     <segue destination="jRy-BD-kgY" kind="presentation" identifier="ShowFollower" modalPresentationStyle="formSheet" id="KeJ-nb-tZq"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FanLinkCell " rowHeight="80" id="UsY-8a-KfA" customClass="FanLinkTableViewCell" customModule="Experiment_Go" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FanLinkCell" rowHeight="80" id="UsY-8a-KfA" customClass="FanLinkTableViewCell" customModule="Experiment_Go" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="87" width="600" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="UsY-8a-KfA" id="qac-pB-8Gh">
@@ -2158,11 +2252,11 @@
                                             <exclude reference="Iau-8Z-ilD"/>
                                             <exclude reference="a5q-Wi-vWd"/>
                                             <exclude reference="pZC-aC-5kg"/>
+                                            <exclude reference="EDp-kS-5Fd"/>
                                             <exclude reference="6KG-iu-loT"/>
                                             <exclude reference="Olw-F0-iN2"/>
                                             <exclude reference="aXo-I9-e4B"/>
                                             <exclude reference="vwX-Ld-0cD"/>
-                                            <exclude reference="EDp-kS-5Fd"/>
                                         </mask>
                                     </variation>
                                 </tableViewCellContentView>
@@ -2939,7 +3033,7 @@
                                     <string key="text">An account is required for writing something to Cloud.
 Please tap on the gold color row :</string>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Banner" translatesAutoresizingMaskIntoConstraints="NO" id="Lb7-hf-qbP">
@@ -3542,7 +3636,7 @@ Please tap on the gold color row :</string>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -3563,7 +3657,7 @@ Please tap on the gold color row :</string>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -3597,16 +3691,16 @@ Please tap on the gold color row :</string>
         <image name="Banner" width="280" height="200"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="QGV-Ef-3gP"/>
+        <segue reference="euo-32-rs2"/>
         <segue reference="5eT-sP-w2s"/>
         <segue reference="2Sx-Tm-Aib"/>
-        <segue reference="Cj7-ss-bvJ"/>
+        <segue reference="FIU-ja-Cyf"/>
         <segue reference="qLE-m0-g8m"/>
+        <segue reference="QGV-Ef-3gP"/>
         <segue reference="leS-CF-ZjH"/>
-        <segue reference="euo-32-rs2"/>
-        <segue reference="gW7-gZ-38U"/>
-        <segue reference="aUJ-vY-2vN"/>
-        <segue reference="oYy-Zc-W8o"/>
+        <segue reference="mtJ-QP-k77"/>
+        <segue reference="Ong-go-o6V"/>
+        <segue reference="Utv-Vb-pvV"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.9212072491645813" green="0.84832113981246948" blue="0.62377804517745972" alpha="1" colorSpace="calibratedRGB"/>
 </document>

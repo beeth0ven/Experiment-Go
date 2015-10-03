@@ -48,6 +48,8 @@
 		45A2A2421B8AE224004BEF45 /* CloudKitTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */; };
 		45A2A2441B8D7EF5004BEF45 /* CKItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2A2431B8D7EF5004BEF45 /* CKItemTableViewCell.swift */; };
 		45AAB0A21B6E117200595467 /* ReviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */; };
+		45ABBBBC1BBFD92100A86B7C /* FollowUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ABBBBB1BBFD92100A86B7C /* FollowUserTableViewCell.swift */; };
+		45ABBBBE1BBFDE9500A86B7C /* SwitchButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ABBBBD1BBFDE9500A86B7C /* SwitchButton.swift */; };
 		45B6FB6C1BA548040089AC15 /* SearchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B6FB6B1BA548040089AC15 /* SearchResultsController.swift */; };
 		45BC4E931B6A145F00A9963F /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E921B6A145F00A9963F /* UserTableViewCell.swift */; };
 		45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */; };
@@ -133,6 +135,8 @@
 		45A2A2411B8AE224004BEF45 /* CloudKitTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CloudKitTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45A2A2431B8D7EF5004BEF45 /* CKItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CKItemTableViewCell.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ReviewTableViewCell.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		45ABBBBB1BBFD92100A86B7C /* FollowUserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowUserTableViewCell.swift; sourceTree = "<group>"; };
+		45ABBBBD1BBFDE9500A86B7C /* SwitchButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchButton.swift; sourceTree = "<group>"; };
 		45B6FB6B1BA548040089AC15 /* SearchResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsController.swift; sourceTree = "<group>"; };
 		45BC4E921B6A145F00A9963F /* UserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = UserTableViewCell.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExperimentTableViewCell.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -255,6 +259,7 @@
 			isa = PBXGroup;
 			children = (
 				4511B28D1B4FB7CF0046DF76 /* Main.storyboard */,
+				45ABBBBD1BBFDE9500A86B7C /* SwitchButton.swift */,
 				45CBDF211B998E650060AB14 /* UIBarButtonItem */,
 				45419ACA1BA7F950006F8A83 /* UICollectionViewCell */,
 				45CBDF201B998E400060AB14 /* UITableViewCell */,
@@ -391,6 +396,7 @@
 				45AAB0A11B6E117200595467 /* ReviewTableViewCell.swift */,
 				45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */,
 				45BC4E921B6A145F00A9963F /* UserTableViewCell.swift */,
+				45ABBBBB1BBFD92100A86B7C /* FollowUserTableViewCell.swift */,
 				451A6AA51BBBDDA200544DFF /* LinkTableViewCell */,
 				45C2FC2E1BA01BC4003B190C /* NotificationTableViewCell.swift */,
 			);
@@ -637,6 +643,7 @@
 				45776EA01BB2A16F002B9003 /* ExperimentsTableViewController.swift in Sources */,
 				4511B2851B4FB7CF0046DF76 /* AppDelegate.swift in Sources */,
 				45419ACF1BA81C39006F8A83 /* AppDetailViewController.swift in Sources */,
+				45ABBBBE1BBFDE9500A86B7C /* SwitchButton.swift in Sources */,
 				451A6A9C1BBBD60400544DFF /* GetNotificationLinksOperation.swift in Sources */,
 				459C8BAC1BBBE32800E80CD7 /* NotificationsTableViewController.swift in Sources */,
 				4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */,
@@ -657,6 +664,7 @@
 				45B6FB6C1BA548040089AC15 /* SearchResultsController.swift in Sources */,
 				451A6A981BBA686200544DFF /* GetFollowersOperation.swift in Sources */,
 				45983D0F1B71CB1000ABCF38 /* SwitchBarButtonItem.swift in Sources */,
+				45ABBBBC1BBFD92100A86B7C /* FollowUserTableViewCell.swift in Sources */,
 				45A023181BB01B7700C6BB4B /* GetObjectsWithCreatorUserOperation.swift in Sources */,
 				45A0231A1BB148CF00C6BB4B /* CKLink.swift in Sources */,
 				45BC4E9E1B6DCDB800A9963F /* DefaultStyleController.swift in Sources */,
