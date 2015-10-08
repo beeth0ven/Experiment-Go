@@ -14,7 +14,7 @@ class FollowLinkTableViewCell: LinkTableViewCell {
     override func updateUI() {
         
         fromUserNameLabel.text = link?.creatorUser?.displayName
-        subheadLabel.text = "is following you."
+        subheadLabel.text =  NSLocalizedString("is following you.", comment: "") 
         dateLabel.text = link?.creationDate.smartString
         
         fromUserProfileImage = CKUsers.ProfileImage

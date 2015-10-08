@@ -54,7 +54,7 @@ class MenuTableViewController: UITableViewController, CurrentUserHasChangeObserv
     func updateUI() {
         // Clear UI
         profileImage = CKUsers.ProfileImage
-        self.title = currentUser?.displayName ?? "Menu".localizedString
+        self.title = currentUser?.displayName ?? NSLocalizedString("Menu", comment: "")
         guard let url = profileImageURL else { return  }
         UIImage.GetImageForURL(url) {
             guard url == self.profileImageURL else { return }
@@ -67,7 +67,7 @@ class MenuTableViewController: UITableViewController, CurrentUserHasChangeObserv
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-            if cell.textLabel?.text == "Profile" {
+            if cell.textLabel?.text == NSLocalizedString("Profile", comment: "")  {
                 tableView.deselectRowAtIndexPath(indexPath, animated: true)
                 guard didAuthoriseElseRequest(didAuthorize: { self.performSegueWithIdentifier(SegueID.ShowUserDetail.rawValue, sender: cell) }) else { return  }
                 performSegueWithIdentifier(SegueID.ShowUserDetail.rawValue, sender: cell)

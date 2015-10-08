@@ -33,12 +33,12 @@ class ItemDetailViewController: UIViewController,  UITableViewDataSource, UITabl
     
     override func setEditing(editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-//        if editing {
-//            guard getAuthorizationIfNeeded(didAuthorize: { self.setEditing(editing, animated: animated) }) == false else {
-//                setEditing(!editing, animated: false)
-//                return
-//            }
-//        }
+        if editing {
+            guard didAuthoriseElseRequest(didAuthorize: { self.setEditing(editing, animated: animated) }) else {
+                setEditing(!editing, animated: false)
+                return
+            }
+        }
         
         tableView.editing = editing
         if !editing && item?.hasChange == true {

@@ -17,7 +17,7 @@ class ReviewLinkTableViewCell: LinkTableViewCell {
     override func updateUI() {
         
         fromUserNameLabel.text = link?.creatorUser?.displayName
-        subheadLabel.text = "reviewed to:"
+        subheadLabel.text = NSLocalizedString("reviewed to:", comment: "") 
         experimentButton.setTitle(link?.experiment?.title, forState: .Normal)
         contentLabel.text = link?.content
         dateLabel.text = link?.creationDate.smartString

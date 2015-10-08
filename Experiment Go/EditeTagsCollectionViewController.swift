@@ -44,13 +44,13 @@ class EditeTagsCollectionViewController: UICollectionViewController {
     @IBAction func tagClicked(button: UIButton) {
         guard button.currentTitle != "+" else { performSegueWithIdentifier(SegueID.AddTag.rawValue, sender: button) ; return }
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alert.addAction(UIAlertAction(title: "Edite".localizedString, style: .Default, handler: { _ in self.performSegueWithIdentifier(SegueID.EditeTag.rawValue, sender: button) }))
-        alert.addAction(UIAlertAction(title: "Delete".localizedString, style: .Destructive, handler: { _ in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Edite", comment: ""), style: .Default, handler: { _ in self.performSegueWithIdentifier(SegueID.EditeTag.rawValue, sender: button) }))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Delete", comment: ""), style: .Destructive, handler: { _ in
             let indexPath = self.indexPathForCellSubView(button)!
             self.tags.removeAtIndex(indexPath.row)
             self.navigationItem.rightBarButtonItem?.enabled = true
         }))
-        alert.addAction(UIAlertAction(title: "Cancel".localizedString, style: .Cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .Cancel, handler: nil))
         
         alert.modalPresentationStyle = .Popover
         let ppc = alert.popoverPresentationController
@@ -74,7 +74,7 @@ class EditeTagsCollectionViewController: UICollectionViewController {
         switch segueID {
         case .AddTag:
             guard let dttvc = segue.destinationViewController.contentViewController as? EditeTextTableViewController else { return }
-            dttvc.title = "New Tag".localizedString
+            dttvc.title = NSLocalizedString("New Tag", comment: "")
             dttvc.done = {
                 (text) in
                 let trimmedText = text?.stringByTrimmingWhitespaceAndNewline.lowercaseString
@@ -87,7 +87,7 @@ class EditeTagsCollectionViewController: UICollectionViewController {
             guard let ettvc = segue.destinationViewController.contentViewController as? EditeTextTableViewController else { return }
             let button = sender as! UIButton
             let indexPath = indexPathForCellSubView(button)!
-            ettvc.title = "Edite Tag".localizedString
+            ettvc.title = NSLocalizedString("Edite Tag", comment: "")
             ettvc.text = button.currentTitle
             ettvc.done = {
                 (text) in

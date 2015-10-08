@@ -15,6 +15,8 @@ enum Notification: String {
 
 class CKUsers: CKItem {
     
+    override var recordID: CKRecordID  { return (recordIDName == CKOwnerDefaultName && CKUsers.CurrentUser?.recordID != nil) ? CKUsers.CurrentUser!.recordID : super.recordID }
+    
     var profileImageAsset: CKAsset? {
         get { return record[UsersKey.profileImageAsset.rawValue] as? CKAsset }
         set { record[UsersKey.profileImageAsset.rawValue] = newValue }

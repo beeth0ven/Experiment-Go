@@ -98,8 +98,8 @@ extension UsersTableViewController {
     func addClicked(sender: UIBarButtonItem) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
 
-        alert.addAction( UIAlertAction( title: "Show a user by Email".localizedString, style: .Default, handler: { _ in self.doShowUserByEmail() } ) )
-        alert.addAction( UIAlertAction( title: "Show users from contacts".localizedString, style: .Default, handler: { _ in self.doShowFromContacts() } ) )
+        alert.addAction( UIAlertAction( title: NSLocalizedString("Show a user by Email", comment: "") , style: .Default, handler: { _ in self.doShowUserByEmail() } ) )
+        alert.addAction( UIAlertAction( title: NSLocalizedString("Show users from contacts", comment: ""), style: .Default, handler: { _ in self.doShowFromContacts() } ) )
         alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
         
         alert.modalPresentationStyle = .Popover
@@ -109,10 +109,10 @@ extension UsersTableViewController {
     }
     
     func doShowUserByEmail() {
-        let alert = UIAlertController(title: "Experiment Go".localizedString, message: "Please Enter a Email Address.".localizedString, preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "Cancel".localizedString, style: .Cancel, handler: nil))
+        let alert = UIAlertController(title: NSLocalizedString("Experiment Go", comment: "") , message: NSLocalizedString("Please Enter a Email Address.", comment: "") , preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "") , style: .Cancel, handler: nil))
         alert.addAction(UIAlertAction(
-            title: "Done".localizedString,
+            title: NSLocalizedString("Done", comment: ""),
             style: .Default)
             { (_)  in
                 guard let textField = alert.textFields?.first else { return }

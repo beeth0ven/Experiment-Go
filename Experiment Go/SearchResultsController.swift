@@ -25,7 +25,7 @@ class SearchResultsController: UITableViewController, UISearchBarDelegate, UISea
         cell.textLabel?.text = historyManager.experimentSearchHistories[indexPath.row]
         return cell
     }
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return "History".localizedString }
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return NSLocalizedString("History", comment: "") }
     
     // MARK: - Table view delegate
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) { callBack(tableView.cellForRowAtIndexPath(indexPath)!.textLabel!.text!) }

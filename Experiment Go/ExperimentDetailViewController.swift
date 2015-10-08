@@ -42,12 +42,12 @@ class ExperimentDetailViewController: ItemDetailViewController {
         cell.setFocus(shouldFocus(rowInfo: rowInfo))
         switch rowInfo {
         case .title:
-            cell.title = key.capitalizedString.localizedString
+            cell.title = rowInfo.displayTitle
             cell.subTitle = experiment?.title
             cell.accessoryType = editing ? .DisclosureIndicator : .None
             
         case .creationDate:
-            cell.title = "Date".localizedString
+            cell.title = rowInfo.displayTitle
             cell.subTitle = experiment?.creationDate.string
             
         case .tags:
@@ -57,12 +57,12 @@ class ExperimentDetailViewController: ItemDetailViewController {
             cell.accessoryType = editing ? .DisclosureIndicator : .None
 
         case .purpose, .principle, .content, .steps, .results, .conclusion, .footNote:
-            cell.title = key.capitalizedString.localizedString
+            cell.title = rowInfo.displayTitle
             cell.subTitle = experiment?[key] as? String
             cell.accessoryType = editing ? .DisclosureIndicator : .None
 
         case .reviews, .fans:
-            cell.title = key.capitalizedString
+            cell.title = rowInfo.displayTitle
             
         case .author:
             let userCell = cell as! UserTableViewCell
@@ -81,7 +81,7 @@ class ExperimentDetailViewController: ItemDetailViewController {
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sections[section].title == "Author".localizedString ? "Author".localizedString : nil
+        return sections[section].title == "Author" ? RowInfo.author.displayTitle : nil
     }
     
     override func setupSections() -> [SectionInfo] {
@@ -258,6 +258,48 @@ class ExperimentDetailViewController: ItemDetailViewController {
         
         var key: String { return rawValue }
         
+        var displayTitle: String {
+            switch self {
+            case .title:
+                return NSLocalizedString("title", comment: "").capitalizedString
+            case .tags:
+                return NSLocalizedString("tags", comment: "").capitalizedString
+            case .creationDate:
+                return NSLocalizedString("date", comment: "").capitalizedString
+
+            case .author:
+                return NSLocalizedString("author", comment: "").capitalizedString
+
+            case .purpose:
+                return NSLocalizedString("purpose", comment: "").capitalizedString
+
+            case .principle:
+                return NSLocalizedString("principle", comment: "").capitalizedString
+
+            case .content:
+                return NSLocalizedString("content", comment: "").capitalizedString
+
+            case .steps:
+                return NSLocalizedString("steps", comment: "").capitalizedString
+
+            case .results:
+                return NSLocalizedString("results", comment: "").capitalizedString
+
+            case .conclusion:
+                return NSLocalizedString("conclusion", comment: "").capitalizedString
+
+            case .footNote:
+                return NSLocalizedString("footNote", comment: "").capitalizedString
+
+            case .reviews:
+                return NSLocalizedString("reviews", comment: "").capitalizedString
+
+            case .fans:
+                return NSLocalizedString("fans", comment: "").capitalizedString
+
+            }
+        }
+    
         var segueID: SegueID? {
             switch self {
             case .author:
@@ -281,6 +323,7 @@ class ExperimentDetailViewController: ItemDetailViewController {
         }
         
         
+
         // Experiment must have value for these keys.
         static var NotOptionalRowInfos: [RowInfo] {
             return [.title, .content, .conclusion]
@@ -303,8 +346,8 @@ extension ExperimentDetailViewController {
     // MARK: - Bar Button Item
     var likeBarButtonItem: SwitchBarButtonItem {
         let result = SwitchBarButtonItem(title: "", style: .Plain, target: self, action: "likeClicked:")
-        result.onStateTitle = "Liking".localizedString
-        result.offStateTitle = "Like".localizedString
+        result.onStateTitle = NSLocalizedString("Liking", comment: "")
+        result.offStateTitle = NSLocalizedString("Like", comment: "")
         result.on = CKUsers.AmILikingThisExperiment(experiment!)
         return result
     }
@@ -334,7 +377,7 @@ extension ExperimentDetailViewController {
     }
     
     var deleteBarButtonItem: UIBarButtonItem {
-        return UIBarButtonItem(title: "Delete".localizedString, style: .Done, target: self, action: "deleteClicked")
+        return UIBarButtonItem(title: NSLocalizedString("Delete", comment: ""), style: .Done, target: self, action: "deleteClicked")
     }
     
     func deleteClicked() {
@@ -355,19 +398,19 @@ extension NSDate {
         let absTimeIntervalSinceNow = -timeIntervalSinceNow
         switch absTimeIntervalSinceNow {
         case 0..<NSDate.OneMinute:
-            return "Now".localizedString
+            return NSLocalizedString("Now", comment: "")
         case NSDate.OneMinute..<NSDate.OneHour:
             // eg. 10 Minutes
             let minutes = Int(absTimeIntervalSinceNow / NSDate.OneMinute)
-            return "\(minutes) minutes ago".localizedString
+            return String.localizedStringWithFormat(NSLocalizedString("%i minutes ago", comment: "") , minutes)
         case NSDate.OneHour..<NSDate.OneDay:
             // eg. 10 Hours
             let hours = Int(absTimeIntervalSinceNow / NSDate.OneHour)
-            return "\(hours) hours ago".localizedString
+            return String.localizedStringWithFormat(NSLocalizedString("%i hours ago", comment: "") , hours)
         default:
             // eg. 10 Days
             let days = Int(absTimeIntervalSinceNow / NSDate.OneDay)
-            return "\(days) days ago".localizedString
+            return String.localizedStringWithFormat(NSLocalizedString("%i days ago", comment: "") , days)
         }
     }
     

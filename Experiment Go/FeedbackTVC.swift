@@ -26,7 +26,7 @@ class FeedbackTVC: UITableViewController {
             let cell = sender as? UITableViewCell else { return }
             let review = CKLink(feedbackTitle: cell.title!)
             rvc.review = review
-            rvc.title = "Feedback"
+            rvc.title = NSLocalizedString("Feedback", comment: "") 
             rvc.done = {
                 $0.saveInBackground(didFail: self.handleFail)
             }

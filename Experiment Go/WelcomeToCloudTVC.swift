@@ -96,7 +96,7 @@ class WelcomeToCloudTVC: UITableViewController, iCloudKeyValueStoreHasChangeObse
     }
     
     private func showSignIntoiCloudAlert() {
-        let alert = UIAlertController(errorMessage: "Please sign into an iCloud account on current device from iOS setting App.")
+        let alert = UIAlertController(errorMessage: NSLocalizedString("Please sign into an iCloud account on current device from iOS setting App.", comment: "") )
         presentViewController(alert, animated: true, completion: nil)
     }
     
@@ -117,7 +117,7 @@ class WelcomeToCloudTVC: UITableViewController, iCloudKeyValueStoreHasChangeObse
     }
     
     private func showPermissonAuthorizationFailedAlert() {
-        let alert = UIAlertController(errorMessage: "Authorization failed.\nYou can still get permision from the path bellow later:\n iOS Setting -> iCLoud -> iCloud Drive -> Look Me Up By Email.")
+        let alert = UIAlertController(errorMessage: NSLocalizedString("Authorization failed.\nYou can still get permision from the path bellow later:\n iOS Setting -> iCLoud -> iCloud Drive -> Look Me Up By Email.", comment: "") )
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
@@ -133,10 +133,10 @@ class WelcomeToCloudTVC: UITableViewController, iCloudKeyValueStoreHasChangeObse
     }
     
     private func getUserDisplayName(didGet didGet: (String?) -> ()) {
-        let alert = UIAlertController(title: "Experiment Go", message: "Please set a display name.", preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { (_)  in didGet(nil) }))
+        let alert = UIAlertController(title: NSLocalizedString("Experiment Go", comment: "") , message: NSLocalizedString("Please set a display name.", comment: "") , preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "") , style: .Cancel, handler: { (_)  in didGet(nil) }))
         alert.addAction(UIAlertAction(
-            title: "Done",
+            title: NSLocalizedString("Done", comment: "") ,
             style: .Default)
             { (_)  in
                 guard let textField = alert.textFields?.first else { return }
@@ -145,7 +145,7 @@ class WelcomeToCloudTVC: UITableViewController, iCloudKeyValueStoreHasChangeObse
             
         )
         
-        alert.addTextFieldWithConfigurationHandler { (textField) in textField.placeholder = "Display Name" }
+        alert.addTextFieldWithConfigurationHandler { (textField) in textField.placeholder = NSLocalizedString("Display Name", comment: "")  }
         presentViewController(alert, animated: true, completion: nil)
     }
     

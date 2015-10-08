@@ -23,6 +23,9 @@
 		4525D1111BC1239200CA55AB /* WelcomeToCloudTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4525D1101BC1239200CA55AB /* WelcomeToCloudTVC.swift */; };
 		4525D1131BC2549D00CA55AB /* FeedbackTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4525D1121BC2549D00CA55AB /* FeedbackTVC.swift */; };
 		4525D1161BC38D0800CA55AB /* StyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4525D1151BC38D0800CA55AB /* StyleKit.swift */; };
+		45316E431BC65B1A0021C18D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 45316E451BC65B1A0021C18D /* InfoPlist.strings */; };
+		45316E481BC65B1B0021C18D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 45316E4A1BC65B1B0021C18D /* InfoPlist.strings */; };
+		45316E4D1BC65B1C0021C18D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 45316E4F1BC65B1C0021C18D /* Localizable.strings */; };
 		4537CB131B944765004378C3 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB121B944765004378C3 /* ImageTableViewCell.swift */; };
 		4537CB151B95680E004378C3 /* EditeTextTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */; };
 		4537CB191B959EF9004378C3 /* SubTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */; };
@@ -110,6 +113,11 @@
 		4525D1101BC1239200CA55AB /* WelcomeToCloudTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeToCloudTVC.swift; sourceTree = "<group>"; };
 		4525D1121BC2549D00CA55AB /* FeedbackTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackTVC.swift; sourceTree = "<group>"; };
 		4525D1151BC38D0800CA55AB /* StyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKit.swift; sourceTree = "<group>"; };
+		45316E401BC64FE80021C18D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
+		45316E441BC65B1A0021C18D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		45316E491BC65B1B0021C18D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		45316E4E1BC65B1C0021C18D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		45316E501BC65B1C0021C18D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		4537CB121B944765004378C3 /* ImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
 		4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditeTextTableViewController.swift; sourceTree = "<group>"; };
 		4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubTitleTableViewCell.swift; sourceTree = "<group>"; };
@@ -231,6 +239,8 @@
 		4511B2821B4FB7CF0046DF76 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				45316E4F1BC65B1C0021C18D /* Localizable.strings */,
+				45316E451BC65B1A0021C18D /* InfoPlist.strings */,
 				45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */,
 				45BC4E9D1B6DCDB800A9963F /* DefaultStyleController.swift */,
 				4511B2AB1B4FBA320046DF76 /* Images.xcassets */,
@@ -254,6 +264,7 @@
 		4511B29D1B4FB7CF0046DF76 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				45316E4A1BC65B1B0021C18D /* InfoPlist.strings */,
 				4511B29E1B4FB7CF0046DF76 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -564,7 +575,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45316E4D1BC65B1C0021C18D /* Localizable.strings in Resources */,
 				4511B2AC1B4FBA320046DF76 /* Images.xcassets in Resources */,
+				45316E431BC65B1A0021C18D /* InfoPlist.strings in Resources */,
 				4511B28F1B4FB7CF0046DF76 /* Main.storyboard in Resources */,
 				4511B2941B4FB7CF0046DF76 /* LaunchScreen.xib in Resources */,
 			);
@@ -574,6 +587,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45316E481BC65B1B0021C18D /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -717,6 +731,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				4511B28E1B4FB7CF0046DF76 /* Base */,
+				45316E401BC64FE80021C18D /* zh-Hans */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -725,8 +740,33 @@
 			isa = PBXVariantGroup;
 			children = (
 				4511B2931B4FB7CF0046DF76 /* Base */,
+				45316E501BC65B1C0021C18D /* zh-Hans */,
 			);
 			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+		45316E451BC65B1A0021C18D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				45316E441BC65B1A0021C18D /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		45316E4A1BC65B1B0021C18D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				45316E491BC65B1B0021C18D /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		45316E4F1BC65B1C0021C18D /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				45316E4E1BC65B1C0021C18D /* zh-Hans */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

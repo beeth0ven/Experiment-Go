@@ -16,7 +16,7 @@ class FanLinkTableViewCell: LinkTableViewCell {
     override func updateUI() {
         
         fromUserNameLabel.text = link?.creatorUser?.displayName
-        subheadLabel.text = "liked:"
+        subheadLabel.text = NSLocalizedString("liked:", comment: "") 
         experimentButton.setTitle(link?.experiment?.title, forState: .Normal)
         dateLabel.text = link?.creationDate.smartString
         

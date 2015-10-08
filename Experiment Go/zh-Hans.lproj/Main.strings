@@ -1,0 +1,336 @@
+/* Class = "UILabel"; text = "Luo Jie"; ObjectID = "0Um-9M-nEi"; */
+"0Um-9M-nEi.text" = "名字";
+
+/* Class = "UILabel"; text = "About me:"; ObjectID = "0hb-jd-9fQ"; */
+"0hb-jd-9fQ.text" = "关于我：";
+
+/* Class = "UILabel"; text = "Tags"; ObjectID = "1mu-qC-ubo"; */
+"1mu-qC-ubo.text" = "标签";
+
+/* Class = "UILabel"; text = "2. Get Write Permision to Cloud"; ObjectID = "1yj-BL-nmv"; */
+"1yj-BL-nmv.text" = "2. 获得 Cloud 写入权限";
+
+/* Class = "UIViewController"; title = "User Detail"; ObjectID = "2AW-Iq-AeF"; */
+"2AW-Iq-AeF.title" = "用户详情";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "03W-y3-fBR"; */
+"03W-y3-fBR.text" = "标签";
+
+/* Class = "UIBarButtonItem"; title = "Write Review"; ObjectID = "3gU-of-dOc"; */
+"3gU-of-dOc.title" = "写评论";
+
+/* Class = "UILabel"; text = "Posted"; ObjectID = "4fG-Oe-xEY"; */
+"4fG-Oe-xEY.text" = "已发布";
+
+/* Class = "UILabel"; text = "Luo Jie"; ObjectID = "4qa-TO-sMN"; */
+"4qa-TO-sMN.text" = "名字";
+
+/* Class = "UILabel"; text = "Reviews"; ObjectID = "6Lt-lq-5FI"; */
+"6Lt-lq-5FI.text" = "评论";
+
+/* Class = "UILabel"; text = "User Name"; ObjectID = "6Re-ur-oHh"; */
+"6Re-ur-oHh.text" = "昵称";
+
+/* Class = "UINavigationItem"; title = "Image"; ObjectID = "7EB-bp-7N0"; */
+"7EB-bp-7N0.title" = "图片";
+
+/* Class = "UILabel"; text = "That's a great experiment."; ObjectID = "7O0-lg-7cW"; */
+"7O0-lg-7cW.text" = "那是一个非常优秀的实验。";
+
+/* Class = "UITableViewController"; title = "Menu"; ObjectID = "7bK-jq-Zjz"; */
+"7bK-jq-Zjz.title" = "菜单";
+
+/* Class = "UIButton"; normalTitle = "Hallo"; ObjectID = "8dW-LG-3X9"; */
+"8dW-LG-3X9.normalTitle" = "你好";
+
+/* Class = "UINavigationItem"; title = "Review"; ObjectID = "9di-Xn-DMY"; */
+"9di-Xn-DMY.title" = "评论";
+
+/* Class = "UIButton"; normalTitle = "Start"; ObjectID = "38E-qL-l52"; */
+"38E-qL-l52.normalTitle" = "开始";
+
+/* Class = "UILabel"; text = "9.3 Days"; ObjectID = "41t-NS-775"; */
+"41t-NS-775.text" = "9.3 天";
+
+/* Class = "UIButton"; normalTitle = "Feedback"; ObjectID = "AIR-dG-Ywb"; */
+"AIR-dG-Ywb.normalTitle" = "反馈";
+
+/* Class = "UILabel"; text = "Home"; ObjectID = "Arm-wq-HPj"; */
+"Arm-wq-HPj.text" = "主页";
+
+/* Class = "UITableViewController"; title = "Edite Text"; ObjectID = "B2H-Y7-irh"; */
+"B2H-Y7-irh.title" = "编辑文本";
+
+/* Class = "UIButton"; normalTitle = "Following"; ObjectID = "B69-d0-nuT"; */
+"B69-d0-nuT.normalTitle" = "已关注";
+
+/* Class = "UILabel"; text = "Date"; ObjectID = "BaY-fJ-XHM"; */
+"BaY-fJ-XHM.text" = "日期";
+
+/* Class = "UILabel"; text = "About me:"; ObjectID = "CGz-ei-2LQ"; */
+"CGz-ei-2LQ.text" = "关于我:";
+
+/* Class = "UILabel"; text = "User Name"; ObjectID = "Dng-8i-0Y9"; */
+"Dng-8i-0Y9.text" = "昵称";
+
+/* Class = "UILabel"; text = "liked:"; ObjectID = "E0L-96-sLx"; */
+"E0L-96-sLx.text" = "喜欢：";
+
+/* Class = "UILabel"; text = "Take a photo"; ObjectID = "EVQ-zZ-YrI"; */
+"EVQ-zZ-YrI.text" = "拍一张照片";
+
+/* Class = "UILabel"; text = "Luo Jie"; ObjectID = "GHL-nu-q3z"; */
+"GHL-nu-q3z.text" = "名字";
+
+/* Class = "UISplitViewController"; title = "Split"; ObjectID = "H1p-Uh-vWS"; */
+"H1p-Uh-vWS.title" = "分离";
+
+/* Class = "UINavigationController"; title = "Fans Nav"; ObjectID = "Hdc-vH-Y2T"; */
+"Hdc-vH-Y2T.title" = "粉丝 Nav";
+
+/* Class = "UILabel"; text = "Luo Jie"; ObjectID = "I5P-jD-EH9"; */
+"I5P-jD-EH9.text" = "名字";
+
+/* Class = "UILabel"; text = "Profile"; ObjectID = "IqR-DT-J2V"; */
+"IqR-DT-J2V.text" = "个人";
+
+/* Class = "UIViewController"; title = "Experiment Detail"; ObjectID = "JEX-9P-axG"; */
+"JEX-9P-axG.title" = "实验详情";
+
+/* Class = "UILabel"; text = "Experiment"; ObjectID = "JIt-TW-MmB"; */
+"JIt-TW-MmB.text" = "实验";
+
+/* Class = "UILabel"; text = "is following you."; ObjectID = "JXW-0h-SgJ"; */
+"JXW-0h-SgJ.text" = "已关注你。";
+
+/* Class = "UINavigationItem"; title = "Experiment"; ObjectID = "Kpf-q4-qxE"; */
+"Kpf-q4-qxE.title" = "实验";
+
+/* Class = "UILabel"; text = "9.3 Days"; ObjectID = "KqL-uH-JSz"; */
+"KqL-uH-JSz.text" = "9.3 天";
+
+/* Class = "UINavigationItem"; title = "Welcome To Cloud"; ObjectID = "LIs-HG-Q2b"; */
+"LIs-HG-Q2b.title" = "欢迎使用 Cloud";
+
+/* Class = "UILabel"; text = "9.3 Days"; ObjectID = "LNv-kQ-Bhl"; */
+"LNv-kQ-Bhl.text" = "9.3 天";
+
+/* Class = "UILabel"; text = "Notification"; ObjectID = "LXU-eg-egw"; */
+"LXU-eg-egw.text" = "通知";
+
+/* Class = "UILabel"; text = "9.3 Days"; ObjectID = "LtQ-oM-rjX"; */
+"LtQ-oM-rjX.text" = "9.3 天";
+
+/* Class = "UINavigationController"; title = "Attension Nav"; ObjectID = "MEB-Rg-jBb"; */
+"MEB-Rg-jBb.title" = "关注 Nav";
+
+/* Class = "UILabel"; text = "Attension"; ObjectID = "MYf-Bl-xKC"; */
+"MYf-Bl-xKC.text" = "关注";
+
+/* Class = "UILabel"; text = "Date"; ObjectID = "Mvy-tS-x5H"; */
+"Mvy-tS-x5H.text" = "日期";
+
+/* Class = "UILabel"; text = "Tags"; ObjectID = "O1C-Af-3qt"; */
+"O1C-Af-3qt.text" = "标签";
+
+/* Class = "UITableViewController"; title = "Edite Text"; ObjectID = "OPX-JV-vO1"; */
+"OPX-JV-vO1.title" = "编辑文本";
+
+/* Class = "UILabel"; text = "About me:"; ObjectID = "P3c-au-cjC"; */
+"P3c-au-cjC.text" = "关于我：";
+
+/* Class = "UITableViewController"; title = "Fans"; ObjectID = "PeT-ND-Ndy"; */
+"PeT-ND-Ndy.title" = "粉丝";
+
+/* Class = "UILabel"; text = "Date"; ObjectID = "Q1p-iF-lNd"; */
+"Q1p-iF-lNd.text" = "日期";
+
+/* Class = "UINavigationItem"; title = "Reviews"; ObjectID = "RBc-QD-rIw"; */
+"RBc-QD-rIw.title" = "评论";
+
+/* Class = "UINavigationController"; title = "Menu Nav"; ObjectID = "RMx-3f-FxP"; */
+"RMx-3f-FxP.title" = "菜单 Nav";
+
+/* Class = "UITableViewController"; title = "Experiments"; ObjectID = "RRH-RP-CTl"; */
+"RRH-RP-CTl.title" = "实验";
+
+/* Class = "UINavigationItem"; title = "Experiment Go"; ObjectID = "SHd-eU-xTk"; */
+"SHd-eU-xTk.title" = "做实验";
+
+/* Class = "UILabel"; text = "Report Bug"; ObjectID = "Spy-tf-6UL"; */
+"Spy-tf-6UL.text" = "反馈 Bug";
+
+/* Class = "UITableViewController"; title = "Experiments"; ObjectID = "Srp-fS-zuU"; */
+"Srp-fS-zuU.title" = "实验";
+
+/* Class = "UINavigationController"; title = "Experiment Detail Nav"; ObjectID = "TXu-FO-35v"; */
+"TXu-FO-35v.title" = "实验详情 Nav";
+
+/* Class = "UIButton"; normalTitle = "Grativity test experiments. "; ObjectID = "UC3-7M-ikp"; */
+"UC3-7M-ikp.normalTitle" = "重力测试实验。";
+
+/* Class = "UINavigationController"; title = "Notification Nav"; ObjectID = "Uhd-DP-IaF"; */
+"Uhd-DP-IaF.title" = "通知 Nav";
+
+/* Class = "UILabel"; text = "3. Set Your Display Name"; ObjectID = "XgJ-rX-IAx"; */
+"XgJ-rX-IAx.text" = "3. 设置你的昵称";
+
+/* Class = "UILabel"; text = "1. Sign into an iCloud account"; ObjectID = "Y3x-Du-6YK"; */
+"Y3x-Du-6YK.text" = "1. 登录一个 iCloud 账号";
+
+/* Class = "UIButton"; normalTitle = "Hallo"; ObjectID = "Yfv-jG-YMP"; */
+"Yfv-jG-YMP.normalTitle" = "你好";
+
+/* Class = "UILabel"; text = "Choose a photo"; ObjectID = "Zeg-3c-njO"; */
+"Zeg-3c-njO.text" = "选一张照片";
+
+/* Class = "UINavigationItem"; title = "Notification"; ObjectID = "bLC-JU-NuL"; */
+"bLC-JU-NuL.title" = "通知";
+
+/* Class = "UILabel"; text = "User Name"; ObjectID = "cYV-8c-BxB"; */
+"cYV-8c-BxB.text" = "昵称";
+
+/* Class = "UILabel"; text = "Failed to load data. Please retry later!"; ObjectID = "cbM-v2-cLw"; */
+"cbM-v2-cLw.text" = "读取数据是吧。稍后请重试！";
+
+/* Class = "UINavigationItem"; title = "Attension"; ObjectID = "dZJ-hb-gcy"; */
+"dZJ-hb-gcy.title" = "关注";
+
+/* Class = "UILabel"; text = "9.3 Days"; ObjectID = "e2f-Y6-gzR"; */
+"e2f-Y6-gzR.text" = "9.3 天";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "e3i-NQ-bFW"; */
+"e3i-NQ-bFW.text" = "标签";
+
+/* Class = "UILabel"; text = "It's a great experiment."; ObjectID = "epo-zu-Cyu"; */
+"epo-zu-Cyu.text" = "这是一个优秀的实验。";
+
+/* Class = "UINavigationController"; title = "User Nav"; ObjectID = "f7h-C5-4lU"; */
+"f7h-C5-4lU.title" = "用户 Nav";
+
+/* Class = "UITextView"; text = "Wow, So wonderful!"; ObjectID = "f54-1X-uVm"; */
+"f54-1X-uVm.text" = "Wow, 太震惊了！";
+
+/* Class = "UILabel"; text = "  Copyright (c) 2015 LuoJie. All rights reserved."; ObjectID = "fo1-jh-REC"; */
+"fo1-jh-REC.text" = "  Copyright (c) 2015 LuoJie. All rights reserved.";
+
+/* Class = "UIBarButtonItem"; title = " "; ObjectID = "gSr-Z0-Crh"; */
+"gSr-Z0-Crh.title" = "  ";
+
+/* Class = "UIButton"; normalTitle = "Rate On App Store"; ObjectID = "hGZ-RQ-Bv3"; */
+"hGZ-RQ-Bv3.normalTitle" = "去 App Store 打分";
+
+/* Class = "UINavigationItem"; title = "Fans"; ObjectID = "hIT-Br-i9c"; */
+"hIT-Br-i9c.title" = "粉丝";
+
+/* Class = "UILabel"; text = "9.3 Days"; ObjectID = "hKr-e0-PSF"; */
+"hKr-e0-PSF.text" = "9.3 天";
+
+/* Class = "UINavigationItem"; title = "Feedback"; ObjectID = "hP1-n2-qtM"; */
+"hP1-n2-qtM.title" = "反馈";
+
+/* Class = "UIViewController"; title = "Experiment Detail"; ObjectID = "hZz-Gs-KYC"; */
+"hZz-Gs-KYC.title" = "实验详情";
+
+/* Class = "UINavigationController"; title = "Experiment Detail Nav"; ObjectID = "hin-9r-nvY"; */
+"hin-9r-nvY.title" = "实验详情 Nav";
+
+/* Class = "UILabel"; text = "Experiment"; ObjectID = "iI7-1p-sWp"; */
+"iI7-1p-sWp.text" = "实验";
+
+/* Class = "UILabel"; text = "Report Abuse"; ObjectID = "j4A-AE-dWP"; */
+"j4A-AE-dWP.text" = "举报";
+
+/* Class = "UITableViewController"; title = "Experiments"; ObjectID = "j5Z-oH-99M"; */
+"j5Z-oH-99M.title" = "实验";
+
+/* Class = "UILabel"; text = "Experiment"; ObjectID = "j65-ck-bx2"; */
+"j65-ck-bx2.text" = "实验";
+
+/* Class = "UINavigationController"; title = "Follower Nav"; ObjectID = "jRy-BD-kgY"; */
+"jRy-BD-kgY.title" = "关注者 Nav";
+
+/* Class = "UILabel"; text = "Posted"; ObjectID = "kTT-IB-p3R"; */
+"kTT-IB-p3R.text" = "已发布";
+
+/* Class = "UIButton"; normalTitle = "Hallo"; ObjectID = "lJJ-Sf-4z1"; */
+"lJJ-Sf-4z1.normalTitle" = "你好";
+
+/* Class = "UILabel"; text = "Reviews"; ObjectID = "lLC-QK-3TE"; */
+"lLC-QK-3TE.text" = "评论";
+
+/* Class = "UINavigationController"; title = "Reviews Nav"; ObjectID = "mrw-KP-wLi"; */
+"mrw-KP-wLi.title" = "评论 Nav";
+
+/* Class = "UILabel"; text = "1987-10-01"; ObjectID = "nRh-fo-kIR"; */
+"nRh-fo-kIR.text" = "1987-10-01";
+
+/* Class = "UIViewController"; title = "Review Post"; ObjectID = "oel-9H-B4o"; */
+"oel-9H-B4o.title" = "发送评论";
+
+/* Class = "UINavigationItem"; title = "Home"; ObjectID = "pXc-t0-zxk"; */
+"pXc-t0-zxk.title" = "主页";
+
+/* Class = "UILabel"; text = "Luo Jie"; ObjectID = "qux-tx-kQP"; */
+"qux-tx-kQP.text" = "名字";
+
+/* Class = "UINavigationItem"; title = "User"; ObjectID = "ryw-qF-zEg"; */
+"ryw-qF-zEg.title" = "用户";
+
+/* Class = "UILabel"; text = "1987-10-01"; ObjectID = "s1A-tr-Kll"; */
+"s1A-tr-Kll.text" = "1987-10-01";
+
+/* Class = "UILabel"; text = "Version 1.0"; ObjectID = "svc-us-c8D"; */
+"svc-us-c8D.text" = "版本 1.0";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "t0j-tq-4bV"; */
+"t0j-tq-4bV.text" = "标签";
+
+/* Class = "UINavigationController"; title = "User Nav"; ObjectID = "t9T-yB-2pV"; */
+"t9T-yB-2pV.title" = "用户 Nav";
+
+/* Class = "UILabel"; text = "An account is required.\nPlease tap on the gold color row :"; ObjectID = "u2N-iC-zxm"; */
+"u2N-iC-zxm.text" = "你需要一个账号，请点击金色那一行：";
+
+/* Class = "UILabel"; text = "User Name"; ObjectID = "uw0-bB-G7X"; */
+"uw0-bB-G7X.text" = "昵称";
+
+/* Class = "UILabel"; text = "Failed to load data. Please retry later!"; ObjectID = "uxN-Ij-ECz"; */
+"uxN-Ij-ECz.text" = "读取数据失败。稍后请重试！";
+
+/* Class = "UINavigationController"; title = "Experiments Nav"; ObjectID = "vC3-pB-5Vb"; */
+"vC3-pB-5Vb.title" = "实验 Nav";
+
+/* Class = "UILabel"; text = "reviewed to:"; ObjectID = "vl2-d1-lnn"; */
+"vl2-d1-lnn.text" = "评论给：";
+
+/* Class = "UILabel"; text = "Advice"; ObjectID = "w7s-Ew-zXN"; */
+"w7s-Ew-zXN.text" = "建议";
+
+/* Class = "UILabel"; text = "Luo Jie"; ObjectID = "wIW-6z-wh7"; */
+"wIW-6z-wh7.text" = "名字";
+
+/* Class = "UINavigationItem"; title = "Body"; ObjectID = "wlL-xS-edh"; */
+"wlL-xS-edh.title" = "内容";
+
+/* Class = "UILabel"; text = "Failed to load data. Please retry later!"; ObjectID = "wx7-Ul-oUs"; */
+"wx7-Ul-oUs.text" = "读取数据失败。稍后请重试！";
+
+/* Class = "UITableViewController"; title = "Notification"; ObjectID = "yRN-Vc-yan"; */
+"yRN-Vc-yan.title" = "通知";
+
+/* Class = "UIButton"; normalTitle = "Grativity test experiments. "; ObjectID = "yfo-TY-olW"; */
+"yfo-TY-olW.normalTitle" = "重力测试实验。";
+
+/* Class = "UITableViewController"; title = "Reviews"; ObjectID = "z0M-nc-sp7"; */
+"z0M-nc-sp7.title" = "评论";
+
+/* Class = "UILabel"; text = "Luo Jie"; ObjectID = "z9m-WK-fYe"; */
+"z9m-WK-fYe.text" = "名字";
+
+/* Class = "UILabel"; text = "9.3 Days"; ObjectID = "zCr-T2-dRo"; */
+"zCr-T2-dRo.text" = "9.3 天";
+
+/* Class = "UILabel"; text = "1987-10-01"; ObjectID = "zQC-Kb-3lR"; */
+"zQC-Kb-3lR.text" = "1987-10-01";
+

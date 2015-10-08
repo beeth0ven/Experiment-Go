@@ -18,7 +18,7 @@ class CKItem: NSObject {
     var recordType: RecordType                  { return RecordType(rawValue: record.recordType)! }
     var recordID: CKRecordID                    { return record.recordID }
     var creationDate: NSDate                    { return record.creationDate ?? NSDate() }
-    var creatorUserRecordID: CKRecordID?        { return record.creatorUserRecordID }
+    var creatorUserRecordID: CKRecordID?        { return (record.creatorUserRecordID?.recordName == CKOwnerDefaultName && CKUsers.CurrentUser?.recordID != nil) ? CKUsers.CurrentUser?.recordID : record.creatorUserRecordID  }
     var modificationDate: NSDate?               { return record.modificationDate }
     var lastModifiedUserRecordID: CKRecordID?   { return record.lastModifiedUserRecordID }
     var recordChangeTag: String?                { return record.recordChangeTag }

@@ -16,10 +16,10 @@ class SwitchButton: UIButton {
     var on = false { didSet { updateUI() } }
     
     @IBInspectable
-    var onStateTitle: String = "On".localizedString
+    var onStateTitle: String = NSLocalizedString("On", comment: "")
     
     @IBInspectable
-    var offStateTitle: String = "Off".localizedString
+    var offStateTitle: String = NSLocalizedString("Off", comment: "")
     
     var color: UIColor = UIColor.globalTintColor()
     

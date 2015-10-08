@@ -82,7 +82,7 @@ class CKLink: CKItem {
     override var displayTitle: String? {
         switch type! {
         case .UserReviewToExperiment:
-            return "Review".localizedString
+            return NSLocalizedString("Review", comment: "")
         default: return nil
         }
     }

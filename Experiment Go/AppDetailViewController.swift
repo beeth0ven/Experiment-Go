@@ -23,6 +23,11 @@ class AppDetailViewController: UIViewController {
     }
     
     func configureBarButtons() {  navigationItem.leftBarButtonItem = adapted ? closeBarButtonItem : nil }
+    
+    @IBAction func rateApp(sender: UIButton) {
+        UIApplication.sharedApplication().openURL(NSURL(string: "https://itunes.apple.com/us/app/experiment-go/id1018125405?ls=1&mt=8")!)
+    }
+    
 }
 
 extension AppDetailViewController: UINavigationControllerDelegate {

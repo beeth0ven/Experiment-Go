@@ -96,11 +96,11 @@ extension UIAlertController {
     
     convenience init(errorMessage: String) {
         self.init(
-            title: "Experiment Go".localizedString,
+            title: NSLocalizedString("Experiment Go", comment: ""),
             message: errorMessage,
             preferredStyle: .Alert
         )
-        self.addAction(UIAlertAction(title: "Ok".localizedString, style: .Cancel, handler: nil))
+        self.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: ""), style: .Cancel, handler: nil))
     }
 }
 
@@ -157,10 +157,6 @@ extension CKAsset {
 }
 
 extension String: CustomStringConvertible {
-    public var localizedString: String {
-        return  NSLocalizedString(self, comment: "")
-    }
-    
     public var description: String {
         return self
     }
@@ -235,7 +231,7 @@ extension UIViewController {
     
     
     var closeBarButtonItem: UIBarButtonItem {
-        return UIBarButtonItem(title: "Close".localizedString, style: .Done, target: self, action: "closeClicked")
+        return UIBarButtonItem(title: NSLocalizedString("Close", comment: ""), style: .Done, target: self, action: "closeClicked")
     }
     
     func closeClicked() {
@@ -244,7 +240,7 @@ extension UIViewController {
     
     var cancelBarButtonItem: UIBarButtonItem? {
         let result = closeBarButtonItem
-        result.title = "Cancel".localizedString
+        result.title = NSLocalizedString("Cancel", comment: "")
         return result
     }
     
@@ -268,31 +264,7 @@ extension UISplitViewController {
 }
 
 
-extension NSDateFormatter {
-//    class func smartStringFormDate(date: NSDate) -> String {
-//        let absTimeIntervalSinceNow = -date.timeIntervalSinceNow
-//        let OneMinute: Double = 60
-//        let OneHour: Double = 60 * 60
-//        let OneDay: Double = 24 * 60 * 60
-//        if absTimeIntervalSinceNow < OneMinute {
-//            return "Now"
-//        } else if absTimeIntervalSinceNow < OneHour {
-//            // eg. 10 Minutes
-//            let minutes = Int(absTimeIntervalSinceNow / OneMinute)
-//            return "\(minutes) minutes ago"
-//        } else if absTimeIntervalSinceNow < OneDay {
-//            // eg. 10 Hours
-//            let hours = Int(absTimeIntervalSinceNow / OneHour)
-//            return "\(hours) hours ago"
-//        } else {
-//            // eg. 10 Days
-//            let days = Int(absTimeIntervalSinceNow / OneDay)
-//            return "\(days) days ago"
-//
-//        }
-//    }
-    
-}
+
 
 extension UITableViewCell {
     class func setSelectedBackgroundColor(color: UIColor) {

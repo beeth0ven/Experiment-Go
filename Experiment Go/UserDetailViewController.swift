@@ -69,17 +69,17 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
             cell.accessoryType = editing ? .DisclosureIndicator : .None
             
         case .displayName:
-            cell.title = "Display Name".localizedString
+            cell.title = rowInfo.displayTitle
             cell.subTitle = user?.displayName
             cell.accessoryType = editing ? .DisclosureIndicator : .None
 
         case .aboutMe:
-            cell.title = "About me".localizedString
+            cell.title = rowInfo.displayTitle
             cell.subTitle = user?.aboutMe
             cell.accessoryType = editing ? .DisclosureIndicator : .None
 
         case .posted, .liked, .following, .follower:
-            cell.title = key.capitalizedString
+            cell.title = rowInfo.displayTitle
             
         }
     }
@@ -93,10 +93,7 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
         }
     }
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sections[section].title.localizedString
-    }
-    
+
     override func setupSections() -> [SectionInfo] {
         let infos = !editing ? sectionInfos : sectionInfosWhileEditing
         return  infos.map { SectionInfo(title: $0.title, rows: $0.reusableCellInfos) }
@@ -151,7 +148,7 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
         case .EditeImage:
             guard let ditvc = segue.destinationViewController.contentViewController as? EditeImageTableViewController else { return }
             let imageTableViewCell = cell as! ImageTableViewCell
-            ditvc.title = "Profile Image".localizedString
+            ditvc.title = NSLocalizedString("Profile Image", comment: "")
             ditvc.image = imageTableViewCell.profileImge
             
             ditvc.done = {
@@ -248,6 +245,29 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
         
         var key: String { return rawValue }
         
+        var displayTitle: String {
+            switch self {
+            case .profileImageAsset:
+                return NSLocalizedString("ProfileImageAsset", comment: "")
+            case .displayName:
+                return NSLocalizedString("Display Name", comment: "")
+            case .aboutMe:
+                return NSLocalizedString("About me", comment: "")
+                
+            case .posted:
+                return NSLocalizedString("Posted", comment: "")
+                
+            case .liked:
+                return NSLocalizedString("Liked", comment: "")
+                
+            case .following:
+                return NSLocalizedString("Following", comment: "")
+                
+            case .follower:
+                return NSLocalizedString("Follower", comment: "")
+            }
+        }
+        
         var segueID: SegueID? {
             switch self {
             case .posted:
@@ -292,8 +312,8 @@ extension UserDetailViewController {
     // MARK: - Bar Button Item
     var followBarButtonItem: SwitchBarButtonItem {
         let result = SwitchBarButtonItem(title: "", style: .Plain, target: self, action: "followClicked:")
-        result.onStateTitle = "Following".localizedString
-        result.offStateTitle = "Follow".localizedString
+        result.onStateTitle = NSLocalizedString("Following", comment: "")
+        result.offStateTitle = NSLocalizedString("Follow", comment: "")
         result.on = CKUsers.AmIFollowingTo(user!)
         return result
     }

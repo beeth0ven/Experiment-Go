@@ -1,0 +1,164 @@
+/* No comment provided by engineer. */
+"%i days ago" = "%i 天前";
+
+/* No comment provided by engineer. */
+"%i hours ago" = "%i 小时前";
+
+/* No comment provided by engineer. */
+"%i minutes ago" = "%i 分钟前";
+
+/* No comment provided by engineer. */
+"About me" = "关于我";
+
+/* No comment provided by engineer. */
+"Authorization failed.
+You can still get permision from the path bellow later:
+ iOS Setting -> iCLoud -> iCloud Drive -> Look Me Up By Email." = "授权失败。\n你任然可以通过以下路径获得权限：\n iOS Setting -> iCLoud -> iCloud Drive -> 通过电子邮件找到我。";
+
+/* No comment provided by engineer. */
+"Cancel" = "取消";
+
+/* No comment provided by engineer. */
+"Close" = "关闭";
+
+/* No comment provided by engineer. */
+"Delete" = "删除";
+
+/* No comment provided by engineer. */
+"Display Name" = "昵称";
+
+/* No comment provided by engineer. */
+"Done" = "完成";
+
+/* No comment provided by engineer. */
+"Edite" = "编辑";
+
+/* No comment provided by engineer. */
+"Edite Tag" = "编辑标签";
+
+/* No comment provided by engineer. */
+"Experiment Go" = "做实验";
+
+/* No comment provided by engineer. */
+"Feedback" = "反馈";
+
+/* No comment provided by engineer. */
+"Follow" = "关注";
+
+/* No comment provided by engineer. */
+"Follower" = "关注者";
+
+/* No comment provided by engineer. */
+"Following" = "已关注";
+
+/* No comment provided by engineer. */
+"History" = "历史纪录";
+
+/* No comment provided by engineer. */
+"Like" = "喜欢";
+
+/* No comment provided by engineer. */
+"Liked" = "已喜欢";
+
+/* No comment provided by engineer. */
+"Liking" = "已喜欢";
+
+/* No comment provided by engineer. */
+"Menu" = "菜单";
+
+/* No comment provided by engineer. */
+"New Tag" = "新标签";
+
+/* No comment provided by engineer. */
+"Now" = "现在";
+
+/* No comment provided by engineer. */
+"Off" = "关";
+
+/* No comment provided by engineer. */
+"Ok" = "好";
+
+/* No comment provided by engineer. */
+"On" = "开";
+
+/* No comment provided by engineer. */
+"Please Enter a Email Address." = "请输入一个邮箱。";
+
+/* No comment provided by engineer. */
+"Please set a display name." = "请设置一个昵称。";
+
+/* No comment provided by engineer. */
+"Please sign into an iCloud account on current device from iOS setting App." = "请在 iOS 系统设置中登录一个 iCloud 账号。";
+
+/* No comment provided by engineer. */
+"Posted" = "已发布";
+
+/* No comment provided by engineer. */
+"Profile" = "个人";
+
+/* No comment provided by engineer. */
+"Profile Image" = "个人图片";
+
+/* No comment provided by engineer. */
+"ProfileImageAsset" = "个人图片资源";
+
+/* No comment provided by engineer. */
+"Review" = "评论";
+
+/* No comment provided by engineer. */
+"Search by tag" = "通过标签搜索";
+
+/* No comment provided by engineer. */
+"Show a user by Email" = "通过邮箱显示一个用户";
+
+/* No comment provided by engineer. */
+"Show users from contacts" = "显示通讯录中的用户";
+
+/* No comment provided by engineer. */
+"author" = "作者";
+
+/* No comment provided by engineer. */
+"conclusion" = "结论";
+
+/* No comment provided by engineer. */
+"content" = "内容";
+
+/* No comment provided by engineer. */
+"date" = "日期";
+
+/* No comment provided by engineer. */
+"fans" = "粉丝";
+
+/* No comment provided by engineer. */
+"footNote" = "补充说明";
+
+/* No comment provided by engineer. */
+"is following you." = "已关注你。";
+
+/* No comment provided by engineer. */
+"liked:" = "喜欢：";
+
+/* No comment provided by engineer. */
+"principle" = "原理";
+
+/* No comment provided by engineer. */
+"purpose" = "目的";
+
+/* No comment provided by engineer. */
+"results" = "结果";
+
+/* No comment provided by engineer. */
+"reviewed to:" = "评论给：";
+
+/* No comment provided by engineer. */
+"reviews" = "评论";
+
+/* No comment provided by engineer. */
+"steps" = "步骤";
+
+/* No comment provided by engineer. */
+"tags" = "标签";
+
+/* No comment provided by engineer. */
+"title" = "标题";
+
