@@ -15,10 +15,10 @@ class SwitchBarButtonItem: UIBarButtonItem {
     var on = false { didSet { updateUI() } }
     
     @IBInspectable
-    var onStateTitle: String = "On"
+    var onStateTitle: String = "On".localizedString
     
     @IBInspectable
-    var offStateTitle: String = "Off"
+    var offStateTitle: String = "Off".localizedString
     
     var color: UIColor = UIColor.globalTintColor()
   

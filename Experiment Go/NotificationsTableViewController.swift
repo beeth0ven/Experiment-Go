@@ -70,7 +70,7 @@ class NotificationsTableViewController: CloudKitTableViewController {
 
         case .ShowFollower:
             guard let utvc = segue.destinationViewController.contentViewController as? UsersTableViewController else { return }
-            utvc.title = "Follower"
+            utvc.title = "Follower".localizedString
             utvc.queryType = .FollowerFrom(CKUsers.CurrentUser!)
             
         case .ShowFans:

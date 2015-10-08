@@ -16,24 +16,29 @@ class UserTableViewCell: CKItemTableViewCell {
         set { item = newValue }
     }
     
-    var profileImage: UIImage? {
-        get { return profileImageView.image }
+    var profileImage: UIImage {
+        get { return profileImageView.image ?? UIImage() }
         set { profileImageView.image = newValue }
     }
     
     var profileImageURL: NSURL? { return user?.profileImageAsset?.fileURL }
     
-    @IBOutlet weak var profileImageView: UIImageView!
+    @IBOutlet weak var profileImageView: UIImageView! {
+        didSet {
+            profileImageView.layer.borderColor = UIColor.globalTintColor().CGColor
+            profileImageView.layer.borderWidth = profileImageView.bounds.size.height / 32
+        }
+    }
     @IBOutlet weak var nameLabel: UILabel!
     
     
     override func updateUI() {
-        profileImage = nil
+        profileImage = CKUsers.ProfileImage
         nameLabel.text = user?.displayName
         guard let url = profileImageURL else { return }
-        UIImage.getImageForURL(url) { (image) in
+        UIImage.GetImageForURL(url) {
             guard url == self.profileImageURL else { return }
-            self.profileImage = image
+            self.profileImage = $0 ?? CKUsers.ProfileImage
         }
     }
 

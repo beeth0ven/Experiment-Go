@@ -20,12 +20,16 @@
 		451A6AA01BBBDD2E00544DFF /* FollowLinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451A6A9F1BBBDD2E00544DFF /* FollowLinkTableViewCell.swift */; };
 		451A6AA21BBBDD4B00544DFF /* ReviewLinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451A6AA11BBBDD4B00544DFF /* ReviewLinkTableViewCell.swift */; };
 		451A6AA41BBBDD9A00544DFF /* LinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451A6AA31BBBDD9A00544DFF /* LinkTableViewCell.swift */; };
+		4525D1111BC1239200CA55AB /* WelcomeToCloudTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4525D1101BC1239200CA55AB /* WelcomeToCloudTVC.swift */; };
+		4525D1131BC2549D00CA55AB /* FeedbackTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4525D1121BC2549D00CA55AB /* FeedbackTVC.swift */; };
+		4525D1161BC38D0800CA55AB /* StyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4525D1151BC38D0800CA55AB /* StyleKit.swift */; };
 		4537CB131B944765004378C3 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB121B944765004378C3 /* ImageTableViewCell.swift */; };
 		4537CB151B95680E004378C3 /* EditeTextTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */; };
 		4537CB191B959EF9004378C3 /* SubTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */; };
 		45419AC71BA57F96006F8A83 /* TagCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45419AC61BA57F96006F8A83 /* TagCollectionViewCell.swift */; };
 		45419AC91BA58B9E006F8A83 /* TagsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45419AC81BA58B9E006F8A83 /* TagsTableViewCell.swift */; };
 		45419ACF1BA81C39006F8A83 /* AppDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45419ACE1BA81C39006F8A83 /* AppDetailViewController.swift */; };
+		45617BE41BBFEAC5003683C0 /* SwitchBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45617BE31BBFEAC5003683C0 /* SwitchBarButtonItem.swift */; };
 		45629F951B5BC386000F41E6 /* ChameleonFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45629F941B5BC386000F41E6 /* ChameleonFramework.framework */; };
 		4566C6AB1B55023F0036D845 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */; };
 		45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */; };
@@ -34,7 +38,6 @@
 		45776EA41BB3DF60002B9003 /* OperatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45776EA31BB3DF60002B9003 /* OperatorProtocol.swift */; };
 		45776EA61BB5156B002B9003 /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45776EA51BB5156B002B9003 /* UserDetailViewController.swift */; };
 		458713BB1B859751004808A3 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458713BA1B859751004808A3 /* CacheManager.swift */; };
-		45983D0F1B71CB1000ABCF38 /* SwitchBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45983D0E1B71CB1000ABCF38 /* SwitchBarButtonItem.swift */; };
 		45983D141B73430B00ABCF38 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45983D131B73430B00ABCF38 /* CloudKit.framework */; };
 		459C8BAC1BBBE32800E80CD7 /* NotificationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459C8BAB1BBBE32800E80CD7 /* NotificationsTableViewController.swift */; };
 		45A0230A1BAFCBA600C6BB4B /* CKUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A023091BAFCBA600C6BB4B /* CKUsers.swift */; };
@@ -54,7 +57,6 @@
 		45BC4E931B6A145F00A9963F /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E921B6A145F00A9963F /* UserTableViewCell.swift */; };
 		45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */; };
 		45BC4E9E1B6DCDB800A9963F /* DefaultStyleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BC4E9D1B6DCDB800A9963F /* DefaultStyleController.swift */; };
-		45C2FC2F1BA01BC4003B190C /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C2FC2E1BA01BC4003B190C /* NotificationTableViewCell.swift */; };
 		45C78D571BB94FF500D0DEC2 /* SearchExperimentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C78D561BB94FF500D0DEC2 /* SearchExperimentsTableViewController.swift */; };
 		45C78D5A1BB9513500D0DEC2 /* GetUserPostedExperimentsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C78D591BB9513500D0DEC2 /* GetUserPostedExperimentsOperation.swift */; };
 		45C78D5E1BB95D9B00D0DEC2 /* GetUserLikedExperimentsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C78D5D1BB95D9B00D0DEC2 /* GetUserLikedExperimentsOperation.swift */; };
@@ -105,12 +107,16 @@
 		451A6A9F1BBBDD2E00544DFF /* FollowLinkTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowLinkTableViewCell.swift; sourceTree = "<group>"; };
 		451A6AA11BBBDD4B00544DFF /* ReviewLinkTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewLinkTableViewCell.swift; sourceTree = "<group>"; };
 		451A6AA31BBBDD9A00544DFF /* LinkTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkTableViewCell.swift; sourceTree = "<group>"; };
+		4525D1101BC1239200CA55AB /* WelcomeToCloudTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeToCloudTVC.swift; sourceTree = "<group>"; };
+		4525D1121BC2549D00CA55AB /* FeedbackTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackTVC.swift; sourceTree = "<group>"; };
+		4525D1151BC38D0800CA55AB /* StyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKit.swift; sourceTree = "<group>"; };
 		4537CB121B944765004378C3 /* ImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
 		4537CB141B95680E004378C3 /* EditeTextTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditeTextTableViewController.swift; sourceTree = "<group>"; };
 		4537CB181B959EF9004378C3 /* SubTitleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubTitleTableViewCell.swift; sourceTree = "<group>"; };
 		45419AC61BA57F96006F8A83 /* TagCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCollectionViewCell.swift; sourceTree = "<group>"; };
 		45419AC81BA58B9E006F8A83 /* TagsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsTableViewCell.swift; sourceTree = "<group>"; };
 		45419ACE1BA81C39006F8A83 /* AppDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDetailViewController.swift; sourceTree = "<group>"; };
+		45617BE31BBFEAC5003683C0 /* SwitchBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchBarButtonItem.swift; sourceTree = "<group>"; };
 		45629F941B5BC386000F41E6 /* ChameleonFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChameleonFramework.framework; path = "Pods/../build/Debug-iphoneos/Pods-Experiment Go/ChameleonFramework.framework"; sourceTree = "<group>"; };
 		4566C6AA1B55023F0036D845 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		45672C0C1B5CE86800B7E8F7 /* PublicExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicExtension.swift; sourceTree = "<group>"; };
@@ -119,7 +125,6 @@
 		45776EA31BB3DF60002B9003 /* OperatorProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperatorProtocol.swift; sourceTree = "<group>"; };
 		45776EA51BB5156B002B9003 /* UserDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
 		458713BA1B859751004808A3 /* CacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
-		45983D0E1B71CB1000ABCF38 /* SwitchBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchBarButtonItem.swift; sourceTree = "<group>"; };
 		45983D121B7342E200ABCF38 /* Experiment Go.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Experiment Go.entitlements"; sourceTree = "<group>"; };
 		45983D131B73430B00ABCF38 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		459C3DB7BFCEAA28C645268E /* Pods-Experiment Go.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Experiment Go.release.xcconfig"; path = "Pods/Target Support Files/Pods-Experiment Go/Pods-Experiment Go.release.xcconfig"; sourceTree = "<group>"; };
@@ -141,7 +146,6 @@
 		45BC4E921B6A145F00A9963F /* UserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = UserTableViewCell.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45BC4E981B6B4F1900A9963F /* ExperimentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExperimentTableViewCell.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45BC4E9D1B6DCDB800A9963F /* DefaultStyleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultStyleController.swift; sourceTree = "<group>"; };
-		45C2FC2E1BA01BC4003B190C /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NotificationTableViewCell.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		45C78D561BB94FF500D0DEC2 /* SearchExperimentsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchExperimentsTableViewController.swift; sourceTree = "<group>"; };
 		45C78D591BB9513500D0DEC2 /* GetUserPostedExperimentsOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetUserPostedExperimentsOperation.swift; sourceTree = "<group>"; };
 		45C78D5D1BB95D9B00D0DEC2 /* GetUserLikedExperimentsOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetUserLikedExperimentsOperation.swift; sourceTree = "<group>"; };
@@ -271,9 +275,9 @@
 			isa = PBXGroup;
 			children = (
 				4511B2841B4FB7CF0046DF76 /* AppDelegate.swift */,
-				45419ACE1BA81C39006F8A83 /* AppDetailViewController.swift */,
-				45419ACB1BA7F974006F8A83 /* UISplitViewController */,
+				4525D1141BC2653700CA55AB /* AppDetailViewController */,
 				45A2A2451B8D907E004BEF45 /* CloudKitTableViewController */,
+				45419ACB1BA7F974006F8A83 /* UISplitViewController */,
 				45BC4E9C1B6B5D1300A9963F /* ItemDetailViewController */,
 				45A2A2461B8D9095004BEF45 /* EditeTableViewController */,
 				45419ACC1BA7F9A2006F8A83 /* UISearchController */,
@@ -284,6 +288,7 @@
 		4511B2AF1B4FBA950046DF76 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				4525D1151BC38D0800CA55AB /* StyleKit.swift */,
 				45776EA31BB3DF60002B9003 /* OperatorProtocol.swift */,
 				45DDF5CC1BA536300006A269 /* HistoryManager.swift */,
 				458713BA1B859751004808A3 /* CacheManager.swift */,
@@ -301,6 +306,16 @@
 				451A6AA11BBBDD4B00544DFF /* ReviewLinkTableViewCell.swift */,
 			);
 			name = LinkTableViewCell;
+			sourceTree = "<group>";
+		};
+		4525D1141BC2653700CA55AB /* AppDetailViewController */ = {
+			isa = PBXGroup;
+			children = (
+				45419ACE1BA81C39006F8A83 /* AppDetailViewController.swift */,
+				4525D1121BC2549D00CA55AB /* FeedbackTVC.swift */,
+				4525D1101BC1239200CA55AB /* WelcomeToCloudTVC.swift */,
+			);
+			name = AppDetailViewController;
 			sourceTree = "<group>";
 		};
 		45419ACA1BA7F950006F8A83 /* UICollectionViewCell */ = {
@@ -398,7 +413,6 @@
 				45BC4E921B6A145F00A9963F /* UserTableViewCell.swift */,
 				45ABBBBB1BBFD92100A86B7C /* FollowUserTableViewCell.swift */,
 				451A6AA51BBBDDA200544DFF /* LinkTableViewCell */,
-				45C2FC2E1BA01BC4003B190C /* NotificationTableViewCell.swift */,
 			);
 			name = ItemTableViewCell;
 			sourceTree = "<group>";
@@ -439,7 +453,7 @@
 		45CBDF211B998E650060AB14 /* UIBarButtonItem */ = {
 			isa = PBXGroup;
 			children = (
-				45983D0E1B71CB1000ABCF38 /* SwitchBarButtonItem.swift */,
+				45617BE31BBFEAC5003683C0 /* SwitchBarButtonItem.swift */,
 			);
 			name = UIBarButtonItem;
 			sourceTree = "<group>";
@@ -624,7 +638,6 @@
 				451A6AA21BBBDD4B00544DFF /* ReviewLinkTableViewCell.swift in Sources */,
 				45A0230A1BAFCBA600C6BB4B /* CKUsers.swift in Sources */,
 				45E1E2211BB7BC2800463B46 /* ReviewViewController.swift in Sources */,
-				45C2FC2F1BA01BC4003B190C /* NotificationTableViewCell.swift in Sources */,
 				4537CB131B944765004378C3 /* ImageTableViewCell.swift in Sources */,
 				45419AC91BA58B9E006F8A83 /* TagsTableViewCell.swift in Sources */,
 				451A6A9A1BBBAF7200544DFF /* GetCurrentUserInteretedExperimentsOperation.swift in Sources */,
@@ -636,12 +649,14 @@
 				451A6A961BBA4F2500544DFF /* GetFollowingUsersOperation.swift in Sources */,
 				45FC5F771B6DD7080045F178 /* MenuItemTableViewCell.swift in Sources */,
 				451A6AA01BBBDD2E00544DFF /* FollowLinkTableViewCell.swift in Sources */,
+				4525D1161BC38D0800CA55AB /* StyleKit.swift in Sources */,
 				45E1E21D1BB7AB8C00463B46 /* ReviewsTableViewController.swift in Sources */,
 				45AAB0A21B6E117200595467 /* ReviewTableViewCell.swift in Sources */,
 				45C78D5A1BB9513500D0DEC2 /* GetUserPostedExperimentsOperation.swift in Sources */,
 				45672C0D1B5CE86800B7E8F7 /* PublicExtension.swift in Sources */,
 				45776EA01BB2A16F002B9003 /* ExperimentsTableViewController.swift in Sources */,
 				4511B2851B4FB7CF0046DF76 /* AppDelegate.swift in Sources */,
+				4525D1131BC2549D00CA55AB /* FeedbackTVC.swift in Sources */,
 				45419ACF1BA81C39006F8A83 /* AppDetailViewController.swift in Sources */,
 				45ABBBBE1BBFDE9500A86B7C /* SwitchButton.swift in Sources */,
 				451A6A9C1BBBD60400544DFF /* GetNotificationLinksOperation.swift in Sources */,
@@ -663,7 +678,7 @@
 				458713BB1B859751004808A3 /* CacheManager.swift in Sources */,
 				45B6FB6C1BA548040089AC15 /* SearchResultsController.swift in Sources */,
 				451A6A981BBA686200544DFF /* GetFollowersOperation.swift in Sources */,
-				45983D0F1B71CB1000ABCF38 /* SwitchBarButtonItem.swift in Sources */,
+				4525D1111BC1239200CA55AB /* WelcomeToCloudTVC.swift in Sources */,
 				45ABBBBC1BBFD92100A86B7C /* FollowUserTableViewCell.swift in Sources */,
 				45A023181BB01B7700C6BB4B /* GetObjectsWithCreatorUserOperation.swift in Sources */,
 				45A0231A1BB148CF00C6BB4B /* CKLink.swift in Sources */,
@@ -671,6 +686,7 @@
 				45E1E2251BB7D2CD00463B46 /* GetExperimentFansOperation.swift in Sources */,
 				45BC4E991B6B4F1900A9963F /* ExperimentTableViewCell.swift in Sources */,
 				45776EA21BB2BC22002B9003 /* ExperimentAddedDVC.swift in Sources */,
+				45617BE41BBFEAC5003683C0 /* SwitchBarButtonItem.swift in Sources */,
 				45F2E0891BA57F4100785F0B /* EditeTagsCollectionViewController.swift in Sources */,
 				4537CB151B95680E004378C3 /* EditeTextTableViewController.swift in Sources */,
 				45C78D571BB94FF500D0DEC2 /* SearchExperimentsTableViewController.swift in Sources */,

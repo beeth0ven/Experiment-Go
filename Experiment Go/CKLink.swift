@@ -11,7 +11,12 @@ import CloudKit
 
 class CKLink: CKItem {
     
-    
+    convenience init(feedbackTitle: String) {
+        let record = CKRecord(recordType: RecordType.Link.rawValue)
+        self.init(record: record)
+        self.type = .UserReviewToExperiment
+        self.content = "\(feedbackTitle):\n"
+    }
     
     convenience init(reviewTo experiment: CKExperiment) {
         let record = CKRecord(recordType: RecordType.Link.rawValue)
@@ -77,7 +82,7 @@ class CKLink: CKItem {
     override var displayTitle: String? {
         switch type! {
         case .UserReviewToExperiment:
-            return "Review"
+            return "Review".localizedString
         default: return nil
         }
     }

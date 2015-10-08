@@ -23,6 +23,14 @@ class ReviewsTableViewController: CloudKitTableViewController {
     }
     
     // MARK: - Segue
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        guard let segueID = SegueID(rawValue: identifier) else { return true }
+        guard case .AddReview = segueID else { return true }
+        guard didAuthoriseElseRequest(didAuthorize: { self.performSegueWithIdentifier(identifier, sender: sender) }) else { return false }
+        return true
+    }
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         guard let identifier = segue.identifier else { return }
         guard let segueID = SegueID(rawValue: identifier) else { return }

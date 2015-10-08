@@ -96,11 +96,11 @@ extension UIAlertController {
     
     convenience init(errorMessage: String) {
         self.init(
-            title: "Experiment Go",
+            title: "Experiment Go".localizedString,
             message: errorMessage,
             preferredStyle: .Alert
         )
-        self.addAction(UIAlertAction(title: "Ok", style: .Cancel, handler: nil))
+        self.addAction(UIAlertAction(title: "Ok".localizedString, style: .Cancel, handler: nil))
     }
 }
 
@@ -121,7 +121,7 @@ extension CGRect {
 }
 
 extension UIImage {
-    static func getImageForURL(url: NSURL, didGet:((UIImage?) -> Void)) {
+    static func GetImageForURL(url: NSURL, didGet:((UIImage?) -> Void)) {
         if let imageData = AppDelegate.Cache.Manager.assetDataForURL(url) {
             didGet(UIImage(data: imageData))
         } else {
@@ -157,6 +157,10 @@ extension CKAsset {
 }
 
 extension String: CustomStringConvertible {
+    public var localizedString: String {
+        return  NSLocalizedString(self, comment: "")
+    }
+    
     public var description: String {
         return self
     }
@@ -231,7 +235,7 @@ extension UIViewController {
     
     
     var closeBarButtonItem: UIBarButtonItem {
-        return UIBarButtonItem(title: "Close", style: .Done, target: self, action: "closeClicked")
+        return UIBarButtonItem(title: "Close".localizedString, style: .Done, target: self, action: "closeClicked")
     }
     
     func closeClicked() {
@@ -240,7 +244,7 @@ extension UIViewController {
     
     var cancelBarButtonItem: UIBarButtonItem? {
         let result = closeBarButtonItem
-        result.title = "Cancel"
+        result.title = "Cancel".localizedString
         return result
     }
     
@@ -265,28 +269,28 @@ extension UISplitViewController {
 
 
 extension NSDateFormatter {
-    class func smartStringFormDate(date: NSDate) -> String {
-        let absTimeIntervalSinceNow = -date.timeIntervalSinceNow
-        let OneMinute: Double = 60
-        let OneHour: Double = 60 * 60
-        let OneDay: Double = 24 * 60 * 60
-        if absTimeIntervalSinceNow < OneMinute {
-            return "Now"
-        } else if absTimeIntervalSinceNow < OneHour {
-            // eg. 10 Minutes
-            let minutes = Int(absTimeIntervalSinceNow / OneMinute)
-            return "\(minutes) minutes ago"
-        } else if absTimeIntervalSinceNow < OneDay {
-            // eg. 10 Hours
-            let hours = Int(absTimeIntervalSinceNow / OneHour)
-            return "\(hours) hours ago"
-        } else {
-            // eg. 10 Days
-            let days = Int(absTimeIntervalSinceNow / OneDay)
-            return "\(days) days ago"
-
-        }
-    }
+//    class func smartStringFormDate(date: NSDate) -> String {
+//        let absTimeIntervalSinceNow = -date.timeIntervalSinceNow
+//        let OneMinute: Double = 60
+//        let OneHour: Double = 60 * 60
+//        let OneDay: Double = 24 * 60 * 60
+//        if absTimeIntervalSinceNow < OneMinute {
+//            return "Now"
+//        } else if absTimeIntervalSinceNow < OneHour {
+//            // eg. 10 Minutes
+//            let minutes = Int(absTimeIntervalSinceNow / OneMinute)
+//            return "\(minutes) minutes ago"
+//        } else if absTimeIntervalSinceNow < OneDay {
+//            // eg. 10 Hours
+//            let hours = Int(absTimeIntervalSinceNow / OneHour)
+//            return "\(hours) hours ago"
+//        } else {
+//            // eg. 10 Days
+//            let days = Int(absTimeIntervalSinceNow / OneDay)
+//            return "\(days) days ago"
+//
+//        }
+//    }
     
 }
 

@@ -17,6 +17,8 @@ class EditeTextTableViewController: EditeValueTableViewController {
         set { value = newValue }
     }
     
+    
+
     var done: ((String?) -> ())?
 
     override func viewDidAppear(animated: Bool) {
@@ -34,6 +36,7 @@ class EditeTextTableViewController: EditeValueTableViewController {
     @IBOutlet weak var bodyTextView: UITextView! { didSet { bodyTextView.delegate = self } }
     
     override func updateUI() { bodyTextView?.text = text }
+    
 }
 
 extension EditeTextTableViewController: UITextViewDelegate {
@@ -42,3 +45,4 @@ extension EditeTextTableViewController: UITextViewDelegate {
         navigationItem.rightBarButtonItem?.enabled = true
     }
 }
+

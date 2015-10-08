@@ -46,11 +46,14 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
     }
     
     override func configureBarButtons() {
+        super.configureBarButtons()
         showBackwardBarButtonItemIfNeeded()
         if user?.isMe == true {
             navigationItem.rightBarButtonItem = editButtonItem()
+            navigationItem.rightBarButtonItem?.enabled = shouldDone
             toolbarItems = nil
             if editing { navigationItem.hideLeftBarButtonItems() }
+
         } else {
             toolbarItems = [followBarButtonItem]
         }
@@ -58,6 +61,7 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
     
     override func configureCell(cell: UITableViewCell, forKey key: String) {
         let rowInfo = RowInfo(rawValue: key)!
+        cell.setFocus(shouldFocus(rowInfo: rowInfo))
         switch rowInfo {
         case .profileImageAsset:
             let imageTableViewCell = cell as! ImageTableViewCell
@@ -65,12 +69,12 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
             cell.accessoryType = editing ? .DisclosureIndicator : .None
             
         case .displayName:
-            cell.title = "Display Name"
+            cell.title = "Display Name".localizedString
             cell.subTitle = user?.displayName
             cell.accessoryType = editing ? .DisclosureIndicator : .None
 
         case .aboutMe:
-            cell.title = "About me"
+            cell.title = "About me".localizedString
             cell.subTitle = user?.aboutMe
             cell.accessoryType = editing ? .DisclosureIndicator : .None
 
@@ -80,6 +84,18 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
         }
     }
     
+    private func shouldFocus(rowInfo rowInfo: RowInfo) -> Bool {
+        switch rowInfo {
+        case .posted, .liked, .following, .follower:
+            return true
+        default:
+            return editing && RowInfo.NotOptionalRowInfos.contains(rowInfo) && String.isBlank(user?[rowInfo.key] as? String)
+        }
+    }
+    
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return sections[section].title.localizedString
+    }
     
     override func setupSections() -> [SectionInfo] {
         let infos = !editing ? sectionInfos : sectionInfosWhileEditing
@@ -135,33 +151,38 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
         case .EditeImage:
             guard let ditvc = segue.destinationViewController.contentViewController as? EditeImageTableViewController else { return }
             let imageTableViewCell = cell as! ImageTableViewCell
-            ditvc.title = "Profile Image"
+            ditvc.title = "Profile Image".localizedString
             ditvc.image = imageTableViewCell.profileImge
             
             ditvc.done = {
                 image in
-                let imageData = UIImageJPEGRepresentation(image, 0.1)!
+                let squreImage = image.squreImageWithWidth(256)
+                let imageData = UIImageJPEGRepresentation(squreImage, 1.0)!
+                let sizeString = NSByteCountFormatter.stringFromByteCount(Int64(imageData.length), countStyle: NSByteCountFormatterCountStyle.File)
+                print("imageData size: \(sizeString)")
                 let profileImageAsset = CKAsset(data: imageData)
                 self.user?.profileImageAsset = profileImageAsset
                 self.tableView.reloadCell(imageTableViewCell)
+                self.navigationItem.rightBarButtonItem?.enabled = self.shouldDone
             }
             
         case .EditeText:
             guard let ettvc = segue.destinationViewController.contentViewController as? EditeTextTableViewController else { return }
             let indexPath = tableView.indexPathForCell(cell)! ; let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
             ettvc.title = cell.title
-            ettvc.text = cell.subTitle?.stringByTrimmingWhitespace
+            ettvc.text = cell.subTitle?.stringByTrimmingWhitespaceAndNewline
             
             ettvc.done = {
                 (text) in
-                let newText = text?.stringByTrimmingWhitespace
+                let trimmedText = text?.stringByTrimmingWhitespaceAndNewline
                 if case .displayName = rowInfo {
-                    self.user?.displayName = newText
-                    self.title = newText
+                    self.user?.displayName = trimmedText
+                    self.title = text
                 } else if case .aboutMe = rowInfo {
-                    self.user?.aboutMe = newText
+                    self.user?.aboutMe = trimmedText
                 }
                 self.tableView.reloadCell(cell)
+                self.navigationItem.rightBarButtonItem?.enabled = self.shouldDone
             }
             
         case .ShowPostedExperiments:
@@ -251,6 +272,11 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
             }
         }
         
+        // Experiment must have value for these keys.
+        static var NotOptionalRowInfos: [RowInfo] {
+            return [.displayName]
+        }
+        
     }
 
 }
@@ -266,13 +292,14 @@ extension UserDetailViewController {
     // MARK: - Bar Button Item
     var followBarButtonItem: SwitchBarButtonItem {
         let result = SwitchBarButtonItem(title: "", style: .Plain, target: self, action: "followClicked:")
-        result.onStateTitle = "Following"
-        result.offStateTitle = "Follow"
+        result.onStateTitle = "Following".localizedString
+        result.offStateTitle = "Follow".localizedString
         result.on = CKUsers.AmIFollowingTo(user!)
         return result
     }
     
     func followClicked(sender: SwitchBarButtonItem) {
+        guard didAuthoriseElseRequest(didAuthorize: { self.followClicked(sender) }) else { return }
         !sender.on ? doFollow(sender) : doUnfollow(sender)
         sender.on = !sender.on
     }
@@ -296,6 +323,26 @@ extension UserDetailViewController {
         
     }
     
+    private var shouldDone: Bool {
+        guard editing else { return true }
+        var trueCount = 0
+        RowInfo.NotOptionalRowInfos.forEach { if !String.isBlank(user?[$0.key] as? String) { trueCount++ } }
+        return trueCount == RowInfo.NotOptionalRowInfos.count
+    }
+
+}
+
+extension UIImage {
+    func squreImageWithWidth(width: CGFloat) -> UIImage {
+        let imageView = UIImageView(frame: CGRect(origin: CGPointZero, size: CGSize(width: width, height: width)))
+        imageView.contentMode = .ScaleAspectFill
+        imageView.image = self
+        UIGraphicsBeginImageContext(imageView.frame.size)
+        imageView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        let result = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return result
+    }
 }
 
 extension UINavigationItem {
@@ -315,6 +362,10 @@ extension UITableViewCell {
         get { return detailTextLabel?.text }
         set { detailTextLabel?.text = newValue }
     }
+    
+    func setFocus(focus: Bool) {
+        textLabel?.textColor = focus ? DefaultStyleController.Color.Sand : UIColor.blackColor()
+    }
 }
 
 extension SubTitleTableViewCell {
@@ -327,5 +378,10 @@ extension SubTitleTableViewCell {
         get { return subTttleLabel?.text }
         set { subTttleLabel?.text = String.isBlank(newValue) ? " " : newValue  }
     }
-
+    
+    override func setFocus(focus: Bool) {
+        titleLabel?.textColor = focus ? DefaultStyleController.Color.DarkSand : UIColor.blackColor()
+    }
 }
+
+

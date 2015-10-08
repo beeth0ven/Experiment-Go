@@ -22,7 +22,7 @@ class GetNotificationLinksOperation: GetCKItemsOperation {
         getLinksOperation.resultsLimit = CKQueryOperation.DafaultResultsLimit
         
         getLinksOperation.recordFetchedBlock = {
-            let object = CKItem.parseRecord($0)
+            let object = CKItem.ParseRecord($0)
             self.currentPageItems.append(object)
         }
         
@@ -47,7 +47,7 @@ class GetNotificationLinksOperation: GetCKItemsOperation {
         
         fetchUsersOperation.perRecordCompletionBlock = {
             (record, _, _) in
-            let item = CKItem.parseRecord(record!)
+            let item = CKItem.ParseRecord(record!)
             for link in links {
                 if link.creatorUserRecordID == item.recordID {
                     link.creatorUser = item as? CKUsers

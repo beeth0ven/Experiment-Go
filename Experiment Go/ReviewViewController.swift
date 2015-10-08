@@ -53,7 +53,16 @@ class ReviewViewController: ItemDetailViewController {
 extension ReviewViewController: UITextViewDelegate {
     func textViewDidChange(textView: UITextView) {
         review!.content = textView.text
-        navigationItem.rightBarButtonItem?.enabled = true
+        navigationItem.rightBarButtonItem?.enabled = shouldDone
     }
     
+    
+    private var shouldDone: Bool {
+        guard 5 < trimmedText?.characters.count else { return false }
+        return true
+    }
+    
+    private var trimmedText: String? {
+        return bodyTextView.text?.stringByTrimmingWhitespaceAndNewline
+    }
 }

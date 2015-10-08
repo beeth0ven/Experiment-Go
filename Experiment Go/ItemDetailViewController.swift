@@ -33,28 +33,42 @@ class ItemDetailViewController: UIViewController,  UITableViewDataSource, UITabl
     
     override func setEditing(editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
+//        if editing {
+//            guard getAuthorizationIfNeeded(didAuthorize: { self.setEditing(editing, animated: animated) }) == false else {
+//                setEditing(!editing, animated: false)
+//                return
+//            }
+//        }
+        
         tableView.editing = editing
         if !editing && item?.hasChange == true {
             item?.saveInBackground(didFail: handleFail)
         }
-        animatedReloadData()
+        reloadData(animated)
     }
     
-    private func animatedReloadData() {
-        let tableFooterView = tableView.tableFooterView ; tableView.tableFooterView = nil // Transition become smooth.
-        let options: UIViewAnimationOptions =  editing ? .TransitionCurlUp : .TransitionCurlDown
-        UIView.transitionWithView(navigationController!.view,
-            duration: 0.4,
-            options: options,
-            animations: {
-                self._sections = nil
-                self.tableView.reloadData()
-            },
-            completion: { (_) in
-                self.configureBarButtons()
-                self.showOrHideToolBarIfNeeded()
-                self.tableView.tableFooterView = tableFooterView
-        })
+    private func reloadData(animated: Bool) {
+        if animated {
+            let tableFooterView = tableView.tableFooterView ; tableView.tableFooterView = nil // Transition become smooth.
+            let options: UIViewAnimationOptions =  editing ? .TransitionCurlUp : .TransitionCurlDown
+            UIView.transitionWithView(navigationController!.view,
+                duration: 0.4,
+                options: options,
+                animations: {
+                    self._sections = nil
+                    self.tableView.reloadData()
+                },
+                completion: { (_) in
+                    self.configureBarButtons()
+                    self.showOrHideToolBarIfNeeded()
+                    self.tableView.tableFooterView = tableFooterView
+            })
+        } else {
+            self._sections = nil
+            self.tableView.reloadData()
+            self.configureBarButtons()
+            self.showOrHideToolBarIfNeeded()
+        }
     }
     
     // MARK: - Table View Data Source

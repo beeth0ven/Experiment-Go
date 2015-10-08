@@ -33,7 +33,9 @@ class CKUsers: CKItem {
     var isMe: Bool  { return recordID.recordName == CKOwnerDefaultName || recordID.recordName == CKUsers.CurrentUser?.recordID.recordName }
     
     override var displayTitle: String? { return displayName }
-
+    
+    static var ProfileImage: UIImage = StyleKit.imageOfUser
+    
     // MARK: - Current User
 
     static var CurrentUser: CKUsers? = CurrentUserFromiCloudKVS
@@ -106,6 +108,61 @@ class CKUsers: CKItem {
     private static var iCloudKeyValueStore = NSUbiquitousKeyValueStore.defaultStore()
     private static var notificationCenter = NSNotificationCenter.defaultCenter()
     
+    static var HasCloudWritePermision: Bool {
+        guard NSFileManager.defaultManager().ubiquityIdentityToken != nil else { return false } // Login iCloud
+        guard UserDiscoverability == true else { return false }                                 // Request Permision
+        guard !String.isBlank(CurrentUser?.displayName) else { return false }                   // Set Display Name
+        return true                                                                             // All Done
+    }
+    
+    static var UserDiscoverability: Bool? {
+        get {
+            return iCloudKeyValueStore.objectForKey(Key.UserDiscoverability.rawValue) as? Bool
+        }
+        
+        set {
+            iCloudKeyValueStore.setObject(newValue, forKey: Key.UserDiscoverability.rawValue)
+            iCloudKeyValueStore.synchronize()
+        }
+        
+    }
+    
+    private static var RequestingDiscoverabilityInProgress = false
+    static func GetDiscoverabilityPermission(didGet didGet: (Bool) -> (), didFail: ((NSError) -> ())?) {
+        guard RequestingDiscoverabilityInProgress == false else { return }
+        RequestingDiscoverabilityInProgress = true
+        CKContainer.defaultContainer().requestApplicationPermission(.UserDiscoverability) {
+            applicationPermissionStatus, error in
+            RequestingDiscoverabilityInProgress = false
+            dispatch_async(dispatch_get_main_queue()) {
+                guard  error == nil else { didFail?(error!) ; return }
+                let discoverability = applicationPermissionStatus == .Granted
+                UserDiscoverability = discoverability
+                didGet( discoverability )
+            }
+        }
+    }
+
+    static func SetUserDisplayName(name: String, didSet: (() -> Void), didFail: ((NSError) -> Void)?) {
+        GetCurrentUser(
+            didGet: {
+                currentUser in
+                currentUser.displayName = name
+                
+                currentUser.superSaveInBackground(
+                    didSave: {
+                        CKUsers.CurrentUser = currentUser
+                        CKUsers.saveCurrentUser()
+                        didSet()
+                    },
+                    
+                    didFail: didFail
+                )
+            },
+            
+            didFail: didFail
+        )
+    }
     
     // MARK: - Liked Experiments
     
@@ -114,7 +171,7 @@ class CKUsers: CKItem {
     }
     
     static func LikeExperiment(experiment: CKExperiment, didLike: (Void -> Void)? = nil, didFail: ((NSError) -> Void)? = nil) {
-        guard LikeOperationInProgress == false else { didFail?(NSError(description: ServerBusyDescription)) ; return }
+        guard LikeOperationInProgress == false else { didFail?(NSError(errorType: .ServerBusy)) ; return }
         LikeOperationInProgress = true
         
         let fanLink = CKLink(like: experiment)
@@ -133,7 +190,7 @@ class CKUsers: CKItem {
     
     
     static func UnlikeExperiment(experiment: CKExperiment, didUnlike: (Void -> Void)? = nil, didFail: ((NSError) -> Void)? = nil) {
-        guard LikeOperationInProgress == false else { didFail?(NSError(description: ServerBusyDescription)) ; return }
+        guard LikeOperationInProgress == false else { didFail?(NSError(errorType: .ServerBusy)) ; return }
         LikeOperationInProgress = true
         
         let fanLink = CKLink(like: experiment)
@@ -171,7 +228,7 @@ class CKUsers: CKItem {
     }
     
     static func FollowUser(user: CKUsers, didFollow: (Void -> Void)? = nil, didFail: ((NSError) -> Void)? = nil) {
-        guard FollowOperationInProgress == false else { didFail?(NSError(description: ServerBusyDescription)) ; return }
+        guard FollowOperationInProgress == false else { didFail?(NSError(errorType: .ServerBusy)) ; return }
         FollowOperationInProgress = true
         
         let followLink = CKLink(followTo: user)
@@ -189,7 +246,7 @@ class CKUsers: CKItem {
     }
     
     static func UnfollowUser(user: CKUsers, didUnfollow: (Void -> Void)? = nil, didFail: ((NSError) -> Void)? = nil) {
-        guard FollowOperationInProgress == false else { didFail?(NSError(description: ServerBusyDescription)) ; return }
+        guard FollowOperationInProgress == false else { didFail?(NSError(errorType: .ServerBusy)) ; return }
         FollowOperationInProgress = true
         
         let followLink = CKLink(followTo: user)
@@ -206,7 +263,6 @@ class CKUsers: CKItem {
         )
     }
     private static var FollowOperationInProgress = false
-    private static let ServerBusyDescription = NSLocalizedString("Server is busy, Please retry later.", comment: "")
 
     
     
@@ -223,6 +279,59 @@ class CKUsers: CKItem {
         return CKRecordID(recordName: name)
     }
 
+    // MARK: - Search Users
+    static func GetUser(email email: String, didGet: ((CKUsers) -> Void)?, didFail: ((NSError) -> Void)?) {
+        guard GetUserInProgress == false else { didFail?(NSError(errorType: .ServerBusy)) ; return }
+        GetUserInProgress = true
+        let discoverUserInfosOperation = CKDiscoverUserInfosOperation(emailAddresses: [email], userRecordIDs: nil)
+        discoverUserInfosOperation.discoverUserInfosCompletionBlock = {
+            userInfoByEmail, userInfoByRecordID, error in
+            GetUserInProgress = false
+            dispatch_async(dispatch_get_main_queue()) {
+                if let error = error { didFail?(error) ; return }
+                guard let recordID =  userInfoByEmail![email]?.userRecordID else { didFail?(ErrorType.UserByEmailNotFound.error) ; return }
+                GetItem(recordID: recordID, didGet: { didGet?($0 as! CKUsers) }, didFail: didFail)
+            }
+        }
+        
+        discoverUserInfosOperation.start()
+    }
+    
+    private static var GetUserInProgress = false
+
+    static func GetUsersFromContacts(didGet didGet: (([CKUsers]) -> Void)?, didFail: ((NSError) -> Void)?) {
+        guard GetUserInProgress == false else { didFail?(NSError(errorType: .ServerBusy)) ; return }
+        GetUserInProgress = true
+        let discoverUserInfosOperation = CKDiscoverAllContactsOperation()
+        discoverUserInfosOperation.discoverAllContactsCompletionBlock = {
+            userInfos, error in
+            GetUserInProgress = false
+            dispatch_async(dispatch_get_main_queue()) {
+                if let error = error { didFail?(error) ; return }
+                let recordIDs = userInfos!.flatMap { $0.userRecordID }
+                guard recordIDs.count > 0 else { didFail?(ErrorType.UsersFromContactsNotFound.error) ; return }
+                GetItems(recordIDs: recordIDs, didGet: { didGet?($0 as! [CKUsers]) }, didFail: didFail)
+            }
+        }
+        
+        discoverUserInfosOperation.start()
+    }
+    
+    private enum ErrorType {
+        case UserByEmailNotFound
+        case UsersFromContactsNotFound
+        
+        var error: NSError {
+            var description: String
+            switch self {
+            case .UserByEmailNotFound:
+                description = "User Not Found."
+            case .UsersFromContactsNotFound:
+                description = "Users Not Found."
+            }
+            return NSError(description: NSLocalizedString(description, comment: ""))
+        }
+    }
     
     // MARK: - CKQuery
     
@@ -285,7 +394,7 @@ class CKUsers: CKItem {
         return NSCompoundPredicate(type: .AndPredicateType, subpredicates: [userPredicate, typePredicate])
     }
     
-    
+
     // MARK: - Save
     
     override func saveInBackground(didSave didSave: (Void -> Void)?, didFail: ((NSError) -> Void)?) {
@@ -296,9 +405,10 @@ class CKUsers: CKItem {
                 for key in self.changedKeys {
                     currentUser[key] = self[key]
                 }
-                
+                print("Before Save: \(NSDate().string)")
                 currentUser.superSaveInBackground(
                     didSave: {
+                        print("Did Save: \(NSDate().string)")
                         CKUsers.CurrentUser?.record = currentUser.record
                         CKUsers.saveCurrentUser()
                         didSave?()
@@ -325,15 +435,33 @@ class CKUsers: CKItem {
         case CurrentUser = "CKUsers.CurrentUser"
         case FollowingUsers = "CKUsers.FollowingUsers"
         case LikedExperiments = "CKUsers.LikedExperiments"
-        
+        case UserDiscoverability = "CKUsers.UserDiscoverability"
     }
     
     private static var publicCloudDatabase = CKContainer.defaultContainer().publicCloudDatabase
 }
 
 extension NSError {
+    
     convenience init(description: String) {
         self.init(domain: "Error", code: 100, userInfo: [NSLocalizedDescriptionKey: description])
+    }
+    
+    convenience init(errorType: ErrorType) {
+        self.init(description: errorType.localizedDescription)
+    }
+    
+    enum ErrorType {
+        case ServerBusy
+
+        var localizedDescription: String {
+            var description: String
+            switch self {
+            case .ServerBusy:
+                description = "Server is busy, Please retry later."
+            }
+            return NSLocalizedString(description, comment: "")
+        }
     }
 }
 

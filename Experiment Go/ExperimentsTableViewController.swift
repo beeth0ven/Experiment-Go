@@ -42,6 +42,15 @@ class ExperimentsTableViewController: CloudKitTableViewController {
     }
     
     // MARK: - Segue
+    
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        guard let segueID = SegueID(rawValue: identifier) else { return true }
+        guard case .AddExperiment = segueID else { return true }
+        guard didAuthoriseElseRequest(didAuthorize: { self.performSegueWithIdentifier(identifier, sender: sender) }) else { return false }
+        return true
+    }
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         guard let identifier = segue.identifier else { return }
         guard let segueID = SegueID(rawValue: identifier) else { return }
@@ -95,6 +104,7 @@ class ExperimentsTableViewController: CloudKitTableViewController {
     }
     
     private func indexPathForExperiment(experiment: CKExperiment) -> NSIndexPath? {
+        
         for (section, experiments) in items.enumerate() {
             for (row, aExperiment) in experiments.enumerate() {
                 if aExperiment == experiment { return NSIndexPath(forRow: row, inSection: section) }

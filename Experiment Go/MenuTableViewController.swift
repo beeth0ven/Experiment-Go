@@ -27,8 +27,8 @@ class MenuTableViewController: UITableViewController, CurrentUserHasChangeObserv
         }
     }
     
-    var profileImage: UIImage? {
-        get { return profileImageView.image }
+    var profileImage: UIImage {
+        get { return profileImageView.image ?? UIImage() }
         set { profileImageView.image = newValue }
     }
     
@@ -53,12 +53,12 @@ class MenuTableViewController: UITableViewController, CurrentUserHasChangeObserv
     
     func updateUI() {
         // Clear UI
-        profileImage = nil
-        self.title = currentUser?.displayName ?? "Menu"
+        profileImage = CKUsers.ProfileImage
+        self.title = currentUser?.displayName ?? "Menu".localizedString
         guard let url = profileImageURL else { return  }
-        UIImage.getImageForURL(url) {
+        UIImage.GetImageForURL(url) {
             guard url == self.profileImageURL else { return }
-            self.profileImage = $0
+            self.profileImage = $0 ?? CKUsers.ProfileImage
         }
 
     }
@@ -68,8 +68,9 @@ class MenuTableViewController: UITableViewController, CurrentUserHasChangeObserv
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
             if cell.textLabel?.text == "Profile" {
-                performSegueWithIdentifier(SegueID.ShowUserDetail.rawValue, sender: cell)
                 tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                guard didAuthoriseElseRequest(didAuthorize: { self.performSegueWithIdentifier(SegueID.ShowUserDetail.rawValue, sender: cell) }) else { return  }
+                performSegueWithIdentifier(SegueID.ShowUserDetail.rawValue, sender: cell)
             } else {
                 egSplitViewController.showDetailViewControllerAtIndex(indexPath.row)
             }

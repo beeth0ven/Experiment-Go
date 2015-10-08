@@ -60,6 +60,7 @@ class EGSplitViewController: UISplitViewController, UISplitViewControllerDelegat
                 let etvc = nav.contentViewController as! ExperimentsTableViewController
                 etvc.queryType = .InteretedByCurrentUser
                 etvc.refreshControl = UIRefreshControl(target: etvc, action: "refresh:")
+                etvc.refreshControl?.tintColor = DefaultStyleController.Color.Sand
                 return nav
             case .Notification:
                 return storyboard.instantiateViewControllerWithIdentifier("NotificationNav")

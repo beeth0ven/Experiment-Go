@@ -16,14 +16,19 @@ class ReviewTableViewCell: CKItemTableViewCell {
         set { item = newValue }
     }
 
-    @IBOutlet weak var authorProfileImageButton: UIButton!
+    @IBOutlet weak var authorProfileImageButton: UIButton! {
+        didSet {
+            authorProfileImageButton.layer.borderColor = UIColor.globalTintColor().CGColor
+            authorProfileImageButton.layer.borderWidth = authorProfileImageButton.bounds.size.height / 32
+        }
+    }
     @IBOutlet weak var authorLabel: UILabel!
     @IBOutlet weak var bodyabel: UILabel!
     @IBOutlet weak var creationDateLabel: UILabel!
     
     override func updateUI() {
         
-        authorProfileImage = nil
+        authorProfileImage = CKUsers.ProfileImage
 
         bodyabel.text = review?.content
         authorLabel.text = review?.creatorUser?.displayName
@@ -31,17 +36,17 @@ class ReviewTableViewCell: CKItemTableViewCell {
         
         guard let url = profileImageURL else { return }
         
-        UIImage.getImageForURL(url) {
+        UIImage.GetImageForURL(url) {
             guard url == self.profileImageURL else { return }
-            self.authorProfileImage = $0
+            self.authorProfileImage = $0 ?? CKUsers.ProfileImage
         }
         
     }
     
 
     
-    var authorProfileImage: UIImage? {
-        get { return authorProfileImageButton.backgroundImageForState(.Normal) }
+    var authorProfileImage: UIImage {
+        get { return authorProfileImageButton.backgroundImageForState(.Normal) ?? UIImage() }
         set { authorProfileImageButton.setBackgroundImage(newValue, forState: .Normal) }
     }
     

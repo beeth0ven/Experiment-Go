@@ -17,13 +17,18 @@ class LinkTableViewCell: CKItemTableViewCell {
     }
     
     
-    @IBOutlet weak var fromUserProfileImageButton: UIButton!
+    @IBOutlet weak var fromUserProfileImageButton: UIButton! {
+        didSet {
+            fromUserProfileImageButton.layer.borderColor = UIColor.globalTintColor().CGColor
+            fromUserProfileImageButton.layer.borderWidth = fromUserProfileImageButton.bounds.size.height / 32
+        }
+    }
     @IBOutlet weak var fromUserNameLabel: UILabel!
     @IBOutlet weak var subheadLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     
-    var fromUserProfileImage: UIImage? {
-        get { return fromUserProfileImageButton.backgroundImageForState(.Normal) }
+    var fromUserProfileImage: UIImage {
+        get { return fromUserProfileImageButton.backgroundImageForState(.Normal) ?? UIImage() }
         set { fromUserProfileImageButton.setBackgroundImage(newValue, forState: .Normal) }
     }
     

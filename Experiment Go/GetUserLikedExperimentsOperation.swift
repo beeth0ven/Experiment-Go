@@ -24,7 +24,7 @@ class GetUserLikedExperimentsOperation: GetObjectsWithCreatorUserOperation {
         getLinksOperation.resultsLimit = CKQueryOperation.DafaultResultsLimit
         
         getLinksOperation.recordFetchedBlock = {
-            let object = CKItem.parseRecord($0) as! CKLink
+            let object = CKItem.ParseRecord($0) as! CKLink
             self.currentPageItems.append(object)
         }
         
@@ -48,7 +48,7 @@ class GetUserLikedExperimentsOperation: GetObjectsWithCreatorUserOperation {
         
         getExperimentsOperation.perRecordCompletionBlock = {
             (experimentRecord, _, _) in
-            let experiment = CKItem.parseRecord(experimentRecord!) as! CKExperiment
+            let experiment = CKItem.ParseRecord(experimentRecord!) as! CKExperiment
             for link in links { if link.experimentRef?.recordID == experiment.recordID { link.experiment = experiment } }
         }
         

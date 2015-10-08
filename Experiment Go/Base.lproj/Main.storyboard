@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9046" systemVersion="15A216g" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9046" systemVersion="15A279b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9035"/>
@@ -156,6 +156,7 @@
                                                 </label>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                         </tableViewCellContentView>
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -183,6 +184,7 @@
                                                 </label>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstItem="e3i-NQ-bFW" firstAttribute="leading" secondItem="CGz-ei-2LQ" secondAttribute="leading" constant="10" id="4ud-5c-c70"/>
                                                 <constraint firstItem="e3i-NQ-bFW" firstAttribute="trailing" secondItem="CGz-ei-2LQ" secondAttribute="trailing" id="74p-Sa-VI2"/>
@@ -281,6 +283,7 @@
                                                 </collectionView>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <gestureRecognizers/>
                                             <constraints>
                                                 <constraint firstAttribute="topMargin" secondItem="1mu-qC-ubo" secondAttribute="top" id="F0A-00-SZb"/>
@@ -337,6 +340,7 @@
                                                 </label>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstItem="uw0-bB-G7X" firstAttribute="leading" secondItem="779-eL-izw" secondAttribute="trailing" constant="8" symbolic="YES" id="2ZC-KI-iCC"/>
                                                 <constraint firstItem="uw0-bB-G7X" firstAttribute="centerX" secondItem="c8K-pJ-AE5" secondAttribute="centerX" id="37v-lE-pjG"/>
@@ -386,6 +390,7 @@
                                                 </label>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                         </tableViewCellContentView>
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -549,7 +554,7 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vid-Ia-xqN">
                                     <rect key="frame" x="0.0" y="-14" width="600" height="150"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="App-Icon" translatesAutoresizingMaskIntoConstraints="NO" id="kWw-Xy-4hX">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="App-Icon" translatesAutoresizingMaskIntoConstraints="NO" id="kWw-Xy-4hX">
                                             <rect key="frame" x="245" y="20" width="110" height="110"/>
                                             <animations/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -758,17 +763,8 @@
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZNT-bh-aag">
-                                <rect key="frame" x="273" y="252" width="55" height="32"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <state key="normal" title="Setting"/>
-                                <connections>
-                                    <segue destination="oUv-8b-ohk" kind="show" id="Utv-Vb-pvV"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hGZ-RQ-Bv3">
-                                <rect key="frame" x="230" y="332" width="140" height="32"/>
+                                <rect key="frame" x="230" y="292" width="140" height="32"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <state key="normal" title="Rate On App Store"/>
@@ -782,14 +778,14 @@
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version 1.0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="svc-us-c8D">
-                                <rect key="frame" x="270" y="478" width="62" height="15"/>
+                                <rect key="frame" x="269" y="478" width="62" height="15"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AIR-dG-Ywb">
-                                <rect key="frame" x="263" y="292" width="74" height="32"/>
+                                <rect key="frame" x="263" y="252" width="74" height="32"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <state key="normal" title="Feedback"/>
@@ -801,22 +797,21 @@
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="AIR-dG-Ywb" firstAttribute="centerX" secondItem="v2N-be-CDI" secondAttribute="centerX" id="9yt-x9-Cor"/>
                             <constraint firstItem="tIg-Pj-uKW" firstAttribute="top" secondItem="kq9-Ms-N9i" secondAttribute="bottom" constant="28" id="END-xJ-PXb"/>
-                            <constraint firstItem="AIR-dG-Ywb" firstAttribute="centerX" secondItem="ZNT-bh-aag" secondAttribute="centerX" id="Fsi-2H-qta"/>
-                            <constraint firstItem="ZNT-bh-aag" firstAttribute="centerY" secondItem="v2N-be-CDI" secondAttribute="centerY" id="GTv-Wj-EKS"/>
                             <constraint firstItem="svc-us-c8D" firstAttribute="top" relation="greaterThanOrEqual" secondItem="hGZ-RQ-Bv3" secondAttribute="bottom" constant="8" symbolic="YES" id="MoK-Mw-qn0"/>
+                            <constraint firstItem="svc-us-c8D" firstAttribute="centerX" secondItem="hGZ-RQ-Bv3" secondAttribute="centerX" id="VPW-MP-0LL"/>
                             <constraint firstAttribute="bottom" secondItem="fo1-jh-REC" secondAttribute="bottom" constant="20" symbolic="YES" id="Y8r-mP-2PN"/>
                             <constraint firstItem="fo1-jh-REC" firstAttribute="top" secondItem="svc-us-c8D" secondAttribute="bottom" constant="8" symbolic="YES" id="ZhM-Dw-BEI"/>
+                            <constraint firstItem="AIR-dG-Ywb" firstAttribute="centerY" secondItem="v2N-be-CDI" secondAttribute="centerY" id="aO1-LR-dGe"/>
                             <constraint firstItem="svc-us-c8D" firstAttribute="centerX" secondItem="fo1-jh-REC" secondAttribute="centerX" id="dh7-C5-eiT"/>
-                            <constraint firstItem="ZNT-bh-aag" firstAttribute="centerX" secondItem="tIg-Pj-uKW" secondAttribute="centerX" id="iM6-BZ-k5t"/>
                             <constraint firstItem="tIg-Pj-uKW" firstAttribute="top" secondItem="kq9-Ms-N9i" secondAttribute="bottom" constant="25" id="itw-bR-SXA"/>
                             <constraint firstItem="fo1-jh-REC" firstAttribute="centerX" secondItem="v2N-be-CDI" secondAttribute="centerX" id="jHM-cE-SWM"/>
                             <constraint firstItem="tIg-Pj-uKW" firstAttribute="centerX" secondItem="v2N-be-CDI" secondAttribute="centerX" id="kgE-4d-s15"/>
                             <constraint firstItem="hGZ-RQ-Bv3" firstAttribute="top" secondItem="AIR-dG-Ywb" secondAttribute="bottom" constant="8" symbolic="YES" id="ndL-ST-qOJ"/>
                             <constraint firstItem="hGZ-RQ-Bv3" firstAttribute="centerX" secondItem="AIR-dG-Ywb" secondAttribute="centerX" id="qU9-hL-f8N"/>
-                            <constraint firstItem="AIR-dG-Ywb" firstAttribute="top" secondItem="ZNT-bh-aag" secondAttribute="bottom" constant="8" symbolic="YES" id="qzl-KW-3Yo"/>
+                            <constraint firstItem="AIR-dG-Ywb" firstAttribute="top" secondItem="tIg-Pj-uKW" secondAttribute="bottom" constant="15" id="qZT-fM-GFc"/>
                             <constraint firstItem="tIg-Pj-uKW" firstAttribute="centerX" secondItem="v2N-be-CDI" secondAttribute="centerX" id="rFv-BZ-2Sg"/>
-                            <constraint firstItem="ZNT-bh-aag" firstAttribute="top" secondItem="tIg-Pj-uKW" secondAttribute="bottom" constant="15" id="uXo-ev-DeV"/>
                             <constraint firstItem="tIg-Pj-uKW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="kq9-Ms-N9i" secondAttribute="bottom" constant="8" symbolic="YES" id="zbA-Lk-e9M"/>
                         </constraints>
                         <variation key="default">
@@ -824,6 +819,7 @@
                                 <exclude reference="END-xJ-PXb"/>
                                 <exclude reference="itw-bR-SXA"/>
                                 <exclude reference="rFv-BZ-2Sg"/>
+                                <exclude reference="jHM-cE-SWM"/>
                             </mask>
                         </variation>
                     </view>
@@ -838,7 +834,7 @@
         <!--Feedback-->
         <scene sceneID="WZH-rW-5Lw">
             <objects>
-                <tableViewController id="OS4-Kp-5hX" sceneMemberID="viewController">
+                <tableViewController id="OS4-Kp-5hX" customClass="FeedbackTVC" customModule="Experiment_Go" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="nhh-Nk-fHu">
                         <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -916,6 +912,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Feedback" id="hP1-n2-qtM"/>
+                    <connections>
+                        <segue destination="wDB-2R-woH" kind="presentation" identifier="AddReview" modalPresentationStyle="currentContext" id="wKF-ru-kgR"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cJt-hh-vkX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1336,7 +1335,7 @@
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
-                                                <segue destination="2AW-Iq-AeF" kind="show" identifier="ShowUserDetail" id="Cj7-ss-bvJ"/>
+                                                <segue destination="t9T-yB-2pV" kind="presentation" identifier="ShowUserDetail" modalPresentationStyle="formSheet" id="QOB-WJ-cIw"/>
                                             </connections>
                                         </button>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Luo Jie" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GHL-nu-q3z">
@@ -1383,7 +1382,7 @@
                                     <outlet property="authorProfileImageButton" destination="XeU-Bj-YD8" id="OaZ-YZ-Jdb"/>
                                     <outlet property="creationDateLabel" destination="hKr-e0-PSF" id="yL5-mI-fEX"/>
                                     <outlet property="titleLabel" destination="iI7-1p-sWp" id="GGp-h7-I1A"/>
-                                    <segue destination="JEX-9P-axG" kind="show" identifier="ShowExperiment" id="5eT-sP-w2s"/>
+                                    <segue destination="hin-9r-nvY" kind="presentation" identifier="ShowExperiment" modalPresentationStyle="formSheet" id="xGu-k7-fdi"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -1584,7 +1583,7 @@
             <objects>
                 <tableViewController title="Fans" clearsSelectionOnViewWillAppear="NO" id="PeT-ND-Ndy" customClass="UsersTableViewController" customModule="Experiment_Go" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="EhI-cp-eLF">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="44" width="600" height="556"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -1637,7 +1636,6 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yHm-hc-e1O">
                                             <rect key="frame" x="15" y="8" width="48" height="48"/>
                                             <animations/>
-                                            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="48" id="NE5-Zb-OhQ"/>
                                                 <constraint firstAttribute="width" constant="64" id="iOk-Ch-8Mb"/>
@@ -1706,7 +1704,6 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="39e-00-ZAz">
                                             <rect key="frame" x="15" y="8" width="48" height="48"/>
                                             <animations/>
-                                            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="64" id="G8s-H4-kmP"/>
                                                 <constraint firstAttribute="height" constant="48" id="cid-2P-cJb"/>
@@ -1739,7 +1736,7 @@
                                                 <userDefinedRuntimeAttribute type="string" keyPath="onStateTitle" value="Following"/>
                                                 <userDefinedRuntimeAttribute type="string" keyPath="offStateTitle" value="Follow"/>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="5"/>
+                                                    <integer key="value" value="10"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                             </userDefinedRuntimeAttributes>
@@ -2586,7 +2583,7 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bnA-mc-sc2">
                                                     <rect key="frame" x="0.0" y="0.0" width="600" height="168"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="v67-Ne-keU">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="v67-Ne-keU">
                                                             <rect key="frame" x="236" y="20" width="128" height="128"/>
                                                             <animations/>
                                                             <constraints>
@@ -2610,6 +2607,7 @@
                                                         </imageView>
                                                     </subviews>
                                                     <animations/>
+                                                    <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="v67-Ne-keU" firstAttribute="top" secondItem="bnA-mc-sc2" secondAttribute="top" constant="20" symbolic="YES" id="7am-dp-zzR"/>
                                                         <constraint firstItem="v67-Ne-keU" firstAttribute="top" secondItem="bnA-mc-sc2" secondAttribute="top" id="CPV-Gl-iLx"/>
@@ -2664,6 +2662,7 @@
                                                 </label>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                         </tableViewCellContentView>
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -2691,6 +2690,7 @@
                                                 </label>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstItem="03W-y3-fBR" firstAttribute="leading" secondItem="0hb-jd-9fQ" secondAttribute="leading" constant="10" id="2j6-sR-lGf"/>
                                                 <constraint firstItem="03W-y3-fBR" firstAttribute="trailing" secondItem="0hb-jd-9fQ" secondAttribute="trailing" id="Drs-qN-i8t"/>
@@ -2731,6 +2731,7 @@
                                                 </label>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                         </tableViewCellContentView>
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -2752,14 +2753,7 @@
                             <constraint firstItem="iso-eK-kEP" firstAttribute="top" secondItem="3Rr-4t-1PD" secondAttribute="top" id="YIX-S3-U1j"/>
                         </constraints>
                     </view>
-                    <toolbarItems>
-                        <barButtonItem title="Follow" id="Sqt-Ii-IE0" customClass="SwitchBarButtonItem" customModule="Experiment_Go" customModuleProvider="target">
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="offStateTitle" value="Follow"/>
-                                <userDefinedRuntimeAttribute type="string" keyPath="onStateTitle" value="Following"/>
-                            </userDefinedRuntimeAttributes>
-                        </barButtonItem>
-                    </toolbarItems>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" title="User" id="ryw-qF-zEg"/>
                     <connections>
                         <outlet property="tableView" destination="iso-eK-kEP" id="zkL-BD-9yd"/>
@@ -2780,7 +2774,7 @@
             <objects>
                 <tableViewController title="Edite Text" id="B2H-Y7-irh" customClass="EditeTextTableViewController" customModule="Experiment_Go" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="tg3-7g-RKs">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="44" width="600" height="556"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -2911,7 +2905,7 @@
             <objects>
                 <collectionViewController id="PJ7-TL-TRb" customClass="EditeTagsCollectionViewController" customModule="Experiment_Go" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="Lcn-FE-M9s">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="44" width="600" height="556"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -3030,7 +3024,7 @@
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u2N-iC-zxm">
                                     <rect key="frame" x="15" y="251" width="570" height="41"/>
                                     <animations/>
-                                    <string key="text">An account is required for writing something to Cloud.
+                                    <string key="text">An account is required.
 Please tap on the gold color row :</string>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -3160,12 +3154,12 @@ Please tap on the gold color row :</string>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f9i-2V-h1r" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2320" y="-467"/>
+            <point key="canvasLocation" x="802" y="317"/>
         </scene>
         <!--User Nav-->
         <scene sceneID="NT2-iC-Fhl">
             <objects>
-                <navigationController storyboardIdentifier="WelcomeToCloudNav" title="User Nav" automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="currentContext" hidesBarsOnSwipe="YES" hidesBarsWhenVerticallyCompact="YES" id="f7h-C5-4lU" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="WelcomeToCloudNav" title="User Nav" automaticallyAdjustsScrollViewInsets="NO" hidesBarsOnSwipe="YES" hidesBarsWhenVerticallyCompact="YES" id="f7h-C5-4lU" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="XMn-Hy-N0N">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -3198,7 +3192,7 @@ Please tap on the gold color row :</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8ux-x8-AGS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1567" y="-467"/>
+            <point key="canvasLocation" x="49" y="317"/>
         </scene>
         <!--Experiment Detail-->
         <scene sceneID="mDi-qX-hiz">
@@ -3278,6 +3272,7 @@ Please tap on the gold color row :</string>
                                                 </label>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                         </tableViewCellContentView>
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -3305,6 +3300,7 @@ Please tap on the gold color row :</string>
                                                 </label>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="topMargin" secondItem="P3c-au-cjC" secondAttribute="top" id="DW4-Pg-ek1"/>
                                                 <constraint firstItem="t0j-tq-4bV" firstAttribute="leading" secondItem="P3c-au-cjC" secondAttribute="trailing" constant="-79" id="GpJ-mB-JSh"/>
@@ -3400,6 +3396,7 @@ Please tap on the gold color row :</string>
                                                 </collectionView>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <gestureRecognizers/>
                                             <constraints>
                                                 <constraint firstAttribute="leadingMargin" secondItem="O1C-Af-3qt" secondAttribute="leading" constant="-7" id="545-hB-7sd"/>
@@ -3426,10 +3423,16 @@ Please tap on the gold color row :</string>
                                             <rect key="frame" x="0.0" y="0.0" width="567" height="64"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dng-8i-0Y9">
+                                                    <rect key="frame" x="71" y="22" width="458" height="20"/>
+                                                    <animations/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                    <color key="textColor" red="0.92120724919999997" green="0.84832113980000001" blue="0.62377804520000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uar-ax-Hb8">
                                                     <rect key="frame" x="15" y="8" width="48" height="48"/>
                                                     <animations/>
-                                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="64" id="6mb-gH-IDx"/>
                                                         <constraint firstAttribute="height" constant="48" id="7Uc-iJ-Fc0"/>
@@ -3447,15 +3450,9 @@ Please tap on the gold color row :</string>
                                                         </mask>
                                                     </variation>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dng-8i-0Y9">
-                                                    <rect key="frame" x="71" y="22" width="458" height="20"/>
-                                                    <animations/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                                    <color key="textColor" red="0.92120724919999997" green="0.84832113980000001" blue="0.62377804520000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstItem="uar-ax-Hb8" firstAttribute="centerY" secondItem="JL3-rs-Vwv" secondAttribute="centerY" id="1QE-Ps-NRS"/>
                                                 <constraint firstItem="Dng-8i-0Y9" firstAttribute="leading" secondItem="uar-ax-Hb8" secondAttribute="trailing" constant="8" symbolic="YES" id="7eU-XD-6ut"/>
@@ -3505,6 +3502,7 @@ Please tap on the gold color row :</string>
                                                 </label>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                         </tableViewCellContentView>
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -3591,7 +3589,7 @@ Please tap on the gold color row :</string>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QMW-Ve-RpQ">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="200"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NKw-jK-gQ7">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NKw-jK-gQ7">
                                             <rect key="frame" x="236" y="20" width="128" height="128"/>
                                             <animations/>
                                             <constraints>
@@ -3631,7 +3629,7 @@ Please tap on the gold color row :</string>
                                             <rect key="frame" x="0.0" y="0.0" width="567" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Choose a photo from library" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Zeg-3c-njO">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Choose a photo" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Zeg-3c-njO">
                                                     <rect key="frame" x="15" y="0.0" width="550" height="44"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <animations/>
@@ -3641,6 +3639,7 @@ Please tap on the gold color row :</string>
                                                 </label>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                         </tableViewCellContentView>
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -3652,7 +3651,7 @@ Please tap on the gold color row :</string>
                                             <rect key="frame" x="0.0" y="0.0" width="567" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Take a photo use camera" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="EVQ-zZ-YrI">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Take a photo" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="EVQ-zZ-YrI">
                                                     <rect key="frame" x="15" y="0.0" width="550" height="44"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <animations/>
@@ -3662,6 +3661,7 @@ Please tap on the gold color row :</string>
                                                 </label>
                                             </subviews>
                                             <animations/>
+                                            <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                         </tableViewCellContentView>
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -3675,7 +3675,7 @@ Please tap on the gold color row :</string>
                         </connections>
                     </tableView>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Body" id="7EB-bp-7N0"/>
+                    <navigationItem key="navigationItem" title="Image" id="7EB-bp-7N0"/>
                     <connections>
                         <outlet property="imageView" destination="NKw-jK-gQ7" id="7Qh-jD-KAW"/>
                         <outlet property="tableHeaderContentViewHeightConstraint" destination="Fdz-Rt-O6M" id="3Lg-p2-FLp"/>
@@ -3691,16 +3691,16 @@ Please tap on the gold color row :</string>
         <image name="Banner" width="280" height="200"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="euo-32-rs2"/>
-        <segue reference="5eT-sP-w2s"/>
-        <segue reference="2Sx-Tm-Aib"/>
-        <segue reference="FIU-ja-Cyf"/>
-        <segue reference="qLE-m0-g8m"/>
+        <segue reference="qru-AD-cuc"/>
+        <segue reference="orS-Il-sdi"/>
+        <segue reference="vle-td-OGp"/>
+        <segue reference="U0F-nX-ELz"/>
         <segue reference="QGV-Ef-3gP"/>
-        <segue reference="leS-CF-ZjH"/>
-        <segue reference="mtJ-QP-k77"/>
-        <segue reference="Ong-go-o6V"/>
-        <segue reference="Utv-Vb-pvV"/>
+        <segue reference="O3h-oV-rnv"/>
+        <segue reference="AZg-Ze-WNT"/>
+        <segue reference="gW7-gZ-38U"/>
+        <segue reference="aUJ-vY-2vN"/>
+        <segue reference="eqO-9p-ZWg"/>
     </inferredMetricsTieBreakers>
-    <color key="tintColor" red="0.9212072491645813" green="0.84832113981246948" blue="0.62377804517745972" alpha="1" colorSpace="calibratedRGB"/>
+    <color key="tintColor" red="0.92156862745098034" green="0.84705882352941175" blue="0.62352941176470589" alpha="1" colorSpace="calibratedRGB"/>
 </document>

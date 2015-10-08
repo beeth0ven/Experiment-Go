@@ -24,6 +24,9 @@ class CKItem: NSObject {
     var recordChangeTag: String?                { return record.recordChangeTag }
     var changedKeys: [String]                   { return record.changedKeys() }
 
+    var recordIDName: String                    { return record.recordID.recordName }
+
+    
     var creatorUser: CKUsers?
     
     var createdByMe: Bool {
@@ -39,7 +42,7 @@ class CKItem: NSObject {
         set { record[key] = newValue }
     }
     
-    static func parseRecord(record: CKRecord) -> CKItem {
+    static func ParseRecord(record: CKRecord) -> CKItem {
         let recordType = RecordType(rawValue: record.recordType)!
         switch recordType {
         case .Users:
@@ -62,6 +65,8 @@ class CKItem: NSObject {
         return NSKeyedArchiver.archivedDataWithRootObject(record)
     }
     
+    // MARK: - Save
+
     func saveInBackground(didSave didSave: (Void -> Void)? = nil ,didFail: ((NSError) -> Void)? = nil) {
         CKContainer.defaultContainer().publicCloudDatabase.saveRecord(record) {
             (_, error) in
@@ -81,7 +86,32 @@ class CKItem: NSObject {
             }
         }
     }
-
+    
+    // MARK: - Get Item
+    static func GetItem(recordID recordID: CKRecordID, didGet: ((CKItem) -> Void)?, didFail: ((NSError) -> Void)?){
+        CKContainer.defaultContainer().publicCloudDatabase.fetchRecordWithID(recordID) {
+            record, error in
+            dispatch_async(dispatch_get_main_queue()) {
+                if let error = error { didFail?(error) ; return }
+                didGet?(ParseRecord(record!))
+            }
+        }
+    }
+    
+    static func GetItems(recordIDs recordIDs: [CKRecordID], didGet: (([CKItem]) -> Void)?, didFail: ((NSError) -> Void)?){
+        let fetchRecordsOperation = CKFetchRecordsOperation(recordIDs: recordIDs)
+        fetchRecordsOperation.fetchRecordsCompletionBlock = {
+            recordsByRecordID, error in
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                if let error = error { didFail?(error) ; return }
+                didGet?(recordsByRecordID!.values.map { ParseRecord($0) })
+            }
+        }
+        
+        fetchRecordsOperation.begin()
+    }
+    
 }
 
 enum RecordKey: String {

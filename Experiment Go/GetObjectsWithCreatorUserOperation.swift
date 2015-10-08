@@ -17,7 +17,7 @@ class GetObjectsWithCreatorUserOperation: GetCKItemsOperation {
         getObjectsOperation.resultsLimit = CKQueryOperation.DafaultResultsLimit
         
         getObjectsOperation.recordFetchedBlock = {
-            let object = CKItem.parseRecord($0)
+            let object = CKItem.ParseRecord($0)
             self.currentPageItems.append(object)
         }
         
@@ -43,7 +43,7 @@ class GetObjectsWithCreatorUserOperation: GetCKItemsOperation {
         
         fetchUsersOperation.perRecordCompletionBlock = {
             (userRecord, _, _) in
-            let user = CKItem.parseRecord(userRecord!) as! CKUsers
+            let user = CKItem.ParseRecord(userRecord!) as! CKUsers
             for item in items { if item.creatorUserRecordID == user.recordID { item.creatorUser = user } }
         }
         

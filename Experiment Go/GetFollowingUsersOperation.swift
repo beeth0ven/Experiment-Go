@@ -23,7 +23,7 @@ class GetFollowingUsersOperation: GetCKItemsOperation {
         getLinksOperation.resultsLimit = CKQueryOperation.DafaultResultsLimit
         
         getLinksOperation.recordFetchedBlock = {
-            let object = CKItem.parseRecord($0)
+            let object = CKItem.ParseRecord($0)
             self.currentPageItems.append(object)
         }
         
@@ -49,7 +49,7 @@ class GetFollowingUsersOperation: GetCKItemsOperation {
         
         fetchUsersOperation.perRecordCompletionBlock = {
             (userRecord, _, _) in
-            let user = CKItem.parseRecord(userRecord!) as! CKUsers
+            let user = CKItem.ParseRecord(userRecord!) as! CKUsers
             for link in links { if link.toUserRef!.recordID == user.recordID { link.toUser = user } }
         }
         

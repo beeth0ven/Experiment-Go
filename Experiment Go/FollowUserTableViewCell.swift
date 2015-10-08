@@ -12,7 +12,8 @@ import CloudKit
 class FollowUserTableViewCell: UserTableViewCell {
     
     var handleFail: ((NSError) -> Void)?
-    
+    var didAuthoriseElseRequest: (((Void) -> Void)? -> Bool)?
+
     override func updateUI() {
         super.updateUI()
         followButton.on = CKUsers.AmIFollowingTo(user!)
@@ -21,6 +22,7 @@ class FollowUserTableViewCell: UserTableViewCell {
     @IBOutlet weak var followButton: SwitchButton!
     
     @IBAction func followClicked(sender: SwitchButton) {
+        guard didAuthoriseElseRequest!({ self.followClicked(sender) }) else { return }
         !sender.on ? doFollow(sender) : doUnfollow(sender)
         sender.on = !sender.on
     }

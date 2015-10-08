@@ -15,10 +15,6 @@ class CKExperiment: CKItem {
         let record = CKRecord(recordType: RecordType.Experiment.rawValue)
         self.init(record: record)
         self.creatorUser = CKUsers.CurrentUser
-        title = "Haha WU han."
-        tags = ["ds", "game"]
-        purpose = "go anyway"
-        content = "Oh my god."
     }
     
     var title: String? {

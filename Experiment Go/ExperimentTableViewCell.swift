@@ -16,20 +16,25 @@ class ExperimentTableViewCell: CKItemTableViewCell {
         set { item = newValue }
     }
 
-    var authorProfileImage: UIImage? {
-        get { return authorProfileImageButton.backgroundImageForState(.Normal) }
+    var authorProfileImage: UIImage {
+        get { return authorProfileImageButton.backgroundImageForState(.Normal) ?? UIImage() }
         set { authorProfileImageButton.setBackgroundImage(newValue, forState: .Normal) }
     }
     
     var profileImageURL: NSURL? { return experiment?.creatorUser?.profileImageAsset?.fileURL }
     
-    @IBOutlet weak var authorProfileImageButton: UIButton!
+    @IBOutlet weak var authorProfileImageButton: UIButton! {
+        didSet {
+            authorProfileImageButton.layer.borderColor = UIColor.globalTintColor().CGColor
+            authorProfileImageButton.layer.borderWidth = authorProfileImageButton.bounds.size.height / 32
+        }
+    }
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var creationDateLabel: UILabel!
     @IBOutlet weak var authorLabel: UILabel!
 
     override func updateUI() {
-        authorProfileImage = nil
+        authorProfileImage = CKUsers.ProfileImage
         
         titleLabel.text = experiment?.title
         authorLabel.text = experiment?.creatorUser?.displayName
@@ -37,9 +42,9 @@ class ExperimentTableViewCell: CKItemTableViewCell {
         
         guard let url = profileImageURL else { return }
         
-        UIImage.getImageForURL(url) { (image) in
+        UIImage.GetImageForURL(url) {
             guard url == self.profileImageURL else { return }
-            self.authorProfileImage = image
+            self.authorProfileImage = $0 ?? CKUsers.ProfileImage
         }
     }
 }

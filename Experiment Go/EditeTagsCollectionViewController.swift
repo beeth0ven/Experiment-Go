@@ -44,13 +44,13 @@ class EditeTagsCollectionViewController: UICollectionViewController {
     @IBAction func tagClicked(button: UIButton) {
         guard button.currentTitle != "+" else { performSegueWithIdentifier(SegueID.AddTag.rawValue, sender: button) ; return }
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alert.addAction(UIAlertAction(title: "Edite", style: .Default, handler: { _ in self.performSegueWithIdentifier(SegueID.EditeTag.rawValue, sender: button) }))
-        alert.addAction(UIAlertAction(title: "Delete", style: .Destructive, handler: { _ in
+        alert.addAction(UIAlertAction(title: "Edite".localizedString, style: .Default, handler: { _ in self.performSegueWithIdentifier(SegueID.EditeTag.rawValue, sender: button) }))
+        alert.addAction(UIAlertAction(title: "Delete".localizedString, style: .Destructive, handler: { _ in
             let indexPath = self.indexPathForCellSubView(button)!
             self.tags.removeAtIndex(indexPath.row)
             self.navigationItem.rightBarButtonItem?.enabled = true
         }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel".localizedString, style: .Cancel, handler: nil))
         
         alert.modalPresentationStyle = .Popover
         let ppc = alert.popoverPresentationController
@@ -74,23 +74,25 @@ class EditeTagsCollectionViewController: UICollectionViewController {
         switch segueID {
         case .AddTag:
             guard let dttvc = segue.destinationViewController.contentViewController as? EditeTextTableViewController else { return }
-            dttvc.title = "New Tag"
+            dttvc.title = "New Tag".localizedString
             dttvc.done = {
                 (text) in
-                guard !String.isBlank(text) else { return }
+                let trimmedText = text?.stringByTrimmingWhitespaceAndNewline.lowercaseString
+                guard !String.isBlank(trimmedText) else { return }
                 self.tags.append(text!)
                 self.navigationItem.rightBarButtonItem?.enabled = true
             }
             
         case .EditeTag:
-            guard let dttvc = segue.destinationViewController.contentViewController as? EditeTextTableViewController else { return }
+            guard let ettvc = segue.destinationViewController.contentViewController as? EditeTextTableViewController else { return }
             let button = sender as! UIButton
             let indexPath = indexPathForCellSubView(button)!
-            dttvc.title = "Edite Tag"
-            dttvc.text = button.currentTitle
-            dttvc.done = {
+            ettvc.title = "Edite Tag".localizedString
+            ettvc.text = button.currentTitle
+            ettvc.done = {
                 (text) in
-                guard !String.isBlank(text) else { return }
+                let trimmedText = text?.stringByTrimmingWhitespaceAndNewline.lowercaseString
+                guard !String.isBlank(trimmedText) else { return }
                 self.tags.removeAtIndex(indexPath.row)
                 self.tags.insert(text!, atIndex: indexPath.row)
                 self.navigationItem.rightBarButtonItem?.enabled = true

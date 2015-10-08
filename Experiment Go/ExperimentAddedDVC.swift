@@ -22,6 +22,7 @@ class ExperimentAddedDVC: ExperimentDetailViewController {
     override func configureBarButtons() {
         navigationItem.leftBarButtonItem = cancelBarButtonItem
         navigationItem.rightBarButtonItem = doneButtonItem
+        navigationItem.rightBarButtonItem?.enabled = false
     }
     
     override func doneClicked() {

@@ -20,11 +20,11 @@ class FanLinkTableViewCell: LinkTableViewCell {
         experimentButton.setTitle(link?.experiment?.title, forState: .Normal)
         dateLabel.text = link?.creationDate.smartString
         
-        fromUserProfileImage = nil
+        fromUserProfileImage = CKUsers.ProfileImage
         guard let url = fromUserProfileImageURL else { return }
-        UIImage.getImageForURL(url) {
+        UIImage.GetImageForURL(url) {
             guard url == self.fromUserProfileImageURL else { return }
-            self.fromUserProfileImage = $0
+            self.fromUserProfileImage = $0 ?? CKUsers.ProfileImage
         }
     }
 }

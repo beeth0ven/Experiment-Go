@@ -20,10 +20,12 @@ class ExperimentDetailViewController: ItemDetailViewController {
     var delete: ((CKExperiment) -> Void)?
 
     override func configureBarButtons() {
+        super.configureBarButtons()
         showBackwardBarButtonItemIfNeeded()
         if experiment?.createdByMe == true {
             // createdByMe
             navigationItem.rightBarButtonItem = editButtonItem()
+            navigationItem.rightBarButtonItem?.enabled = shouldDone
             if !editing {
                 toolbarItems = nil
             } else {
@@ -37,14 +39,15 @@ class ExperimentDetailViewController: ItemDetailViewController {
     
     override func configureCell(cell: UITableViewCell, forKey key: String) {
         let rowInfo = RowInfo(rawValue: key)!
+        cell.setFocus(shouldFocus(rowInfo: rowInfo))
         switch rowInfo {
         case .title:
-            cell.title = key.capitalizedString
+            cell.title = key.capitalizedString.localizedString
             cell.subTitle = experiment?.title
             cell.accessoryType = editing ? .DisclosureIndicator : .None
             
         case .creationDate:
-            cell.title = "Date"
+            cell.title = "Date".localizedString
             cell.subTitle = experiment?.creationDate.string
             
         case .tags:
@@ -54,7 +57,7 @@ class ExperimentDetailViewController: ItemDetailViewController {
             cell.accessoryType = editing ? .DisclosureIndicator : .None
 
         case .purpose, .principle, .content, .steps, .results, .conclusion, .footNote:
-            cell.title = key.capitalizedString
+            cell.title = key.capitalizedString.localizedString
             cell.subTitle = experiment?[key] as? String
             cell.accessoryType = editing ? .DisclosureIndicator : .None
 
@@ -65,10 +68,20 @@ class ExperimentDetailViewController: ItemDetailViewController {
             let userCell = cell as! UserTableViewCell
             userCell.user = experiment?.creatorUser
         }
+
+    }
+    
+    private func shouldFocus(rowInfo rowInfo: RowInfo) -> Bool {
+        switch rowInfo {
+        case .reviews, .fans, .author:
+            return true
+        default:
+            return editing && RowInfo.NotOptionalRowInfos.contains(rowInfo) && String.isBlank(experiment?[rowInfo.key] as? String)
+        }
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sections[section].title == "Author" ? "Author" : nil
+        return sections[section].title == "Author".localizedString ? "Author".localizedString : nil
     }
     
     override func setupSections() -> [SectionInfo] {
@@ -170,15 +183,17 @@ class ExperimentDetailViewController: ItemDetailViewController {
             let cell = sender as! UITableViewCell
             let indexPath = tableView.indexPathForCell(cell)! ; let rowInfo = sections[indexPath.section].rows[indexPath.row] as! RowInfo
             ettvc.title = cell.title
-            ettvc.text = cell.subTitle?.stringByTrimmingWhitespace
+            ettvc.text = cell.subTitle?.stringByTrimmingWhitespaceAndNewline
             
             ettvc.done = {
                 (text) in
-                let newText = text?.stringByTrimmingWhitespace
-                self.experiment?[rowInfo.key] = newText
-                if case .title = rowInfo { self.title = newText }
+                print(text)
+                self.experiment?[rowInfo.key] = text?.stringByTrimmingWhitespaceAndNewline
                 self.tableView.reloadCell(cell)
+                self.navigationItem.rightBarButtonItem?.enabled = self.shouldDone
+                if case .title = rowInfo { self.title = text?.stringByTrimmingWhitespaceAndNewline }
             }
+            
             
         case .EditeTags:
             guard let etcvc = segue.destinationViewController.contentViewController as? EditeTagsCollectionViewController else { return }
@@ -190,6 +205,7 @@ class ExperimentDetailViewController: ItemDetailViewController {
                 (tags) in
                 self.experiment?.tags = tags
                 self.tableView.reloadCell(tagsTableViewCell)
+                self.navigationItem.rightBarButtonItem?.enabled = self.shouldDone
             }
             
         }
@@ -264,6 +280,21 @@ class ExperimentDetailViewController: ItemDetailViewController {
             }
         }
         
+        
+        // Experiment must have value for these keys.
+        static var NotOptionalRowInfos: [RowInfo] {
+            return [.title, .content, .conclusion]
+        }
+        
+//        func trimmedTextFrom(text: String?) -> String? {
+//            switch self {
+//            case .title:
+//                return text?.stringByTrimmingWhitespaceAndNewline
+//            case .purpose, .principle, .content, .steps, .results, .conclusion, .footNote:
+//                return text?.stringByTrimmingWhitespaceAndNewline
+//            default: abort()
+//            }
+//        }
     }
     
 }
@@ -272,13 +303,14 @@ extension ExperimentDetailViewController {
     // MARK: - Bar Button Item
     var likeBarButtonItem: SwitchBarButtonItem {
         let result = SwitchBarButtonItem(title: "", style: .Plain, target: self, action: "likeClicked:")
-        result.onStateTitle = "Liking"
-        result.offStateTitle = "Like"
+        result.onStateTitle = "Liking".localizedString
+        result.offStateTitle = "Like".localizedString
         result.on = CKUsers.AmILikingThisExperiment(experiment!)
         return result
     }
     
     func likeClicked(sender: SwitchBarButtonItem) {
+        guard didAuthoriseElseRequest(didAuthorize: { self.likeClicked(sender) }) else { return }
         !sender.on ? doLike(sender) : doUnlike(sender)
         sender.on = !sender.on
     }
@@ -302,14 +334,20 @@ extension ExperimentDetailViewController {
     }
     
     var deleteBarButtonItem: UIBarButtonItem {
-        return UIBarButtonItem(title: "Delete", style: .Done, target: self, action: "deleteClicked")
+        return UIBarButtonItem(title: "Delete".localizedString, style: .Done, target: self, action: "deleteClicked")
     }
     
     func deleteClicked() {
+        guard didAuthoriseElseRequest(didAuthorize: deleteClicked) else { return }
         presentingViewController?.dismissViewControllerAnimated(true) { delete?(experiment!) }
     }
     
-    
+    private var shouldDone: Bool {
+        guard editing else { return true }
+        var trueCount = 0
+        RowInfo.NotOptionalRowInfos.forEach { if !String.isBlank(experiment?[$0.key] as? String) { trueCount++ } }
+        return trueCount == RowInfo.NotOptionalRowInfos.count
+    }
 }
 
 extension NSDate {
@@ -317,19 +355,19 @@ extension NSDate {
         let absTimeIntervalSinceNow = -timeIntervalSinceNow
         switch absTimeIntervalSinceNow {
         case 0..<NSDate.OneMinute:
-            return "Now"
+            return "Now".localizedString
         case NSDate.OneMinute..<NSDate.OneHour:
             // eg. 10 Minutes
             let minutes = Int(absTimeIntervalSinceNow / NSDate.OneMinute)
-            return "\(minutes) minutes ago"
+            return "\(minutes) minutes ago".localizedString
         case NSDate.OneHour..<NSDate.OneDay:
             // eg. 10 Hours
             let hours = Int(absTimeIntervalSinceNow / NSDate.OneHour)
-            return "\(hours) hours ago"
+            return "\(hours) hours ago".localizedString
         default:
             // eg. 10 Days
             let days = Int(absTimeIntervalSinceNow / NSDate.OneDay)
-            return "\(days) days ago"
+            return "\(days) days ago".localizedString
         }
     }
     
@@ -342,6 +380,28 @@ extension NSDate {
 }
 
 extension String {
-    var stringByTrimmingWhitespace: String { return stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()) }
+    var stringByTrimmingWhitespaceAndNewline: String { return stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) }
+
+    func trimmedText(type type: TrimTextType = .Content) -> String {
+        var result = self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        switch type {
+        case .Title:
+            result = result.stringByReplacingOccurrencesOfString("\n", withString: "")
+            return result
+        case .Tag:
+            result = result.stringByReplacingOccurrencesOfString(" ", withString: "")
+            result = result.stringByReplacingOccurrencesOfString("\n", withString: "")
+            return result
+        case .Content:
+            return result
+        }
+    }
 }
+
+enum TrimTextType {
+    case Title
+    case Tag
+    case Content
+}
+
 

@@ -26,13 +26,16 @@ class EditeImageTableViewController: EditeValueTableViewController {
     
     @IBOutlet weak var imageView: UIImageView! {
         didSet {
+            // Add border
+            imageView.layer.borderColor = UIColor.globalTintColor().CGColor
+            imageView.layer.borderWidth = imageView.bounds.size.height / 32
             // Add corner radius
             imageView.layer.cornerRadius = imageView.bounds.size.height / 2
             imageView.layer.masksToBounds = true
         }
     }
     
-    override func updateUI() { imageView?.image = image }
+    override func updateUI() { imageView?.image = image ?? CKUsers.ProfileImage }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
