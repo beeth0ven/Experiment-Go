@@ -208,7 +208,7 @@ extension UIViewController {
     }
     
     var rewindBarButtonItem: UIBarButtonItem {
-        return UIBarButtonItem(title: "Rewind", style: .Plain, target: self, action: "rewindClicked")
+        return UIBarButtonItem(title: NSLocalizedString("Rewind", comment: "") , style: .Plain, target: self, action: "rewindClicked")
     }
     
     func rewindClicked() {
@@ -337,19 +337,25 @@ extension UIImage {
         return image
     }
     
-    class func resizableImageFromColor(color: UIColor, cornerRadius: CGFloat) -> UIImage {
-        let size = CGSizeMake(2 * cornerRadius, 2 * cornerRadius)
+    class func resizableImageFromColor(color: UIColor, cornerRadius: CGFloat = 0, insets: CGSize = CGSizeZero) -> UIImage {
+        let size = CGSizeMake(2 * (cornerRadius + insets.width), 2 * (cornerRadius + insets.height))
         UIGraphicsBeginImageContext(size)
         let context = UIGraphicsGetCurrentContext()
         CGContextSetFillColorWithColor(context, color.CGColor)
-        CGContextFillEllipseInRect(context, CGRectMake(0, 0, size.width, size.height))
+        CGContextFillEllipseInRect(context, CGRectMake(insets.width, insets.height, 2 * cornerRadius, 2 * cornerRadius))
         var image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        image = image.resizableImageWithCapInsets(UIEdgeInsets(top: cornerRadius, left: cornerRadius, bottom: cornerRadius, right: cornerRadius))
+        image = image.resizableImageByDivideFromCenter
         return image
     }
 }
 
+extension UIImage {
+    var resizableImageByDivideFromCenter: UIImage {
+        let midX = size.width / 2 ; let midY = size.height / 2
+        return resizableImageWithCapInsets(UIEdgeInsets(top: midY, left: midX, bottom: midY, right: midX))
+    }
+}
 
 
 

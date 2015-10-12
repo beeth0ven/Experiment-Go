@@ -22,7 +22,15 @@ class GetCKItemsOperation: NSOperation {
     var type: Type
     
     init(type: Type) {  self.type = type }
-        
+    
+    func fetchErrorFrom(error: NSError?) -> NSError? {
+        guard let error = error else { return nil }
+        guard let errorCode = CKErrorCode(rawValue: error.code) else { return error }
+        if case .PartialFailure = errorCode { return nil }
+        return error
+    }
+    
+    
     enum Type {
         case Refresh(CKQuery)
         case GetNextPage(CKQueryCursor)
@@ -36,6 +44,7 @@ class GetCKItemsOperation: NSOperation {
             }
         }
     }
+    
 }
 
 extension CKDatabaseOperation {

@@ -23,6 +23,7 @@ class GetNotificationLinksOperation: GetCKItemsOperation {
         
         getLinksOperation.recordFetchedBlock = {
             let object = CKItem.ParseRecord($0)
+            (object as? CKLink)?.toUser = CKUsers.CurrentUser
             self.currentPageItems.append(object)
         }
         
@@ -46,7 +47,8 @@ class GetNotificationLinksOperation: GetCKItemsOperation {
         let fetchUsersOperation = CKFetchRecordsOperation(recordIDs: userRecordIDs + experimentsRecordIDs)
         
         fetchUsersOperation.perRecordCompletionBlock = {
-            (record, _, _) in
+            (record, _, error) in
+            guard error == nil else { print(error!.localizedDescription) ; return }
             let item = CKItem.ParseRecord(record!)
             for link in links {
                 if link.creatorUserRecordID == item.recordID {
@@ -60,8 +62,8 @@ class GetNotificationLinksOperation: GetCKItemsOperation {
         fetchUsersOperation.fetchRecordsCompletionBlock = {
             (_, error) in
             dispatch_async(dispatch_get_main_queue()) {
-                if let error = error { self.didFail?(error) ; return }
-                self.didGet?(self.currentPageCallBackItems, cursor)
+                if let error = self.fetchErrorFrom(error) { self.didFail?(error) ; return }
+                self.didGet?(self.currentPageCallBackItems.filter { $0.completed }, cursor)
             }
             
         }

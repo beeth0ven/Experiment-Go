@@ -37,5 +37,8 @@ class FeedbackTVC: UITableViewController {
     private enum SegueID: String {
         case AddReview
     }
-
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
 }

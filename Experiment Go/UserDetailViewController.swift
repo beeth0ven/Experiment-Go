@@ -9,25 +9,6 @@
 import UIKit
 import CloudKit
 
-protocol CurrentUserHasChangeObserver: class {
-    func startObserveCurrentUserHasChange()
-    func stopObserveCurrentUserHasChange()
-    func updateUI()
-}
-
-extension CurrentUserHasChangeObserver {
-    func startObserveCurrentUserHasChange() {
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "updateUI",
-            name: Notification.currentUserHasChange.rawValue,
-            object: nil
-        )
-    }
-    func stopObserveCurrentUserHasChange() {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
-    
-}
 
 class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeObserver {
     
@@ -37,7 +18,7 @@ class UserDetailViewController: ItemDetailViewController, CurrentUserHasChangeOb
     }
     
     // MARK: - Key Value Observe
-    deinit { if user?.isMe == true { stopObserveCurrentUserHasChange() } }
+    deinit { if user?.isMe == true { stopObserve() } }
     
     func updateUI() {
         // Clear UI

@@ -20,6 +20,7 @@
 		451A6AA01BBBDD2E00544DFF /* FollowLinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451A6A9F1BBBDD2E00544DFF /* FollowLinkTableViewCell.swift */; };
 		451A6AA21BBBDD4B00544DFF /* ReviewLinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451A6AA11BBBDD4B00544DFF /* ReviewLinkTableViewCell.swift */; };
 		451A6AA41BBBDD9A00544DFF /* LinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451A6AA31BBBDD9A00544DFF /* LinkTableViewCell.swift */; };
+		45250EBA1BC8DA0500ADF90F /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45250EB91BC8DA0500ADF90F /* Notification.swift */; settings = {ASSET_TAGS = (); }; };
 		4525D1111BC1239200CA55AB /* WelcomeToCloudTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4525D1101BC1239200CA55AB /* WelcomeToCloudTVC.swift */; };
 		4525D1131BC2549D00CA55AB /* FeedbackTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4525D1121BC2549D00CA55AB /* FeedbackTVC.swift */; };
 		4525D1161BC38D0800CA55AB /* StyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4525D1151BC38D0800CA55AB /* StyleKit.swift */; };
@@ -110,6 +111,7 @@
 		451A6A9F1BBBDD2E00544DFF /* FollowLinkTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowLinkTableViewCell.swift; sourceTree = "<group>"; };
 		451A6AA11BBBDD4B00544DFF /* ReviewLinkTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewLinkTableViewCell.swift; sourceTree = "<group>"; };
 		451A6AA31BBBDD9A00544DFF /* LinkTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkTableViewCell.swift; sourceTree = "<group>"; };
+		45250EB91BC8DA0500ADF90F /* Notification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		4525D1101BC1239200CA55AB /* WelcomeToCloudTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeToCloudTVC.swift; sourceTree = "<group>"; };
 		4525D1121BC2549D00CA55AB /* FeedbackTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackTVC.swift; sourceTree = "<group>"; };
 		4525D1151BC38D0800CA55AB /* StyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKit.swift; sourceTree = "<group>"; };
@@ -299,6 +301,7 @@
 		4511B2AF1B4FBA950046DF76 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				45250EB91BC8DA0500ADF90F /* Notification.swift */,
 				4525D1151BC38D0800CA55AB /* StyleKit.swift */,
 				45776EA31BB3DF60002B9003 /* OperatorProtocol.swift */,
 				45DDF5CC1BA536300006A269 /* HistoryManager.swift */,
@@ -702,6 +705,7 @@
 				45776EA21BB2BC22002B9003 /* ExperimentAddedDVC.swift in Sources */,
 				45617BE41BBFEAC5003683C0 /* SwitchBarButtonItem.swift in Sources */,
 				45F2E0891BA57F4100785F0B /* EditeTagsCollectionViewController.swift in Sources */,
+				45250EBA1BC8DA0500ADF90F /* Notification.swift in Sources */,
 				4537CB151B95680E004378C3 /* EditeTextTableViewController.swift in Sources */,
 				45C78D571BB94FF500D0DEC2 /* SearchExperimentsTableViewController.swift in Sources */,
 				45A023111BAFE42600C6BB4B /* GetCKObjectsOperation.swift in Sources */,
@@ -870,7 +874,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Experiment Go/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "cn.beeth0ven.Experiment-Go";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -891,7 +895,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Experiment Go/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "cn.beeth0ven.Experiment-Go";
 				PRODUCT_NAME = "$(TARGET_NAME)";

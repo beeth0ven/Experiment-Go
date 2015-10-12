@@ -8,9 +8,9 @@
 
 import CloudKit
 
-class NotificationsTableViewController: CloudKitTableViewController {
+class NotificationsTableViewController: CloudKitTableViewController, RemoteNotificationObserver {
     
-
+    
     override var refreshOperation: GetCKItemsOperation {
         return GetNotificationLinksOperation()
     }
@@ -46,6 +46,31 @@ class NotificationsTableViewController: CloudKitTableViewController {
         }
     }
     
+    // MARK: - View Controller Lifecycle
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        AppDelegate.requestForRemoteNotifications()
+        startObserveRemoteNotification()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if needRefresh {
+            needRefresh = false
+            refresh()
+        }
+    }
+    
+    func didReceiveRemoteNotification(notification: NSNotification) {
+        if  tableView.window != nil { refresh() } else { needRefresh = true }
+    }
+    
+    func stopObserve() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    private var needRefresh = false
     
     // MARK: - Segue
     
@@ -62,7 +87,21 @@ class NotificationsTableViewController: CloudKitTableViewController {
             guard let edvc = segue.destinationViewController.contentViewController as? ExperimentDetailViewController,
                 let cell = UITableViewCell.cellForView(sender as! UIButton) as? LinkTableViewCell else { return }
             edvc.experiment = cell.link?.experiment
-            
+            edvc.delete =  {
+                experiment in
+                let indexPath = self.tableView.indexPathForCell(cell)!
+                let link = self.items[indexPath.section].removeAtIndex(indexPath.row)
+                self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                
+                experiment.deleteInBackground(
+                    didFail: {
+                        self.handleFail($0)
+                        self.items[indexPath.section].insert(link, atIndex: indexPath.row)
+                        self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                    }
+                )
+            }
+
         case .ShowUserDetail:
             guard let udvc = segue.destinationViewController.contentViewController as? UserDetailViewController,
                 let cell = UITableViewCell.cellForView(sender as! UIButton) as? LinkTableViewCell else { return }
@@ -86,6 +125,9 @@ class NotificationsTableViewController: CloudKitTableViewController {
         }
     }
     
+    func deleteExperiment(experiment: CKExperiment) {
+        
+    }
     
     private enum SegueID: String {
         case ShowExperiment

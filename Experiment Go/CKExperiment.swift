@@ -62,6 +62,8 @@ class CKExperiment: CKItem {
         set { record[ExperimentKey.footNote.rawValue] = newValue }
     }
     
+    override var completed: Bool { return creatorUser != nil }
+    
     override var displayTitle: String? { return title }
     
     // MARK: - CKQuery

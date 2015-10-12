@@ -152,7 +152,7 @@ class WelcomeToCloudTVC: UITableViewController, iCloudKeyValueStoreHasChangeObse
     // MARK: - KVO
     
     func iCloudKeyValueStoreHasChange(notification: NSNotification) { self.updateUI() }
-    deinit { stopObserveiCloudKeyValueStoreHasChange()  }
+    deinit { stopObserve()  }
     
     
     // MARK: - Preferred Setting
@@ -171,7 +171,9 @@ class WelcomeToCloudTVC: UITableViewController, iCloudKeyValueStoreHasChangeObse
         case Done = 3
     }
     
-    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
 }
 
 

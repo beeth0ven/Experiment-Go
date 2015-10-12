@@ -9,9 +9,7 @@
 import Foundation
 import CloudKit
 
-enum Notification: String {
-    case currentUserHasChange
-}
+
 
 class CKUsers: CKItem {
     
@@ -49,7 +47,7 @@ class CKUsers: CKItem {
     
     static func UpdateCurrentUserFromiCloudKVS() {
         guard let user = CurrentUserFromiCloudKVS else { CurrentUser = nil ; return }
-        CurrentUser?.record = user.record
+        if CurrentUser == nil { CurrentUser = user } else { CurrentUser?.record = user.record }
         PostCurrentUserHasChangeNotification()
     }
     
@@ -360,8 +358,7 @@ class CKUsers: CKItem {
     }
     
     static private var CurrentUserInteretedExperimentsQueryPredicate: NSPredicate {
-        guard let currentUser = CKUsers.CurrentUser else { return NSPredicate(value: false) }
-        let userRecordNames: [String] = FollowingUsers + [currentUser.recordID.recordName]
+        let userRecordNames: [String] = CKUsers.CurrentUser != nil ? FollowingUsers + [CKUsers.CurrentUser!.recordID.recordName] : FollowingUsers
         let recordRefs = userRecordNames.map {  CKReference(recordID: CKRecordID(recordName: $0), action: .DeleteSelf)  }
         return NSPredicate(format: "%K IN %@", RecordKey.creatorUserRecordID.rawValue ,recordRefs)
     }
@@ -371,8 +368,8 @@ class CKUsers: CKItem {
     }
     
     static private var NotificationLinksQueryPredicate: NSPredicate {
-        guard let currentUser = CKUsers.CurrentUser else { return NSPredicate(value: false) }
-        return NSPredicate(format: "%K == %@", LinkKey.toUserRef.rawValue, currentUser.recordID)
+        let recordID = CKUsers.CurrentUser != nil ? CKUsers.CurrentUser!.recordID : CKRecordID.NotFoundID
+        return NSPredicate(format: "%K == %@", LinkKey.toUserRef.rawValue, recordID)
     }
 
    
@@ -390,13 +387,44 @@ class CKUsers: CKItem {
         return CKQuery(recordType: .Link, predicate: followersQueryPredicate)
     }
     
-    private var followersQueryPredicate: NSPredicate {
+    var followersQueryPredicate: NSPredicate {
         let typePredicate = NSPredicate(format: "%K = %@", LinkKey.linkType.rawValue ,LinkType.UserFollowUser.rawValue)
         let userPredicate = NSPredicate(format: "%K = %@",  LinkKey.toUserRef.rawValue, recordID)
         return NSCompoundPredicate(type: .AndPredicateType, subpredicates: [userPredicate, typePredicate])
     }
     
-
+    // MARK: - CKSubscription
+    static func saveCurrentUserSubscriptionsIfNeeded() {
+        guard HasSaveCurrentUserSubscription == false && CurrentUser != nil else { return }
+        let op = CKModifySubscriptionsOperation(subscriptionsToSave: currentUserSubscriptions, subscriptionIDsToDelete: nil)
+        op.modifySubscriptionsCompletionBlock = { if $2 == nil { HasSaveCurrentUserSubscription = true } }
+        op.begin()
+    }
+    
+    private static var currentUserSubscriptions: [CKSubscription] {
+        let reviewsSubscription = CKSubscription(reviewsTo: CurrentUser!)
+        let fansSubscription = CKSubscription(fansTo: CurrentUser!)
+        let followersSubscription = CKSubscription(followersTo: CurrentUser!)
+        return [reviewsSubscription, fansSubscription, followersSubscription]
+    }
+    
+    private static var HasSaveCurrentUserSubscription: Bool {
+        get { return iCloudKeyValueStore.objectForKey(Key.HasSaveCurrentUserSubscription.rawValue) as? Bool ?? false }
+        set { iCloudKeyValueStore.setObject(newValue, forKey:Key.HasSaveCurrentUserSubscription.rawValue) ; iCloudKeyValueStore.synchronize() }
+    }
+    
+    var reviewsQueryPredicate: NSPredicate {
+        let typePredicate = NSPredicate(format: "%K = %@", LinkKey.linkType.rawValue, LinkType.UserReviewToExperiment.rawValue)
+        let userPredicate = NSPredicate(format: "%K = %@", LinkKey.toUserRef.rawValue, recordID)
+        return NSCompoundPredicate(type: .AndPredicateType, subpredicates: [typePredicate, userPredicate])
+    }
+    
+    var fansQueryPredicate: NSPredicate {
+        let typePredicate = NSPredicate(format: "%K = %@", LinkKey.linkType.rawValue, LinkType.UserLikeExperiment.rawValue)
+        let userPredicate = NSPredicate(format: "%K = %@", LinkKey.toUserRef.rawValue, recordID)
+        return NSCompoundPredicate(type: .AndPredicateType, subpredicates: [typePredicate, userPredicate])
+    }
+    
     // MARK: - Save
     
     override func saveInBackground(didSave didSave: (Void -> Void)?, didFail: ((NSError) -> Void)?) {
@@ -438,6 +466,8 @@ class CKUsers: CKItem {
         case FollowingUsers = "CKUsers.FollowingUsers"
         case LikedExperiments = "CKUsers.LikedExperiments"
         case UserDiscoverability = "CKUsers.UserDiscoverability"
+        case HasSaveCurrentUserSubscription = "CKUsers.HasSaveCurrentUserSubscription"
+        
     }
     
     private static var publicCloudDatabase = CKContainer.defaultContainer().publicCloudDatabase
@@ -467,9 +497,60 @@ extension NSError {
     }
 }
 
+extension CKRecordID {
+    static var NotFoundID: CKRecordID { return CKRecordID(recordName: "__NOT_FOUND__") }
+}
+
 enum UsersKey: String {
     case displayName
     case profileImageAsset
     case aboutMe
 
+}
+
+extension CKSubscription {
+    convenience init(reviewsTo user: CKUsers) {
+        let reviewsSubscriptionID = "\(user.recordIDNameToSave)-reviews-subscription"
+        self.init(
+            recordType: RecordType.Link.rawValue,
+            predicate: user.reviewsQueryPredicate,
+            subscriptionID: reviewsSubscriptionID,
+            options: .FiresOnRecordCreation
+        )
+        
+        let notificationInfo = CKNotificationInfo()
+        notificationInfo.alertLocalizationKey = "New review to your experiment!"
+        
+        self.notificationInfo = notificationInfo
+    }
+    
+    convenience init(fansTo user: CKUsers) {
+        let fansSubscriptionID = "\(user.recordIDNameToSave)-fans-subscription"
+        self.init(
+            recordType: RecordType.Link.rawValue,
+            predicate: user.fansQueryPredicate,
+            subscriptionID: fansSubscriptionID,
+            options: .FiresOnRecordCreation
+        )
+        
+        let notificationInfo = CKNotificationInfo()
+        notificationInfo.alertLocalizationKey = "New fan to your experiment!"
+        
+        self.notificationInfo = notificationInfo
+    }
+    
+    convenience init(followersTo user: CKUsers) {
+        let followersSubscriptionID = "\(user.recordIDNameToSave)-followers-subscription"
+        self.init(
+            recordType: RecordType.Link.rawValue,
+            predicate: user.followersQueryPredicate,
+            subscriptionID: followersSubscriptionID,
+            options: .FiresOnRecordCreation
+        )
+        
+        let notificationInfo = CKNotificationInfo()
+        notificationInfo.alertLocalizationKey = "New follower!"
+        
+        self.notificationInfo = notificationInfo
+    }
 }

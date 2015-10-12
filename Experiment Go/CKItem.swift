@@ -25,17 +25,20 @@ class CKItem: NSObject {
     var changedKeys: [String]                   { return record.changedKeys() }
 
     var recordIDName: String                    { return record.recordID.recordName }
+    var recordIDNameToSave: String              { return recordIDName.stringByReplacingOccurrencesOfString("_", withString: "") }
 
     
     var creatorUser: CKUsers?
     
     var createdByMe: Bool {
-        let byMe = creatorUserRecordID!.recordName == CKOwnerDefaultName || creatorUserRecordID!.recordName == CKUsers.CurrentUser?.recordID.recordName
+        let byMe = creatorUserRecordID == nil || creatorUserRecordID!.recordName == CKOwnerDefaultName || creatorUserRecordID!.recordName == CKUsers.CurrentUser?.recordID.recordName
         if byMe && creatorUser == nil && CKUsers.CurrentUser != nil { creatorUser = CKUsers.CurrentUser! }
         return byMe
     }
     
     var hasChange: Bool { return changedKeys.count > 0 }
+    
+    var completed: Bool { return true }
     
     subscript(key: String) -> CKRecordValue? {
         get { return record[key] }

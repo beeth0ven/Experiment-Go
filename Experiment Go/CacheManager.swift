@@ -90,7 +90,6 @@ class CacheManager {
             let file = File(fileSize: fileSize as! NSNumber, fileDate:  fileDate as! NSDate, url: url)
             files.append(file)
             print("file Size: \(file.fileSize.integerValue/1024)KB")
-//            print("file url: \(file.url)")
             
         }
         

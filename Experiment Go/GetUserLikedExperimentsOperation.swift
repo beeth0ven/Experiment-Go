@@ -47,7 +47,8 @@ class GetUserLikedExperimentsOperation: GetObjectsWithCreatorUserOperation {
         let getExperimentsOperation = CKFetchRecordsOperation(recordIDs: recordIDs)
         
         getExperimentsOperation.perRecordCompletionBlock = {
-            (experimentRecord, _, _) in
+            (experimentRecord, _, error) in
+            guard error == nil else { print(error!.localizedDescription) ; return }
             let experiment = CKItem.ParseRecord(experimentRecord!) as! CKExperiment
             for link in links { if link.experimentRef?.recordID == experiment.recordID { link.experiment = experiment } }
         }
@@ -55,7 +56,7 @@ class GetUserLikedExperimentsOperation: GetObjectsWithCreatorUserOperation {
         getExperimentsOperation.fetchRecordsCompletionBlock = {
             (_, error) in
             dispatch_async(dispatch_get_main_queue()) {
-                if let error = error { self.didFail?(error) ; return }
+                if let error = self.fetchErrorFrom(error) { self.didFail?(error) ; return }
                 self.getUsersFormItems(self.currentPageLinks.flatMap { $0.experiment }, cursor: cursor)
             }
         }

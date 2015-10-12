@@ -70,7 +70,19 @@ You can still get permision from the path bellow later:
 "New Tag" = "新标签";
 
 /* No comment provided by engineer. */
+"New review to your experiment!" = "新评论！";
+
+/* No comment provided by engineer. */
+"New fan to your experiment!" = "新粉丝！";
+
+/* No comment provided by engineer. */
+"New follower!" = "新关注者！";
+
+/* No comment provided by engineer. */
 "Now" = "现在";
+
+/* No comment provided by engineer. */
+"Rewind" = "回家";
 
 /* No comment provided by engineer. */
 "Off" = "关";

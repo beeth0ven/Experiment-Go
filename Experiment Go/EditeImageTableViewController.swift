@@ -77,15 +77,13 @@ extension EditeImageTableViewController: UIImagePickerControllerDelegate, UINavi
         dismissViewControllerAnimated(true) {
             self.image = image
             self.navigationItem.rightBarButtonItem?.enabled = true
-            self.hideStatusBar()
         }
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true) { self.hideStatusBar() }
+        dismissViewControllerAnimated(true, completion: nil)
+        self.prefersStatusBarHidden()
     }
     
-    private func hideStatusBar() {
-        UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: .Fade)
-    }
+
 }

@@ -19,7 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, iCloudKeyValueStoreHasCha
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        requestForRemoteNotifications()
         DefaultStyleController.applyStyle()
         startObserveiCloudKeyValueStoreHasChange()
 //        CKUsers.UpdateCurrentUser()
@@ -43,15 +42,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, iCloudKeyValueStoreHasCha
         }
     }
     
-    func requestForRemoteNotifications() {
+    static func requestForRemoteNotifications() {
         let type: UIUserNotificationType = [.Alert, .Badge, .Sound]
         let settings = UIUserNotificationSettings(forTypes:type , categories: nil)
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
         UIApplication.sharedApplication().registerForRemoteNotifications()
+        CKUsers.saveCurrentUserSubscriptionsIfNeeded()
     }
 
     func applicationWillTerminate(application: UIApplication) {
-        stopObserveiCloudKeyValueStoreHasChange()
+        stopObserve()
     }
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
@@ -64,6 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, iCloudKeyValueStoreHasCha
     }
 
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        NSNotificationCenter.defaultCenter().postNotificationName(Notification.remoteNotification.rawValue, object: nil)
         print("didReceiveRemoteNotification.")
     }
     
@@ -74,24 +75,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, iCloudKeyValueStoreHasCha
     }
 }
 
-protocol iCloudKeyValueStoreHasChangeObserver: class {
-    func startObserveiCloudKeyValueStoreHasChange()
-    func stopObserveiCloudKeyValueStoreHasChange()
-    func iCloudKeyValueStoreHasChange(notification: NSNotification)
-}
 
-extension iCloudKeyValueStoreHasChangeObserver {
-    func startObserveiCloudKeyValueStoreHasChange() {
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "iCloudKeyValueStoreHasChange:",
-            name: NSUbiquitousKeyValueStoreDidChangeExternallyNotification,
-            object: NSUbiquitousKeyValueStore.defaultStore()
-        )
-    }
-    
-    func stopObserveiCloudKeyValueStoreHasChange() {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
-}
 
 

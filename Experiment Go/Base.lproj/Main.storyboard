@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9046" systemVersion="15A279b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A279b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9035"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -403,6 +402,7 @@
                             </tableView>
                         </subviews>
                         <animations/>
+                        <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="FGR-UP-yLX" secondAttribute="trailing" id="IyX-Yw-egF"/>
                             <constraint firstItem="FGR-UP-yLX" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leading" id="Y9U-ZG-FcX"/>
@@ -1006,7 +1006,7 @@
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
-                                                <segue destination="t9T-yB-2pV" kind="presentation" identifier="ShowUserDetail" modalPresentationStyle="formSheet" id="mtJ-QP-k77"/>
+                                                <segue destination="2AW-Iq-AeF" kind="show" identifier="ShowUserDetail" id="eQO-oI-yxS"/>
                                             </connections>
                                         </button>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Luo Jie" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z9m-WK-fYe">
@@ -1053,7 +1053,7 @@
                                     <outlet property="authorProfileImageButton" destination="4A4-V7-SgQ" id="NaT-dG-XuB"/>
                                     <outlet property="creationDateLabel" destination="41t-NS-775" id="MIs-pw-adI"/>
                                     <outlet property="titleLabel" destination="JIt-TW-MmB" id="KUz-1K-CIa"/>
-                                    <segue destination="hin-9r-nvY" kind="presentation" identifier="ShowExperiment" modalPresentationStyle="formSheet" id="Ong-go-o6V"/>
+                                    <segue destination="JEX-9P-axG" kind="show" identifier="ShowExperiment" id="RiH-OD-apv"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -1085,6 +1085,8 @@
                     <connections>
                         <outlet property="tableFooterActivityIndicatorView" destination="176-96-Uio" id="iax-A8-Oy2"/>
                         <outlet property="tableFooterAppIconImageView" destination="SX6-c7-Qo1" id="5Pg-5C-W6u"/>
+                        <segue destination="hin-9r-nvY" kind="presentation" identifier="ShowExperimentModally" modalPresentationStyle="formSheet" id="acc-dN-PrI"/>
+                        <segue destination="t9T-yB-2pV" kind="presentation" identifier="ShowUserDetailModally" modalPresentationStyle="formSheet" id="yip-57-2a4"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7TT-cA-SR5" sceneMemberID="firstResponder"/>
@@ -1337,7 +1339,7 @@
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
-                                                <segue destination="t9T-yB-2pV" kind="presentation" identifier="ShowUserDetail" modalPresentationStyle="formSheet" id="QOB-WJ-cIw"/>
+                                                <segue destination="2AW-Iq-AeF" kind="show" identifier="ShowUserDetail" id="5UF-jG-Xdv"/>
                                             </connections>
                                         </button>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Luo Jie" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GHL-nu-q3z">
@@ -1384,7 +1386,7 @@
                                     <outlet property="authorProfileImageButton" destination="XeU-Bj-YD8" id="OaZ-YZ-Jdb"/>
                                     <outlet property="creationDateLabel" destination="hKr-e0-PSF" id="yL5-mI-fEX"/>
                                     <outlet property="titleLabel" destination="iI7-1p-sWp" id="GGp-h7-I1A"/>
-                                    <segue destination="hin-9r-nvY" kind="presentation" identifier="ShowExperiment" modalPresentationStyle="formSheet" id="xGu-k7-fdi"/>
+                                    <segue destination="JEX-9P-axG" kind="show" identifier="ShowExperiment" id="1C9-Jf-lS0"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -1402,6 +1404,8 @@
                     <connections>
                         <outlet property="tableFooterActivityIndicatorView" destination="u2f-yf-iZF" id="WHr-dc-AfK"/>
                         <outlet property="tableFooterAppIconImageView" destination="Qtc-Fq-Oc8" id="0us-4B-bgT"/>
+                        <segue destination="hin-9r-nvY" kind="presentation" identifier="ShowExperimentModally" modalPresentationStyle="formSheet" id="n5d-Ki-FkR"/>
+                        <segue destination="t9T-yB-2pV" kind="presentation" identifier="ShowUserDetailModally" modalPresentationStyle="formSheet" id="bu4-C0-dVF"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dpg-df-eLj" sceneMemberID="firstResponder"/>
@@ -1693,7 +1697,6 @@
                                 <connections>
                                     <outlet property="nameLabel" destination="cYV-8c-BxB" id="hnR-Kz-RnK"/>
                                     <outlet property="profileImageView" destination="yHm-hc-e1O" id="1Fs-XQ-Vl7"/>
-                                    <segue destination="2AW-Iq-AeF" kind="show" identifier="ShowUserDetail" id="FIU-ja-Cyf"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FollowUserCell" rowHeight="65" id="bLt-8t-JNj" customClass="FollowUserTableViewCell" customModule="Experiment_Go" customModuleProvider="target">
@@ -1805,6 +1808,7 @@
                     <connections>
                         <outlet property="tableFooterActivityIndicatorView" destination="MYr-3L-OWN" id="8Z3-gp-CgQ"/>
                         <outlet property="tableFooterAppIconImageView" destination="iie-x4-Kc4" id="chC-8G-3Vf"/>
+                        <segue destination="2AW-Iq-AeF" kind="show" identifier="ShowUserDetail" id="bZH-fN-Hmq"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WVp-pW-4V0" sceneMemberID="firstResponder"/>
@@ -2051,7 +2055,7 @@
                                             <color key="textColor" red="0.51784205439999997" green="0.58159953360000005" blue="0.58617168659999996" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UC3-7M-ikp">
+                                        <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="700" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UC3-7M-ikp">
                                             <rect key="frame" x="114" y="26" width="471" height="29"/>
                                             <animations/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
@@ -2189,7 +2193,7 @@
                                             <color key="textColor" red="0.51784205439999997" green="0.58159953360000005" blue="0.58617168659999996" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yfo-TY-olW">
+                                        <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="700" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yfo-TY-olW">
                                             <rect key="frame" x="158" y="26" width="427" height="29"/>
                                             <animations/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
@@ -2373,7 +2377,7 @@
         <!--Experiment Detail Nav-->
         <scene sceneID="vgd-FB-uHA">
             <objects>
-                <navigationController title="Experiment Detail Nav" toolbarHidden="NO" hidesBarsOnSwipe="YES" id="hin-9r-nvY" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="ExperimentDetailNav" title="Experiment Detail Nav" modalPresentationStyle="formSheet" toolbarHidden="NO" hidesBarsOnSwipe="YES" id="hin-9r-nvY" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="Ar8-hJ-Fa2">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -2776,7 +2780,7 @@
             <objects>
                 <tableViewController title="Edite Text" id="B2H-Y7-irh" customClass="EditeTextTableViewController" customModule="Experiment_Go" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="tg3-7g-RKs">
-                        <rect key="frame" x="0.0" y="44" width="600" height="556"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -2907,7 +2911,7 @@
             <objects>
                 <collectionViewController id="PJ7-TL-TRb" customClass="EditeTagsCollectionViewController" customModule="Experiment_Go" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="Lcn-FE-M9s">
-                        <rect key="frame" x="0.0" y="44" width="600" height="556"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -3691,16 +3695,16 @@
         <image name="Banner" width="280" height="200"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="vle-td-OGp"/>
-        <segue reference="WUH-z6-xeJ"/>
-        <segue reference="O3h-oV-rnv"/>
-        <segue reference="qLE-m0-g8m"/>
-        <segue reference="QGV-Ef-3gP"/>
-        <segue reference="aUJ-vY-2vN"/>
         <segue reference="gW7-gZ-38U"/>
-        <segue reference="wKF-ru-kgR"/>
-        <segue reference="orS-Il-sdi"/>
-        <segue reference="qru-AD-cuc"/>
+        <segue reference="aUJ-vY-2vN"/>
+        <segue reference="qLE-m0-g8m"/>
+        <segue reference="1C9-Jf-lS0"/>
+        <segue reference="2Sx-Tm-Aib"/>
+        <segue reference="WUH-z6-xeJ"/>
+        <segue reference="QGV-Ef-3gP"/>
+        <segue reference="leS-CF-ZjH"/>
+        <segue reference="euo-32-rs2"/>
+        <segue reference="AZg-Ze-WNT"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.92156862745098034" green="0.84705882352941175" blue="0.62352941176470589" alpha="1" colorSpace="calibratedRGB"/>
 </document>

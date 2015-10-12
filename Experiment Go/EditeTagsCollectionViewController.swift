@@ -111,6 +111,9 @@ class EditeTagsCollectionViewController: UICollectionViewController {
     
     private enum SegueID: String {  case AddTag , EditeTag }
 
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
 }
 
 

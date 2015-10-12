@@ -11,7 +11,7 @@ import UIKit
 class EditeValueTableViewController: UITableViewController {
     
     // MARK: - Properties
-    var value: AnyObject? { didSet { updateUI() } }
+    var value: AnyObject? 
     
     
     override func viewDidLoad() {
@@ -36,5 +36,8 @@ class EditeValueTableViewController: UITableViewController {
         navigationItem.rightBarButtonItem?.enabled = false
     }
     
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
 }
 

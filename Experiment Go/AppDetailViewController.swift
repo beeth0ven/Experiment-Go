@@ -40,6 +40,10 @@ extension AppDetailViewController: UINavigationControllerDelegate {
     func navigationController(navigationController: UINavigationController, didShowViewController viewController: UIViewController, animated: Bool) {
         navigationController.preferredContentSize = viewController.preferredContentSize
     }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
 }
 
 extension CGSize {

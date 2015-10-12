@@ -187,7 +187,6 @@ class ExperimentDetailViewController: ItemDetailViewController {
             
             ettvc.done = {
                 (text) in
-                print(text)
                 self.experiment?[rowInfo.key] = text?.stringByTrimmingWhitespaceAndNewline
                 self.tableView.reloadCell(cell)
                 self.navigationItem.rightBarButtonItem?.enabled = self.shouldDone
@@ -203,7 +202,7 @@ class ExperimentDetailViewController: ItemDetailViewController {
             
             etcvc.done = {
                 (tags) in
-                self.experiment?.tags = tags
+                self.experiment?.tags = tags.count > 0 ? tags : nil
                 self.tableView.reloadCell(tagsTableViewCell)
                 self.navigationItem.rightBarButtonItem?.enabled = self.shouldDone
             }
@@ -382,7 +381,12 @@ extension ExperimentDetailViewController {
     
     func deleteClicked() {
         guard didAuthoriseElseRequest(didAuthorize: deleteClicked) else { return }
-        presentingViewController?.dismissViewControllerAnimated(true) { delete?(experiment!) }
+        if navigationController?.viewControllers.indexOf(self) > 0 {
+            navigationController?.popViewControllerAnimated(true) ; delete?(experiment!)
+        }
+        else {
+            presentingViewController?.dismissViewControllerAnimated(true) { delete?(experiment!) }
+        }
     }
     
     private var shouldDone: Bool {

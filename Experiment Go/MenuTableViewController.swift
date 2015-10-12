@@ -43,7 +43,7 @@ class MenuTableViewController: UITableViewController, CurrentUserHasChangeObserv
         updateUI()
     }
     
-    deinit { stopObserveCurrentUserHasChange() }
+    deinit { stopObserve() }
     
     // MARK: - Update UI
     var profileImageURL: NSURL? {
@@ -112,6 +112,7 @@ class MenuTableViewController: UITableViewController, CurrentUserHasChangeObserv
         case .ShowAppDetail:
             guard let advc = segue.destinationViewController.contentViewController as? AppDetailViewController else { return }
             guard let ppc = advc.navigationController?.popoverPresentationController else { return }
+            ppc.sourceRect = CGRect(origin: (sender as! UIButton).bounds.center, size: CGSize(width: 1, height: 1))
             ppc.backgroundColor = UIColor.whiteColor()
             ppc.delegate = self
         }

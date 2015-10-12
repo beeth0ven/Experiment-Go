@@ -76,7 +76,9 @@ class EGSplitViewController: UISplitViewController, UISplitViewControllerDelegat
         }
     }
     
-    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
 }
 
 extension UIRefreshControl {

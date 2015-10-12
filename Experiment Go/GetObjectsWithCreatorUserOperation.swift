@@ -28,6 +28,7 @@ class GetObjectsWithCreatorUserOperation: GetCKItemsOperation {
                 self.getUsersFormItems(self.currentPageItems, cursor: cursor)
             }
             
+            
         }
         
         getObjectsOperation.begin()
@@ -42,7 +43,8 @@ class GetObjectsWithCreatorUserOperation: GetCKItemsOperation {
         let fetchUsersOperation = CKFetchRecordsOperation(recordIDs: userRecordIDs)
         
         fetchUsersOperation.perRecordCompletionBlock = {
-            (userRecord, _, _) in
+            (userRecord, _, error) in
+            guard error == nil else { print(error!.localizedDescription) ; return }
             let user = CKItem.ParseRecord(userRecord!) as! CKUsers
             for item in items { if item.creatorUserRecordID == user.recordID { item.creatorUser = user } }
         }
@@ -50,7 +52,7 @@ class GetObjectsWithCreatorUserOperation: GetCKItemsOperation {
         fetchUsersOperation.fetchRecordsCompletionBlock = {
             (_, error) in
             dispatch_async(dispatch_get_main_queue()) {
-                if let error = error { self.didFail?(error) ; return }
+                if let error = self.fetchErrorFrom(error)  { self.didFail?(error) ; return }
                 self.didGet?(self.currentPageCallBackItems, cursor)
             }
             

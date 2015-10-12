@@ -34,7 +34,7 @@ class SwitchBarButtonItem: UIBarButtonItem {
         } else {
             title = onStateTitle
             tintColor = UIColor.whiteColor()
-            backgroundImage = UIImage.resizableImageFromColor(color, cornerRadius: 5)
+            backgroundImage = UIImage.resizableImageFromColor(color, cornerRadius: 5, insets: CGSize(width: 8, height: 0))
         }
         
         setBackgroundImage(backgroundImage,

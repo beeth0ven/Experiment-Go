@@ -115,6 +115,10 @@ class ItemDetailViewController: UIViewController,  UITableViewDataSource, UITabl
         case Read
         case Write
     }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
 }
 
 struct SectionInfo {

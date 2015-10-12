@@ -48,7 +48,8 @@ class GetFollowingUsersOperation: GetCKItemsOperation {
         let fetchUsersOperation = CKFetchRecordsOperation(recordIDs: userRecordIDs)
         
         fetchUsersOperation.perRecordCompletionBlock = {
-            (userRecord, _, _) in
+            (userRecord, _, error) in
+            guard error == nil else { print(error!.localizedDescription) ; return }
             let user = CKItem.ParseRecord(userRecord!) as! CKUsers
             for link in links { if link.toUserRef!.recordID == user.recordID { link.toUser = user } }
         }
@@ -56,7 +57,7 @@ class GetFollowingUsersOperation: GetCKItemsOperation {
         fetchUsersOperation.fetchRecordsCompletionBlock = {
             (_, error) in
             dispatch_async(dispatch_get_main_queue()) {
-                if let error = error { self.didFail?(error) ; return }
+                if let error = self.fetchErrorFrom(error) { self.didFail?(error) ; return }
                 self.didGet?(self.currentPageCallBackItems, cursor)
             }
             

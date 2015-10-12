@@ -33,7 +33,7 @@ class CloudKitTableViewController: UITableViewController, TableViewControllerCel
         showBackwardBarButtonItemIfNeeded()
     }
     
-    deinit { stopObserveCurrentUserHasChange() }
+    deinit { stopObserve() }
 
     
     // MARK: - @IBAction
@@ -134,6 +134,10 @@ class CloudKitTableViewController: UITableViewController, TableViewControllerCel
     
     enum FetchType: String {
         case ObjectsWithCreatorUser
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
 }
 

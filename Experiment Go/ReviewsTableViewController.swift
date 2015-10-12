@@ -40,7 +40,11 @@ class ReviewsTableViewController: CloudKitTableViewController {
             let review = CKLink(reviewTo: reviewTo!)
             rvc.review = review
             rvc.done = saveReview
-        
+        case .ShowUserDetail:
+            guard let udvc = segue.destinationViewController.contentViewController as? UserDetailViewController,
+            let cell = UITableViewCell.cellForView(sender as! UIButton) as? ReviewTableViewCell else { return }
+            udvc.user = cell.review?.creatorUser
+
         }
     }
     
@@ -60,5 +64,6 @@ class ReviewsTableViewController: CloudKitTableViewController {
     
     private enum SegueID: String {
         case AddReview
+        case ShowUserDetail
     }
 }

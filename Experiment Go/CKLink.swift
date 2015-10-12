@@ -79,6 +79,17 @@ class CKLink: CKItem {
         return result
     }
     
+    override var completed: Bool {
+        guard let type = type else { return false }
+        switch type {
+        case .UserReviewToExperiment, .UserLikeExperiment:
+            return creatorUser != nil && experiment != nil && toUser != nil
+        case .UserFollowUser:
+            return creatorUser != nil && toUser != nil
+        }
+    }
+
+    
     override var displayTitle: String? {
         switch type! {
         case .UserReviewToExperiment:

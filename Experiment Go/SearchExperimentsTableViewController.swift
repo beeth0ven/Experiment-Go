@@ -47,6 +47,7 @@ class SearchExperimentsTableViewController: ExperimentsTableViewController {
         
         // SearchController
         var result = UISearchController(searchResultsController: searchResultsController)
+        result.hidesNavigationBarDuringPresentation = false
         result.delegate = searchResultsController
         result.view.layer.cornerRadius = 5
         result.view.layer.masksToBounds = true

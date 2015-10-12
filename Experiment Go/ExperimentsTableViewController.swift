@@ -46,9 +46,23 @@ class ExperimentsTableViewController: CloudKitTableViewController {
     
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
         guard let segueID = SegueID(rawValue: identifier) else { return true }
-        guard case .AddExperiment = segueID else { return true }
-        guard didAuthoriseElseRequest(didAuthorize: { self.performSegueWithIdentifier(identifier, sender: sender) }) else { return false }
-        return true
+        switch segueID {
+        case .AddExperiment:
+            guard didAuthoriseElseRequest(didAuthorize: { self.performSegueWithIdentifier(identifier, sender: sender) }) else { return false }
+            return true
+        case .ShowExperiment:
+            guard splitViewController == nil else { performSegueWithIdentifier(SegueID.ShowExperimentModally.rawValue, sender: sender) ; return false }
+            return true
+        case .ShowUserDetail:
+            guard splitViewController == nil else { performSegueWithIdentifier(SegueID.ShowUserDetailModally.rawValue, sender: sender) ; return false }
+            return true
+        default: return true
+        }
+    }
+    
+    private var experimentDetailNav: UIViewController {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        return storyboard.instantiateViewControllerWithIdentifier("ExperimentDetailNav")
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -61,13 +75,13 @@ class ExperimentsTableViewController: CloudKitTableViewController {
             eadvc.experiment = experiment
             eadvc.done = saveExperiment
             
-        case .ShowExperiment:
+        case .ShowExperiment, .ShowExperimentModally:
             guard let edvc = segue.destinationViewController.contentViewController as? ExperimentDetailViewController else { return }
             let cell = sender as! ExperimentTableViewCell
             edvc.experiment = cell.experiment
             edvc.delete = deleteExperiment
             
-        case .ShowUserDetail:
+        case .ShowUserDetail, .ShowUserDetailModally:
             guard let udvc = segue.destinationViewController.contentViewController as? UserDetailViewController,
             let cell = UITableViewCell.cellForView(sender as! UIButton) as? CKItemTableViewCell else { return }
             udvc.user = cell.item?.creatorUser
@@ -116,7 +130,9 @@ class ExperimentsTableViewController: CloudKitTableViewController {
     private enum SegueID: String {
         case AddExperiment
         case ShowExperiment
+        case ShowExperimentModally
         case ShowUserDetail
+        case ShowUserDetailModally
     }
 
 }
