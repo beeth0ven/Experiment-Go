@@ -22,35 +22,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, iCloudKeyValueStoreHasCha
         DefaultStyleController.applyStyle()
         startObserveiCloudKeyValueStoreHasChange()
 //        CKUsers.UpdateCurrentUser()
-        
         return true
     }
     
-    func requestApplicationPermission() {
-        getDiscoverabilityPermission(
-            didGet: { _ in CKUsers.UpdateCurrentUser() },
-            didFail: nil
-        )
-    }
-    
-    func getDiscoverabilityPermission(didGet didGet: (Bool) -> (), didFail: ((NSError) -> ())?) {
-        CKContainer.defaultContainer().requestApplicationPermission(.UserDiscoverability) { (applicationPermissionStatus, error) -> Void in
-            dispatch_async(dispatch_get_main_queue()) {
-                guard  error == nil else { didFail?(error!) ; return }
-                didGet( applicationPermissionStatus == .Granted )
-            }
-        }
-    }
-    
-    static func requestForRemoteNotifications() {
-        let type: UIUserNotificationType = [.Alert, .Badge, .Sound]
-        let settings = UIUserNotificationSettings(forTypes:type , categories: nil)
-        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
-        UIApplication.sharedApplication().registerForRemoteNotifications()
-        CKUsers.saveCurrentUserSubscriptionsIfNeeded()
-    }
-
-    func applicationWillTerminate(application: UIApplication) {
+      func applicationWillTerminate(application: UIApplication) {
         stopObserve()
     }
     
@@ -66,6 +41,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, iCloudKeyValueStoreHasCha
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         NSNotificationCenter.defaultCenter().postNotificationName(Notification.remoteNotification.rawValue, object: nil)
         print("didReceiveRemoteNotification.")
+    }
+    
+//    func requestApplicationPermission() {
+//        getDiscoverabilityPermission(
+//            didGet: { _ in CKUsers.UpdateCurrentUser() },
+//            didFail: nil
+//        )
+//    }
+    
+//    func getDiscoverabilityPermission(didGet didGet: (Bool) -> Void, didFail: ((NSError) -> Void)?) {
+//        CKContainer.defaultContainer().requestApplicationPermission(.UserDiscoverability) {
+//            (applicationPermissionStatus, error)  in
+//            Queue.Main.execute { error != nil ? didFail?(error!) : didGet( applicationPermissionStatus == .Granted ) }
+//        }
+//    }
+//    
+    static func requestForRemoteNotifications() {
+        let type: UIUserNotificationType = [.Alert, .Badge, .Sound]
+        let settings = UIUserNotificationSettings(forTypes:type , categories: nil)
+        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        UIApplication.sharedApplication().registerForRemoteNotifications()
+        CKUsers.saveCurrentUserSubscriptionsIfNeeded()
     }
     
     func iCloudKeyValueStoreHasChange(notification: NSNotification) {

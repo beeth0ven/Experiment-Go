@@ -385,7 +385,7 @@ extension ExperimentDetailViewController {
             navigationController?.popViewControllerAnimated(true) ; delete?(experiment!)
         }
         else {
-            presentingViewController?.dismissViewControllerAnimated(true) { delete?(experiment!) }
+            presentingViewController?.dismissViewControllerAnimated(true) { self.delete?(self.experiment!) }
         }
     }
     

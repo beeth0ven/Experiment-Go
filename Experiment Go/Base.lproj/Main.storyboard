@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A279b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -222,18 +222,18 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="BiT-YW-OKk">
-                                                    <rect key="frame" x="15" y="36" width="577" height="67"/>
+                                                    <rect key="frame" x="0.0" y="36" width="600" height="67"/>
                                                     <animations/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="F1w-Ti-FqB">
                                                         <size key="itemSize" width="84" height="32"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                        <inset key="sectionInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="yWD-Hr-20N" customClass="TagCollectionViewCell" customModule="Experiment_Go" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="18" width="84" height="32"/>
+                                                            <rect key="frame" x="10" y="18" width="84" height="32"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                                 <rect key="frame" x="0.0" y="0.0" width="84" height="32"/>
@@ -286,12 +286,12 @@
                                             <gestureRecognizers/>
                                             <constraints>
                                                 <constraint firstAttribute="topMargin" secondItem="1mu-qC-ubo" secondAttribute="top" id="F0A-00-SZb"/>
-                                                <constraint firstItem="BiT-YW-OKk" firstAttribute="trailing" secondItem="1mu-qC-ubo" secondAttribute="trailing" id="KHf-dv-Yt1"/>
-                                                <constraint firstItem="BiT-YW-OKk" firstAttribute="top" secondItem="1mu-qC-ubo" secondAttribute="bottom" constant="8" id="RPg-qT-PAi"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="BiT-YW-OKk" secondAttribute="bottom" id="Ww5-GG-Tid"/>
+                                                <constraint firstAttribute="trailing" secondItem="BiT-YW-OKk" secondAttribute="trailing" id="QoE-0H-Bc5"/>
                                                 <constraint firstAttribute="leadingMargin" secondItem="1mu-qC-ubo" secondAttribute="leading" constant="-7" id="YZF-40-baP"/>
-                                                <constraint firstItem="BiT-YW-OKk" firstAttribute="leading" secondItem="1mu-qC-ubo" secondAttribute="leading" id="pla-3a-KWd"/>
+                                                <constraint firstItem="BiT-YW-OKk" firstAttribute="bottom" secondItem="abc-40-CY0" secondAttribute="bottomMargin" id="ZUd-sr-bsq"/>
+                                                <constraint firstItem="BiT-YW-OKk" firstAttribute="top" secondItem="1mu-qC-ubo" secondAttribute="bottom" constant="8" symbolic="YES" id="mou-hS-orp"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="1mu-qC-ubo" secondAttribute="trailing" id="rXr-Ne-Nsf"/>
+                                                <constraint firstItem="BiT-YW-OKk" firstAttribute="leading" secondItem="abc-40-CY0" secondAttribute="leading" id="zYb-Ft-XOP"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <animations/>
@@ -671,7 +671,7 @@
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="highlightedColor" red="0.79226005079999995" green="0.71810984609999995" blue="0.48854580520000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="highlightedColor" red="0.92120724919999997" green="0.84832113980000001" blue="0.62377804520000002" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
                                             </subviews>
                                             <animations/>
@@ -693,7 +693,7 @@
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="highlightedColor" red="0.79226005079999995" green="0.71810984609999995" blue="0.48854580520000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="highlightedColor" red="0.92120724919999997" green="0.84832113980000001" blue="0.62377804520000002" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
                                             </subviews>
                                             <animations/>
@@ -715,7 +715,7 @@
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="highlightedColor" red="0.79226005077362061" green="0.7181098461151123" blue="0.48854580521583557" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="highlightedColor" red="0.92120724919999997" green="0.84832113980000001" blue="0.62377804520000002" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
                                             </subviews>
                                             <animations/>
@@ -2780,7 +2780,7 @@
             <objects>
                 <tableViewController title="Edite Text" id="B2H-Y7-irh" customClass="EditeTextTableViewController" customModule="Experiment_Go" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="tg3-7g-RKs">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="44" width="600" height="556"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -2911,7 +2911,7 @@
             <objects>
                 <collectionViewController id="PJ7-TL-TRb" customClass="EditeTagsCollectionViewController" customModule="Experiment_Go" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="Lcn-FE-M9s">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="44" width="600" height="556"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" red="1" green="1" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -3343,18 +3343,18 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Xhj-4i-35D">
-                                                    <rect key="frame" x="15" y="36" width="577" height="67"/>
+                                                    <rect key="frame" x="0.0" y="36" width="600" height="67"/>
                                                     <animations/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ZJd-kD-D7b">
                                                         <size key="itemSize" width="84" height="32"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                        <inset key="sectionInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="fjO-7Y-yvK" customClass="TagCollectionViewCell" customModule="Experiment_Go" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="18" width="84" height="32"/>
+                                                            <rect key="frame" x="10" y="18" width="84" height="32"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                                 <rect key="frame" x="0.0" y="0.0" width="84" height="32"/>
@@ -3404,13 +3404,21 @@
                                             <gestureRecognizers/>
                                             <constraints>
                                                 <constraint firstAttribute="leadingMargin" secondItem="O1C-Af-3qt" secondAttribute="leading" constant="-7" id="545-hB-7sd"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="Xhj-4i-35D" secondAttribute="bottom" id="8E0-sk-aeT"/>
+                                                <constraint firstItem="Xhj-4i-35D" firstAttribute="bottom" secondItem="4WA-o3-jl1" secondAttribute="bottomMargin" id="CpD-QI-5Vc"/>
+                                                <constraint firstItem="Xhj-4i-35D" firstAttribute="leading" secondItem="4WA-o3-jl1" secondAttribute="leading" id="Itz-zC-a5P"/>
                                                 <constraint firstAttribute="topMargin" secondItem="O1C-Af-3qt" secondAttribute="top" id="OdS-kl-QdO"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="O1C-Af-3qt" secondAttribute="trailing" id="Uze-pR-jJd"/>
-                                                <constraint firstItem="Xhj-4i-35D" firstAttribute="top" secondItem="O1C-Af-3qt" secondAttribute="bottom" constant="8" id="XzD-dT-EiI"/>
                                                 <constraint firstItem="Xhj-4i-35D" firstAttribute="leading" secondItem="O1C-Af-3qt" secondAttribute="leading" id="dFa-Qo-OxU"/>
+                                                <constraint firstItem="Xhj-4i-35D" firstAttribute="top" secondItem="O1C-Af-3qt" secondAttribute="bottom" constant="8" symbolic="YES" id="g6L-YP-IUX"/>
                                                 <constraint firstItem="Xhj-4i-35D" firstAttribute="trailing" secondItem="O1C-Af-3qt" secondAttribute="trailing" id="k2z-90-eTI"/>
+                                                <constraint firstAttribute="trailing" secondItem="Xhj-4i-35D" secondAttribute="trailing" id="xLc-3V-i8A"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="dFa-Qo-OxU"/>
+                                                    <exclude reference="k2z-90-eTI"/>
+                                                </mask>
+                                            </variation>
                                         </tableViewCellContentView>
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -3695,16 +3703,16 @@
         <image name="Banner" width="280" height="200"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="gW7-gZ-38U"/>
-        <segue reference="aUJ-vY-2vN"/>
-        <segue reference="qLE-m0-g8m"/>
-        <segue reference="1C9-Jf-lS0"/>
         <segue reference="2Sx-Tm-Aib"/>
-        <segue reference="WUH-z6-xeJ"/>
+        <segue reference="5UF-jG-Xdv"/>
+        <segue reference="n5d-Ki-FkR"/>
+        <segue reference="1C9-Jf-lS0"/>
         <segue reference="QGV-Ef-3gP"/>
-        <segue reference="leS-CF-ZjH"/>
-        <segue reference="euo-32-rs2"/>
+        <segue reference="qLE-m0-g8m"/>
         <segue reference="AZg-Ze-WNT"/>
+        <segue reference="qru-AD-cuc"/>
+        <segue reference="orS-Il-sdi"/>
+        <segue reference="bqy-Rf-GfH"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.92156862745098034" green="0.84705882352941175" blue="0.62352941176470589" alpha="1" colorSpace="calibratedRGB"/>
 </document>

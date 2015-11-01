@@ -15,7 +15,7 @@ class ExperimentsTableViewController: CloudKitTableViewController {
     override var refreshOperation: GetCKItemsOperation {
         switch queryType!{
         case .PostedBy(let user):
-                return GetUserPostedExperimentsOperation(postedBy: user)
+            return GetUserPostedExperimentsOperation(postedBy: user)
         case .LikedBy(let user):
             return GetUserLikedExperimentsOperation(likedBy: user)
         case .InteretedByCurrentUser:
@@ -138,10 +138,8 @@ class ExperimentsTableViewController: CloudKitTableViewController {
 }
 extension UITableViewCell {
     class func cellForView(view: UIView) -> UITableViewCell? {
-        var superView = view.superview
-        while superView != nil {
+        for var superView = view.superview; superView != nil; superView = superView!.superview {
             if let cell = superView as? UITableViewCell { return cell }
-            superView = superView!.superview
         }
         return nil
     }

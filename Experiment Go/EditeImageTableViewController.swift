@@ -12,7 +12,7 @@ class EditeImageTableViewController: EditeValueTableViewController {
     
     var image: UIImage? {
         get { return value as? UIImage }
-        set { value = newValue }
+        set { value = newValue ; updateUI() }
     }
     
     var done: ((UIImage) -> Void)?

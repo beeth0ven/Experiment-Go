@@ -26,7 +26,7 @@ class ExperimentAddedDVC: ExperimentDetailViewController {
     }
     
     override func doneClicked() {
-        presentingViewController?.dismissViewControllerAnimated(true) { done?(experiment!) }
+        presentingViewController?.dismissViewControllerAnimated(true) { self.done?(self.experiment!) }
     }
     
 }

@@ -88,7 +88,7 @@ extension UIViewController {
     
     func showAlertWithMessage(message: String) {
         let alert = UIAlertController(errorMessage: message)
-        self.presentViewController(alert, animated: true, completion: nil)
+        presentViewController(alert, animated: true, completion: nil)
     }
 }
 
@@ -125,8 +125,7 @@ extension UIImage {
         if let imageData = AppDelegate.Cache.Manager.assetDataForURL(url) {
             didGet(UIImage(data: imageData))
         } else {
-            let qos = QOS_CLASS_USER_INITIATED
-            dispatch_async(dispatch_get_global_queue(qos, 0)) {
+            Queue.UserInitiated.execute {
                 var image: UIImage?
                 let imageData = NSData(contentsOfURL: url)
                 if imageData != nil {
@@ -135,9 +134,8 @@ extension UIImage {
                 } else {
                     CKUsers.UpdateCurrentUserIfNeeded()
                 }
-                dispatch_async(dispatch_get_main_queue()) {
-                    didGet(image)
-                }
+                Queue.Main.execute { didGet(image) }
+
             }
         }
         
@@ -343,10 +341,9 @@ extension UIImage {
         let context = UIGraphicsGetCurrentContext()
         CGContextSetFillColorWithColor(context, color.CGColor)
         CGContextFillEllipseInRect(context, CGRectMake(insets.width, insets.height, 2 * cornerRadius, 2 * cornerRadius))
-        var image = UIGraphicsGetImageFromCurrentImageContext()
+        let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        image = image.resizableImageByDivideFromCenter
-        return image
+        return image.resizableImageByDivideFromCenter
     }
 }
 

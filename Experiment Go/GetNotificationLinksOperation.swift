@@ -19,7 +19,6 @@ class GetNotificationLinksOperation: GetCKItemsOperation {
 
     override func main() {
         let getLinksOperation = type.queryOperationToAttempt
-        getLinksOperation.resultsLimit = CKQueryOperation.DafaultResultsLimit
         
         getLinksOperation.recordFetchedBlock = {
             let object = CKItem.ParseRecord($0)
@@ -29,7 +28,7 @@ class GetNotificationLinksOperation: GetCKItemsOperation {
         
         getLinksOperation.queryCompletionBlock = {
             (cursor, error) in
-            dispatch_async(dispatch_get_main_queue()) {
+            Queue.Main.execute {
                 if let error = error { self.didFail?(error) ; return }
                 self.getUsersAndExperimentsFormLinks(self.currentPageLinks, cursor: cursor)
             }
@@ -44,8 +43,8 @@ class GetNotificationLinksOperation: GetCKItemsOperation {
         let userRecordIDs = links.flatMap { $0.createdByMe ? nil : $0.creatorUserRecordID!  }
         let experimentsRecordIDs = links.flatMap { $0.experimentRef?.recordID }
         
-        let fetchUsersOperation = CKFetchRecordsOperation(recordIDs: userRecordIDs + experimentsRecordIDs)
-        
+        let fetchUsersOperation = CKFetchRecordsOperation(recordIDs: (userRecordIDs + experimentsRecordIDs).uniqueArray)
+
         fetchUsersOperation.perRecordCompletionBlock = {
             (record, _, error) in
             guard error == nil else { print(error!.localizedDescription) ; return }
@@ -61,7 +60,7 @@ class GetNotificationLinksOperation: GetCKItemsOperation {
         
         fetchUsersOperation.fetchRecordsCompletionBlock = {
             (_, error) in
-            dispatch_async(dispatch_get_main_queue()) {
+            Queue.Main.execute {
                 if let error = self.fetchErrorFrom(error) { self.didFail?(error) ; return }
                 self.didGet?(self.currentPageCallBackItems.filter { $0.completed }, cursor)
             }

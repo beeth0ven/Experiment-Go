@@ -73,20 +73,14 @@ class CKItem: NSObject {
     func saveInBackground(didSave didSave: (Void -> Void)? = nil ,didFail: ((NSError) -> Void)? = nil) {
         CKContainer.defaultContainer().publicCloudDatabase.saveRecord(record) {
             (_, error) in
-            dispatch_async(dispatch_get_main_queue()) {
-                if let error = error { didFail?(error) ; return }
-                didSave?()
-            }
+            Queue.Main.execute { error != nil ? didFail?(error!) : didSave?() }
         }
     }
     
     func deleteInBackground(didDelete didDelete: (Void -> Void)? = nil ,didFail: ((NSError) -> Void)? = nil) {
         CKContainer.defaultContainer().publicCloudDatabase.deleteRecordWithID(recordID) {
             (_, error) in
-            dispatch_async(dispatch_get_main_queue()) {
-                if let error = error { didFail?(error) ; return }
-                didDelete?()
-            }
+            Queue.Main.execute { error != nil ? didFail?(error!) : didDelete?() }
         }
     }
     
@@ -94,22 +88,16 @@ class CKItem: NSObject {
     static func GetItem(recordID recordID: CKRecordID, didGet: ((CKItem) -> Void)?, didFail: ((NSError) -> Void)?){
         CKContainer.defaultContainer().publicCloudDatabase.fetchRecordWithID(recordID) {
             record, error in
-            dispatch_async(dispatch_get_main_queue()) {
-                if let error = error { didFail?(error) ; return }
-                didGet?(ParseRecord(record!))
-            }
+            Queue.Main.execute { error != nil ? didFail?(error!) : didGet?(ParseRecord(record!)) }
         }
     }
     
     static func GetItems(recordIDs recordIDs: [CKRecordID], didGet: (([CKItem]) -> Void)?, didFail: ((NSError) -> Void)?){
-        let fetchRecordsOperation = CKFetchRecordsOperation(recordIDs: recordIDs)
+        let fetchRecordsOperation = CKFetchRecordsOperation(recordIDs: recordIDs.uniqueArray)
+        
         fetchRecordsOperation.fetchRecordsCompletionBlock = {
             recordsByRecordID, error in
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                if let error = error { didFail?(error) ; return }
-                didGet?(recordsByRecordID!.values.map { ParseRecord($0) })
-            }
+            Queue.Main.execute { error != nil ? didFail?(error!) : didGet?(recordsByRecordID!.values.map { ParseRecord($0) }) }
         }
         
         fetchRecordsOperation.begin()

@@ -46,7 +46,7 @@ class ReviewViewController: ItemDetailViewController {
     
     
     override func doneClicked() {
-        presentingViewController?.dismissViewControllerAnimated(true) { done?(review!) }
+        presentingViewController?.dismissViewControllerAnimated(true) { self.done?(self.review!) }
     }
 }
 

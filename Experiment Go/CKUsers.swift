@@ -54,6 +54,7 @@ class CKUsers: CKItem {
     static func UpdateCurrentUser() {
         GetCurrentUser(
             didGet: {
+                print($0.recordIDName)
                 if let currentUser = self.CurrentUser {
                     currentUser.record = $0.record
                 } else {
@@ -92,15 +93,14 @@ class CKUsers: CKItem {
         FetchingCurrentUser = true
         
         let fetchCurrentUserRecordOperation = CKFetchRecordsOperation.fetchCurrentUserRecordOperation()
+
         fetchCurrentUserRecordOperation.perRecordCompletionBlock = {
             (userRecord, _, error) in
-            self.FetchingCurrentUser = false
-            dispatch_async(dispatch_get_main_queue()) {
-                guard  error == nil else { didFail?(error!) ; return }
-                didGet( CKUsers(record: userRecord!) )
-            }
+            FetchingCurrentUser = false
+            Queue.Main.execute { error != nil ? didFail?(error!) : didGet( CKUsers(record: userRecord!)) }
         }
-        publicCloudDatabase.addOperation(fetchCurrentUserRecordOperation)
+        
+        fetchCurrentUserRecordOperation.begin()
     }
     private static var FetchingCurrentUser = false
 
@@ -134,8 +134,8 @@ class CKUsers: CKItem {
         CKContainer.defaultContainer().requestApplicationPermission(.UserDiscoverability) {
             applicationPermissionStatus, error in
             RequestingDiscoverabilityInProgress = false
-            dispatch_async(dispatch_get_main_queue()) {
-                guard  error == nil else { didFail?(error!) ; return }
+            Queue.Main.execute {
+                guard error == nil else { didFail?(error!) ; return }
                 let discoverability = applicationPermissionStatus == .Granted
                 UserDiscoverability = discoverability
                 didGet( discoverability )
@@ -284,16 +284,18 @@ class CKUsers: CKItem {
         guard GetUserInProgress == false else { didFail?(NSError(errorType: .ServerBusy)) ; return }
         GetUserInProgress = true
         let discoverUserInfosOperation = CKDiscoverUserInfosOperation(emailAddresses: [email], userRecordIDs: nil)
+
         discoverUserInfosOperation.discoverUserInfosCompletionBlock = {
             userInfoByEmail, userInfoByRecordID, error in
             GetUserInProgress = false
-            dispatch_async(dispatch_get_main_queue()) {
+            Queue.Main.execute {
                 if let error = error { didFail?(error) ; return }
                 guard let recordID =  userInfoByEmail![email]?.userRecordID else { didFail?(ErrorType.UserByEmailNotFound.error) ; return }
                 GetItem(recordID: recordID, didGet: { didGet?($0 as! CKUsers) }, didFail: didFail)
             }
         }
         
+        discoverUserInfosOperation.qualityOfService = .UserInitiated
         discoverUserInfosOperation.start()
     }
     
@@ -306,7 +308,7 @@ class CKUsers: CKItem {
         discoverUserInfosOperation.discoverAllContactsCompletionBlock = {
             userInfos, error in
             GetUserInProgress = false
-            dispatch_async(dispatch_get_main_queue()) {
+            Queue.Main.execute {
                 if let error = error { didFail?(error) ; return }
                 let recordIDs = userInfos!.flatMap { $0.userRecordID }
                 guard recordIDs.count > 0 else { didFail?(ErrorType.UsersFromContactsNotFound.error) ; return }
@@ -314,6 +316,7 @@ class CKUsers: CKItem {
             }
         }
         
+        discoverUserInfosOperation.qualityOfService = .UserInitiated
         discoverUserInfosOperation.start()
     }
     

@@ -36,12 +36,16 @@ class GetCKItemsOperation: NSOperation {
         case GetNextPage(CKQueryCursor)
         
         var queryOperationToAttempt: CKQueryOperation {
+            var queryOperation: CKQueryOperation
             switch self {
             case .Refresh(let query):
-                return CKQueryOperation(query: query)
+                queryOperation = CKQueryOperation(query: query)
             case .GetNextPage(let cursor):
-                return CKQueryOperation(cursor: cursor)
+                queryOperation = CKQueryOperation(cursor: cursor)
             }
+            
+            queryOperation.resultsLimit = CKQueryOperation.DafaultResultsLimit
+            return queryOperation
         }
     }
     
@@ -49,6 +53,7 @@ class GetCKItemsOperation: NSOperation {
 
 extension CKDatabaseOperation {
     func begin() {
+        self.qualityOfService = .UserInitiated
         CKContainer.defaultContainer().publicCloudDatabase.addOperation(self)
     }
 }

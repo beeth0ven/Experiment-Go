@@ -21,7 +21,6 @@ class GetUserLikedExperimentsOperation: GetObjectsWithCreatorUserOperation {
     
     override func main() {
         let getLinksOperation = type.queryOperationToAttempt
-        getLinksOperation.resultsLimit = CKQueryOperation.DafaultResultsLimit
         
         getLinksOperation.recordFetchedBlock = {
             let object = CKItem.ParseRecord($0) as! CKLink
@@ -30,7 +29,7 @@ class GetUserLikedExperimentsOperation: GetObjectsWithCreatorUserOperation {
         
         getLinksOperation.queryCompletionBlock = {
             (cursor, error) in
-            dispatch_async(dispatch_get_main_queue()) {
+            Queue.Main.execute {
                 if let error = error { self.didFail?(error) ; return }
                 self.getExperimentsFormLinks(self.currentPageLinks, cursor: cursor)
             }
@@ -42,10 +41,10 @@ class GetUserLikedExperimentsOperation: GetObjectsWithCreatorUserOperation {
     
     func getExperimentsFormLinks(links: [CKLink], cursor: CKQueryCursor?) {
         
-        let recordIDs = links.map { $0.experimentRef!.recordID }
+        let recordIDs = links.map { $0.experimentRef!.recordID }.uniqueArray
         
         let getExperimentsOperation = CKFetchRecordsOperation(recordIDs: recordIDs)
-        
+
         getExperimentsOperation.perRecordCompletionBlock = {
             (experimentRecord, _, error) in
             guard error == nil else { print(error!.localizedDescription) ; return }
@@ -55,7 +54,7 @@ class GetUserLikedExperimentsOperation: GetObjectsWithCreatorUserOperation {
         
         getExperimentsOperation.fetchRecordsCompletionBlock = {
             (_, error) in
-            dispatch_async(dispatch_get_main_queue()) {
+            Queue.Main.execute {
                 if let error = self.fetchErrorFrom(error) { self.didFail?(error) ; return }
                 self.getUsersFormItems(self.currentPageLinks.flatMap { $0.experiment }, cursor: cursor)
             }
